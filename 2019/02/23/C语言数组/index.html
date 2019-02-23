@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="数组数组是数据结构的一种。它属于线性结构。 数组的定义在C语言中声明一个数组很简单：int arr[4] = {1,2,2,3};  这是一个一维数组。上面语句中 arr 是数组名，[4] 指的是这个数组一共有几个元素，等号右边就是这个数组的元素集合。   初始化一个数组：初始化变量就相当于给这个变量赋个初始值。比如：int a = 2;int ary[5] = {0};当我们为一个数组的每一位元">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/2019/02/23/C语言数组/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="数组数组是数据结构的一种。它属于线性结构。 数组的定义在C语言中声明一个数组很简单：int arr[4] = {1,2,2,3};  这是一个一维数组。上面语句中 arr 是数组名，[4] 指的是这个数组一共有几个元素，等号右边就是这个数组的元素集合。   初始化一个数组：初始化变量就相当于给这个变量赋个初始值。比如：int a = 2;int ary[5] = {0};当我们为一个数组的每一位元">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/02/img/other/C/C_2/C_2.1.PNG">
+<meta property="og:updated_time" content="2019-02-23T02:25:56.573Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="数组数组是数据结构的一种。它属于线性结构。 数组的定义在C语言中声明一个数组很简单：int arr[4] = {1,2,2,3};  这是一个一维数组。上面语句中 arr 是数组名，[4] 指的是这个数组一共有几个元素，等号右边就是这个数组的元素集合。   初始化一个数组：初始化变量就相当于给这个变量赋个初始值。比如：int a = 2;int ary[5] = {0};当我们为一个数组的每一位元">
+<meta name="twitter:image" content="http://yoursite.com/2019/02/img/other/C/C_2/C_2.1.PNG">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-C语言数组" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/23/C语言数组/" class="article-date">
+  <time datetime="2019-02-23T04:32:22.482Z" itemprop="datePublished">2019-02-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><p>数组是数据结构的一种。它属于线性结构。</p>
+<h2 id="数组的定义"><a href="#数组的定义" class="headerlink" title="数组的定义"></a>数组的定义</h2><p>在C语言中声明一个数组很简单：<br><code>int arr[4] = {1,2,2,3};</code>  这是一个一维数组。<br>上面语句中 <code>arr</code> 是数组名，<code>[4]</code> 指的是这个数组一共有几个元素，等号右边就是这个数组的元素集合。  </p>
+<h4 id="初始化一个数组："><a href="#初始化一个数组：" class="headerlink" title="初始化一个数组："></a>初始化一个数组：</h4><p>初始化变量就相当于给这个变量赋个初始值。比如：<br><code>int a = 2;</code><br><code>int ary[5] = {0};</code><br>当我们为一个数组的每一位元素赋的值一样时，我们可以简写。就像上面两个赋值语句中的第二个 <code>int ary[5] = {0};</code> 这个语句相当于：<br><code>int ary[5] = {0,0,0,0,0};</code>  </p>
+<h4 id="如何声明多维数组？"><a href="#如何声明多维数组？" class="headerlink" title="如何声明多维数组？"></a>如何声明多维数组？</h4><p>声明多维数组需要多加一个下标：<br><code>int ary[3][4] = {1};</code><br>声明了一个 3×4 的多维数组，并将数组每一位初始化为 1。这个多维数组也可以这么赋值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ary[<span class="number">3</span>][<span class="number">4</span>] = &#123;   <span class="comment">// 定义一个三行四列的数组</span></span><br><span class="line">    &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">    &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">    &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;</span><br><span class="line">&#125;;      <span class="comment">// 或者如下（直接赋 12 个 1）：</span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">3</span>][<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>当声明并直接赋值一个数组变量时，下标数字我们可以省略：<br><code>int arr[3] = {1,2,3};</code> 也可以写成：<code>int arr[] = {1,2,3};</code> 多维数组的列数我们不能省略：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对数组中第一行第一列元素赋值为 1</span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">// 第一行全赋值为 1，第二行第一个赋值为 2</span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line"><span class="comment">// 对数组中第一行的第一列赋值为 1</span></span><br><span class="line"><span class="keyword">int</span> arr[][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">// 对数组中第一行第一列赋值为 1</span></span><br><span class="line"><span class="keyword">int</span> arr[][<span class="number">3</span>] = &#123;<span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">// 系统会报错：</span></span><br><span class="line"><span class="keyword">int</span> arr[][] = &#123;<span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">// 系统会报错：</span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">3</span>][] = &#123;<span class="number">1</span>&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>再定义一个数组时尽量把数组下标数字写上，不写应注意书写规则。在声明一个数组后最好进行初始化，以免不必要的错误。  </p>
+<h2 id="如何遍历数组元素？"><a href="#如何遍历数组元素？" class="headerlink" title="如何遍历数组元素？"></a>如何遍历数组元素？</h2><h4 id="如何访问数组的一个元素？"><a href="#如何访问数组的一个元素？" class="headerlink" title="如何访问数组的一个元素？"></a>如何访问数组的一个元素？</h4><p>通过下标的形式进行访问：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">4</span>] = &#123;<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> n = arr[<span class="number">2</span>];     <span class="comment">// 6</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,arr[<span class="number">0</span>]);      <span class="comment">// 2</span></span><br></pre></td></tr></table></figure></p>
+<p>注意数组第一个元素下标是 0。<br>多维数组访问元素：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ary[][<span class="number">3</span>] = &#123;</span><br><span class="line">    &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,</span><br><span class="line">    &#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;,</span><br><span class="line">    &#123;<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;,</span><br><span class="line">    &#123;<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">int</span> n = ary[<span class="number">2</span>][<span class="number">2</span>];      <span class="comment">// 9</span></span><br></pre></td></tr></table></figure></p>
+<p>我们声明数组时和访问元素时下标是不同的。声明时几行几列对应的数字就是几，而访问时是从数字 0 开始的，即：第一行第一列用下标就是 <code>ary[0][0]</code> 。</p>
+<p>通过循环遍历数组元素：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">5</span>;i ++)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,arr[i]);</span><br><span class="line">    <span class="comment">// 会输出数组每一项</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>多维数组遍历用双层循环：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ary[<span class="number">3</span>][<span class="number">4</span>] = &#123;<span class="number">2</span>&#125;;   <span class="comment">// 第一行第一列为 2</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">3</span>;i ++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; <span class="number">4</span>;j ++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,ary[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="数组的长度计算"><a href="#数组的长度计算" class="headerlink" title="数组的长度计算"></a>数组的长度计算</h4><p>可以通过用 <code>sizeof</code> 运算符算出某个数组的长度（也即一个数组中的元素个数）。如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">4</span>];</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,<span class="keyword">sizeof</span>(arr));     <span class="comment">// 16</span></span><br><span class="line"><span class="keyword">int</span> len = <span class="keyword">sizeof</span>(arr)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,len);     <span class="comment">// 4</span></span><br></pre></td></tr></table></figure></p>
+<p>从以上代码就可以看到：<code>sizeof(arr)</code> 返回的是正个数组的字节长度（每一个数组元素都是整型，整型占四个字节），而再除以类型字节数就得到了数组长度。<br>当我们声明一个变量这样声明时 —— <code>int arr[] = {...};</code>，或许会求数组长度（即没有指明下标）。</p>
+<h2 id="杨辉三角"><a href="#杨辉三角" class="headerlink" title="杨辉三角"></a>杨辉三角</h2><p>说完了数组基础，可以打印一个杨辉三角数组。<br>先来说一下杨辉三角的特征，如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">2</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">3</span>   <span class="number">3</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">4</span>   <span class="number">6</span>   <span class="number">4</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">5</span>   <span class="number">10</span>  <span class="number">10</span>  <span class="number">5</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">6</span>   <span class="number">15</span>  <span class="number">20</span>  <span class="number">15</span>  <span class="number">6</span>   <span class="number">1</span>   <span class="number">0</span></span><br><span class="line">..........</span><br></pre></td></tr></table></figure></p>
+<p>杨辉三角是一个金字塔型的数字集合，他有无穷项长度。第一列数字都是 1，通过与它邻近的右边第一个数相加，数值等于右边数字下边数字的数值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>   +   <span class="number">0</span></span><br><span class="line">        |</span><br><span class="line"><span class="number">1</span>   +   <span class="number">1</span>   +   <span class="number">0</span></span><br><span class="line">        |       |</span><br><span class="line"><span class="number">1</span>       <span class="number">2</span>       <span class="number">1</span>       <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>出去所有数字 0，可以看到，第一行有一个不为 0 的数，第二行有两个不为零的数，依次类推，第 n 行有 n 个不为零的数。而且 第 n 行的第 n 列数字都是 1<br>分析完毕，源码如下：（我们打印出杨辉三角前十行）<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">10</span>][<span class="number">10</span>];</span><br><span class="line"><span class="comment">// 第一次双循环是为了进行初始化数组</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i ++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; <span class="number">10</span>;j ++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(j != <span class="number">0</span>)&#123;</span><br><span class="line">            arr[i][j] = <span class="number">0</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            arr[i][j] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第二次双循环是为了生成 杨辉三角</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; <span class="number">10</span>;i ++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; i;j ++)&#123;</span><br><span class="line">        arr[i][j+<span class="number">1</span>] = arr[i<span class="number">-1</span>][j] + arr[i<span class="number">-1</span>][j+<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第三次双循环为了打印出 杨辉三角</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i ++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt;= i;j ++)&#123;</span><br><span class="line">    <span class="comment">// j &lt;= i，是为了打印时不打出数字 0</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,arr[i][j];)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意代码中第二次双循环，首先让 i = 1; 而 j = 0; 当然，你也可以让 i = 0; 那么 j 就应该 <code>j &lt; i+1</code> 因为 <strong>第n行第n列 加 第n行第(n+1)列 等于 第(n+1)行(n+1)列</strong>。  输出窗口如下：<br><img src="../../img/other/C/C_2/C_2.1.PNG" alt="杨辉三角"><br>当然，你也可以将第二个双循环和第三个双循环合并：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i ++) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i+<span class="number">1</span>; j ++) &#123;</span><br><span class="line">        arr[i+<span class="number">1</span>][j+<span class="number">1</span>] = arr[i][j] + arr[i][j+<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt;= i;j ++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,arr[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="作为函数参数的数组"><a href="#作为函数参数的数组" class="headerlink" title="作为函数参数的数组"></a>作为函数参数的数组</h2><p>我们可以在把数组传递到一个函数参数中。比如：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ary[] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> len = <span class="keyword">sizeof</span>(arr)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">arrSum</span><span class="params">(<span class="keyword">int</span> arr[]，<span class="keyword">int</span> len)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; len;i ++)&#123;</span><br><span class="line">        sum += arr[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,arrSum(ary,len));     <span class="comment">// 10</span></span><br></pre></td></tr></table></figure></p>
+<p>上面代码的 <code>arrSum</code> 函数是求数组之和的函数，该函数会返回相加后的和数。你可以看到，函数形参用 <code>arr[]</code> 来接收（因为我们不一定知道一个数组（一维数组）的具体长度，因此这样设置形参比较友好）一个整型数组，具体数组长度不确定（这样也使得不同长度的整型数组都可以用该函数）；数组长度可以用 <code>sizeof</code> 来计算。  </p>
+<h3 id="求一个数组中的最大值并返回该值"><a href="#求一个数组中的最大值并返回该值" class="headerlink" title="求一个数组中的最大值并返回该值"></a>求一个数组中的最大值并返回该值</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">arrMax</span><span class="params">(<span class="keyword">int</span> arr[],<span class="keyword">int</span> len)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> max = arr[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; len;i ++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(max &lt; arr[i])&#123;</span><br><span class="line">            max = arr[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，len表示数组长度；我们先让 max 变量等于 数组中的第一个元素值，然后从第二个数组元素开始遍历，如果找到大于 max 的元素，就把该元素值赋给 max，最后返回max。这样就达到了我们的目的。  </p>
+<h4 id="为什么不再函数中再计算数组长度呢？"><a href="#为什么不再函数中再计算数组长度呢？" class="headerlink" title="为什么不再函数中再计算数组长度呢？"></a>为什么不再函数中再计算数组长度呢？</h4><p>比如：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> arr[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = <span class="keyword">sizeof</span>(arr)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; len;i ++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> ary[] = &#123;<span class="number">1</span>,<span class="number">23</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line">func(ary);</span><br></pre></td></tr></table></figure></p>
+<p>运行上面代码后你会发现并不对，这是为什么呢？<br>这涉及到C语言中指针的问题，在该函数中，<code>sizeof(arr)</code> 中的 arr 其实是一个指针（他并不是指一个数组），在指针一篇，会发现，一个数组的首元素可以用以下两种表示：</p>
+<ul>
+<li><code>arr[0]</code></li>
+<li><code>*arr</code><br><code>arr</code> 就表示首元素的地址</li>
+</ul>
+<p>一个整型指针通常占 8 个字节，因此 len 始终等于 2。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,<span class="keyword">sizeof</span>(p));       <span class="comment">// 8</span></span><br></pre></td></tr></table></figure></p>
+<p>因此在函数中对数组进行操作时，应向函数参数中传入数组和该数组的长度，以免出错。</p>
+<h2 id="作为函数返回值的数组"><a href="#作为函数返回值的数组" class="headerlink" title="作为函数返回值的数组"></a>作为函数返回值的数组</h2><p>返回一个数组比较困难，常常借助指针。一般不返回数组进行操作，而是传递另一个数组作为接收，然后再进行操作<br>如下函数，该函数接收一个多维数组，返回的数组是这个多维数组变成一维数组后的数组的长度（k）。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">newArr</span><span class="params">(<span class="keyword">int</span> arr[][<span class="number">3</span>],<span class="keyword">int</span> ary[],<span class="keyword">int</span> m,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; m;i ++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; n;j ++)&#123;</span><br><span class="line">            ary[k ++] = arr[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> k;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[][<span class="number">3</span>] = &#123;</span><br><span class="line">        &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,</span><br><span class="line">        &#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;,</span><br><span class="line">        &#123;<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;,</span><br><span class="line">        &#123;<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">int</span> m_len = <span class="keyword">sizeof</span>(arr)/(<span class="number">3</span>*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="comment">// 每一行有三个元素，因此乘以 3</span></span><br><span class="line">	<span class="keyword">int</span> n_len = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">int</span> ary[n_len + m_len];     <span class="comment">// 定义一个空数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> len = newArr(arr,ary,m_len,n_len);  <span class="comment">// 用函数对数组进行操作</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; len;i ++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,ary[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你也可以按如下代码写（其实完全没那个必要）：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="comment">// 返回一个指针类型的函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">newArr</span><span class="params">(<span class="keyword">int</span> arr[][<span class="number">3</span>],<span class="keyword">int</span> ary[],<span class="keyword">int</span> m,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; m;i ++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; n;j ++)&#123;</span><br><span class="line">            ary[k ++] = arr[i][j];</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ary;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">4</span>][<span class="number">3</span>] = &#123;</span><br><span class="line">        &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,</span><br><span class="line">        &#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;,</span><br><span class="line">        &#123;<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;,</span><br><span class="line">        &#123;<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> m_len = <span class="keyword">sizeof</span>(arr)/(<span class="number">3</span>*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">int</span> n_len = <span class="keyword">sizeof</span>(arr)/(<span class="number">4</span>*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> *p;</span><br><span class="line">    <span class="keyword">int</span> ary[<span class="number">12</span>];</span><br><span class="line"></span><br><span class="line">    p = newArr(arr,ary,m_len,n_len);</span><br><span class="line">    <span class="comment">// 接收返回值（数组第一个元素的地址）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">12</span>;i ++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,*(p++));</span><br><span class="line">        <span class="comment">// 对地址进行操作，得到数组中每一个元素的值</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在指针一篇会详细说明指针在数组中的应用。  </p>
+<h2 id="数组常量"><a href="#数组常量" class="headerlink" title="数组常量"></a>数组常量</h2><p>在C语言中可以用 <code>const + 变量类型</code> 来创建一个常量。同样的，也可以创建一个数组常量：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> arr[<span class="number">2</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>创建常量数组，并赋值后我们就不可改变数组中元素的值，比如：<code>arr[0] = 6;</code> 这么干系统会报错。只声明然后下一个语句在进行赋值也会报错：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> arr[<span class="number">2</span>];</span><br><span class="line">arr[<span class="number">1</span>] = <span class="number">3</span>;     <span class="comment">// 编译到这会报错！</span></span><br></pre></td></tr></table></figure></p>
+<p>因此，我们如果声明数组常量应该立即赋上我们想要的值，以免出错。</p>
+<h2 id="数组排序"><a href="#数组排序" class="headerlink" title="数组排序"></a>数组排序</h2><p>有一篇专门说了数组排序的问题：<br><a href="./数组排序.md"><strong>数组排序，点击查看</strong></a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/23/C语言数组/" data-id="cjsgzou5x0001esiiypkbwyf6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/23/README/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/23/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/23/数组排序/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/23/数据结构概述/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/23/README/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/23/C语言数组/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/23/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
