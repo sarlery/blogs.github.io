@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        div.wrapper{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 120px;
+            width: 120px;
+            background: yellow;
+            font: 600 36px 'consoles';
+            color: black;
+            line-height: 120px;
+            text-align: center;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        div.wrapper:active{
+            box-shadow: 4px 4px 10px #ccc;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="wrapper">^__^</div>
+
+    <script>
+        const box = document.querySelector('.wrapper');
+        var throttle = function(fn,interval){
+            var first = true,
+                timer = null;
+            return function(){
+                var _args = arguments,
+                    self = this;
+                if(first){
+                    fn.apply(self,_args);
+                    return first = false;
+                }
+                if(timer){
+                    return false;
+                }
+                timer = setTimeout(function(){
+                    clearTimeout(timer);
+                    timer = null;
+                    fn.apply(self,_args);
+                },interval || 400);
+            }
+        }
+
+        box.onmousedown = function(e){
+            document.onmousemove = function(ev){
+                box.style.top = ev.pageY - e.offsetY + 'px';
+                box.style.left = ev.pageX - e.offsetY + 'px';
+            }
+        }
+
+        box.onmouseup = function () {
+            document.onmousemove = null;
+        }
+        
+
+    </script>
+
+</body>
+</html>
