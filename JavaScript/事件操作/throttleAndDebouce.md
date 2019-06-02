@@ -1,19 +1,25 @@
 # 防抖与节流
+
 在一些情况下，函数的触发不是由用户直接控制的。在一些场景下，函数有可能被非常频繁地调用，而造成性能的问题。比如以下事件操作：
+
 - `window.onresize` 事件被注册后，频繁的变化浏览器窗口大小会不断地触发该事件（过于频繁的操作）；
 - `onmousemove` 事件是鼠标在移动过程中被触发；
 - `onmousewheel` 事件是鼠标滚轮滚动时被触发；
 - `oninput` 事件是在用户输入内容时被触发；
 
 还有一些场景可能是用户频繁操作成为了“频繁事件”，比如：
+
 - 当多次点击提交按钮时，导致出现多次 Ajax 请求；
 
 针对以上场景，我们引入了 `防抖` 和 `节流` 两个函数，这两个函数实现功能很相似。从表面意思来看，防抖是为了“防止”，而节流是为了“节省”，防抖的触发频率是要比节流触发频率低的。  
 
 防抖（debounce）
--------
+---
+
 #### 防抖的实现：
+
 为了避免高触发，`setTimeout` 函数是关键，一下是防抖函数：
+
 ```js
 function debounce(fn,delay){
     var timer;
@@ -31,8 +37,10 @@ function debounce(fn,delay){
     }
 }
 ```
+
 在代码注释 1 下面的一行代码，清除 timer 就是为了“防抖”，因为这一次调用的函数在执行该行代码时清除的是上一次的 timer。也即，当上一次与这一次的间隔不足 delay 就会被清除，当事件不再被触发，“下一次的函数”也就不会再调用，这一次（最后一次被触发）的函数就是被顺利执行，让 timer 中的 `fn.apply(...)` 成功执行。  
 假设，做一个功能，在表单验证中，当用户输入内容时，我们就对输入内容进行验证：
+
 ```js
 input.oninput = debounce(function(e){
     var val = input.value,
@@ -42,8 +50,10 @@ input.oninput = debounce(function(e){
     }
 },600);
 ```
+
 在鼠标滚轮事件中，也可能会用到防抖函数，比如当鼠标滚动时，页面进行切换展示（跟轮番图差不多），比如豆瓣官网的年度总结页面，如果不用到防抖，当鼠标滑动时，页面展示的会非常快。做一个最简单的展示效果：
 HTML 代码：
+
 ```html
 <body>
     <div class="wrapper">
@@ -54,7 +64,9 @@ HTML 代码：
     </div>
 </body>
 ```
+
 CSS 代码：
+
 ```css
 *{
     margin: 0;
@@ -95,20 +107,25 @@ html,body{
     background: gold;
 }
 ```
+
 在 JavaScript中利用 zIndex 属性来实现。
 所用到的DOM元素：
+
 ```js
 const wrap = document.querySelector('.wrapper');
 const divs = wrap.querySelectorAll('div');
 var len = divs.length,
     i = 0;
 ```
+
 然后是鼠标滚轮事件：`onmousewheel`，该事件对象中有一个属性 —— `detail` 或 `wheelDelta`；  
 这两个属性的功能是一样的，都是来判断鼠标滚轮是向上滚动还是向下滚动，之所以有两个，是因为浏览器兼容缘故，有的浏览器是 detail ，比如火狐，而有的是 wheelDelta。但两者判断方法相同：
+
 - 当属性值 > 0 时，表示向上滚动；
 - 当属性值 < 0 时，表示向下滚动；  
 
 于是，可以写出实现方法：
+
 ```js
 wrap.onmousewheel = debounce(function(e){
     // 做兼容处理：
@@ -136,10 +153,13 @@ wrap.onmousewheel = debounce(function(e){
     }
 },500);
 ```
+
 节流（throttle）
---------
+---
+
 节流与防抖很相似，但两者却是不同的，节流主要用于动画。  
 节流实现代码：
+
 ```js
 var throttle = function(fn,interval){
     var first = true,
