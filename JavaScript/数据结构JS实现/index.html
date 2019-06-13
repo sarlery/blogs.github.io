@@ -12,19 +12,21 @@
         
         const Seting = (function(){
 
-            var ary = {},
+            var obj = {},
                 sy = Symbol();
-            ary[sy] = [];
+            obj[sy] = [];
             class Seting{
                 constructor(arr){
                     if(Object.prototype.toString.call(arr) === '[object Array]'){
                         for(let i = 0,len = arr.length;i < len;i ++){
                             var prop = arr[i];
-                            if(this.isObjOrAry(prop)){
-                                ary[sy].push(prop);
-                            }else{
-                                obj[prop] = prop;
-                            }
+                            console.log(prop);
+                            this.add(prop);
+                            // if(this.isObjOrAry(prop)){
+                            //     obj[sy].push(prop);
+                            // }else{
+                            //     obj[prop] = prop;
+                            // }
                         }
                     }else{
                         throw new TypeError('你应该传入一个数组！');
@@ -32,7 +34,7 @@
                 }
                 isObjOrAry(elem){
                     var type = Object.prototype.toString.call(elem);
-                    if(elem === '[object Object]' || elem === '[object Array]'){
+                    if(type === '[object Object]' || type === '[object Array]'){
                         return true;
                     }
                     return false;
@@ -54,7 +56,7 @@
                 values(){
                     let ary = Object.keys(obj);
                     for(let j = 0,len = obj[sy].length;j < len;j ++){
-                        ary.push(obj[sy][i]);
+                        ary.push(obj[sy][j]);
                     }
                     return ary;
                 }
