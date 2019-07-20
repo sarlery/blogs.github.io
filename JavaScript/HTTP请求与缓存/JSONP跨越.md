@@ -2,7 +2,7 @@ JSONP 实现跨域请求
 ===
 
 除了使用AJAX技术实现跨域之外，其实还可以利用`<script>`、`<iframe>`、`<link>`、`<img>`等标签的 **`src`** 属性来实现跨域请求。  
-在HTML中，有时会用`script`标签来引入网上的脚本（比如 jQuery文件），用`img`标签引入网上的图片，这都体现出src属性引入文件不受同源策略限制，可以请求到资源。我们利用这一特性来加载引入资源的方式也被称为 JSONP 技术。
+在HTML中，有时会用`script`标签来引入网上的脚本（比如 jQuery文件），用`img`标签引入网上的图片，这都体现出src属性引入文件不受同源策略限制，可以请求到资源。我们利用这一特性来加载资源的方式也被称为 JSONP 技术。
 
 ---
 
@@ -19,8 +19,12 @@ jQuery11020xxx({'a':1,'b':2});
 
 函数实参是JSON数据。这就是 JSONP 技术。利用JSONP技术可以实现跨越（仅限于GET请求），而且JSONP技术兼容性非常好。  
 
+<<<<<<< HEAD
 ## 实现一个JSONP技术
 
+=======
+## 一个JSONP的例子
+>>>>>>> 3019085f94cd418d958dd42284d07bf259ec8a6f
 JSONP 技术之所以兼容性很好，原因就在于其简单性，不想AJAX技术，封装了很多方法。JSONP只需要动态创建script标签，以及编写属于自己的数据函数即可。  
 下面就利用百度的JSONP接口，写个简单的程序：
 
@@ -124,7 +128,6 @@ function debounce(fn,delay){
     var timer;
     // 每次触发事件，就会执行下面返回的函数
     return function(){
-        // 1.
         clearTimeout(timer);
         var args = arguments,
         // 这里的 arguments 是事件对象（event）
