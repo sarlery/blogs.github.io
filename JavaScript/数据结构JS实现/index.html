@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+    
+        function HashTable(object){
+            let table = [];     // 存入哈希表的一个数组
+            // 写成两个回调函数，减少了反复的条件判断
+            function keyIsNumOrStr(key,value,strFn,numFn){
+                if(typeof key === 'string'){
+                    return strFn(key,value);
+                }else if(typeof key === 'number'){
+                    return numFn(key,value);
+                }else{
+                    throw new TypeError('The key must be a string or a number');
+                }
+            }
+
+            function getHashValue(str){
+                var num = 0;
+                for(let i = 0,len = str.length;i < len;i ++){
+                    num += str.codePointAt(i);
+                }
+                return num % 37;
+            }
+
+            function putElem(idx,key,value){
+                if(!table[idx]){
+                    table[idx] = [];
+                    table[idx].push({key,value});
+                }else{
+                    table[idx].push({key,value});
+                }
+            }
+
+            this.put = function (key,value){
+                keyIsNumOrStr(key,value,function(key,value){
+                    let hashVal = getHashValue(key);
+                    putElem(hashVal,key,value);
+                },function(key,value){
+                    putElem(key,key,value);
+                });
+            }
+
+            if(object){
+                if(Object.prototype.toString.call(object) !== '[object Object]'){
+                    throw new TypeError('this arguments must be object');
+                }else{
+                    for(let props in object){
+                        this.put(props,object[props]);
+                    }
+                }
+            }
+            
+            this.get = function(key){
+                return keyIsNumOrStr(key,null,function(k){
+                    var hashVal = getHashValue(k);
+                    if(!table[hashVal]) return undefined;
+                    else{
+                        return table[hashVal].filter(item => item.key === k)[0].value;
+                    }
+                },function(k){
+                    if(!table[k]) return undefined;
+                    return table[k].filter(item => item.key === k)[0].value;
+                });
+            }
+
+            this.remove = function (key){
+                return keyIsNumOrStr(key,null,function(key){
+                    var hashVal = getHashValue(key);
+                    if(!table[hashVal]) return undefined;
+                    else{
+                        var idx = table[hashVal].findIndex((elem,idx) => elem.key === key);
+                        return table[hashVal].splice(idx,1)[0].value;
+                    }
+                },function(key){
+                    if(!table[key]) return undefined;
+                    else{
+                        var idx = table[key].findIndex((elem,idx) => elem.key === key);
+                        return table[key].splice(idx,1)[0].value;
+                    }
+                });
+            }
+
+            this.print = function(){
+                return table;
+            }
+        }
+    
+    </script>
+    
+</body>
+</html>
