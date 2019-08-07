@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="parent">parent
+        <div class="child">child1</div>
+        <div class="child">child2</div>
+        <div class="child">child3</div>
+        <div class="child">child4</div>
+    </div>
+
+    <script>
+        var parent = document.querySelector('.parent');
+
+        var child_1 = document.querySelector('.child');
+
+        var child_2 = document.querySelectorAll('.child')[1];
+
+        var child_4 = document.querySelectorAll('.child')[3];
+
+        if (!("lastElementChild" in Element.prototype)) {
+            Object.defineProperty(Element.prototype, "lastElementChild", {
+                get: function () { // 只有 get 方法，没有 set
+                    var node = this.childNodes,
+                        len = node.length;
+                    for(var i = len - 1;i >= 0;i --){
+                        if(node[i].nodeType === 1){
+                            return node[i];
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
+
+        console.log(parent.lastElementChild === child_2);
+    </script>
+
+</body>
+
+</html>
