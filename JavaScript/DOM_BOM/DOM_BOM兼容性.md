@@ -110,3 +110,133 @@ if (!("lastElementChild" in Element.prototype)) {
 ```
 
 ### `textContent`
+`textContent` 属性就是将指定的元素的所有后代的Text结点简单的串联在一起。而 `innerText` 没有一个明确指定的行为。
+`textContent` 和 `innerText` 功能很相似，但又有一些不同，具体不同大致有这些：  
++ `innerText` 不返回 `<script>` 元素里的内容，而且他还会忽略多余的空白，并试图保留表格格式；
++ `innerText` 元素针对某些表格元素只有只读属性（如：`<table>`、`<tbody>`、`<tr>`）；
++ `innerText` 受 CSS 样式的影响（可能会触发重排），并且不会返回隐藏元素的文本，而 `textContent` 会；
++ `textContent` 会获取所有元素的内容，包括 `<script>` 和 `<style>` 元素；  
+
+![textContent](./img/textContent.png)  
+
+#### 实现一个 `textContent` 
+在 IE8 及其以下版本，该属性是没有的，而 `innerText` 属性是存在的。可以利用 innerText 来实现。
+```js
+if(!("textContent" in Element.prototype)){
+    Object.defineProperty(Element.prototype,"textContent",{
+        get: function(){
+            return innerText;
+        },
+        set: function(value){
+            this.innerText = value;
+        }
+    });
+}
+```
+上面直接返回 innerText 作为读取结果 也可以在复杂一点，利用 childNodes 和递归来实现 get 函数：
+```js
+if(!("textContent" in Element.prototype)){
+    Object.defineProperty(Element.prototype,"textContent",{
+        get: function(){
+            var str = '';
+            function getContent(node){
+                var childs = node.childNodes,
+                    len = childs.length;
+                for(var i = 0;i < len;i ++){
+                    /*
+                        考虑到 IE8 中不能使用 let 关键字
+                        需要使用 var + 立即执行函才行
+                    */
+                    (function(i){
+                        if(!childs[i]){
+                            return;
+                        }
+                        if(childs[i].nodeType === 3){
+                            // IE 当中不是直接的一个字符串内容，而是一个对象，
+                            // 对象当中的 data 属性存在着文本内容
+                            str += childs[i].data;
+                        }else{
+                            getContent(childs[i]);
+                        }
+                    })(i);
+                }
+            }
+            getContent(this);
+            return str;
+        },
+        set: function(value){
+            this.innerText = value;
+        }
+    });
+}
+```
+
+DOM 中兼容 IE8 版本及其以上的一些 API 大概有那么多。下面来看看有关尺寸方面的 API，这些 API 运行 JavaScript 操作 CSS，这些 API 属于 CSS 对象模型（CSSOM）。  
+## CSSOM
+### `window.pageXoffset` 和 `window.pageYoffset`
+这两个属性分别返回文档在水平/垂直方向已滚动的像素值。注意是 **文档**，整个文档内容有时会很多，会出现滚动条，比如淘宝网，垂直方向就会出现滚动条。  
+在多部分浏览器中还实现了另一对属性：`window.scrollX` 和 `window.scrollY` 这两个属性作用和 `pageX/Yoffset` 一样（或说完全相同），遗憾的是在 IE9 之前 这两个属性都没有，IE9 之后实现了 `pageX/Yoffset` 属性，但一直没有 `scrollX/Y` 属性（其实有一个就行了）。  
+这两个属性既可读也可写，但是最好不要进行写操作，因为写操作只是单纯的赋值，写之后页面不会有明显的变化（比如滚动条会滚动到指定的地方），如果要进行写入操作，可以使用 [`window.scrollTo`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/scrollTo) 或者 [`window.scrollBy`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/scrollBy) 两个方法。  
+
+![](./img/scrollX_Y.png)
+
+看一下面的一个例子，在这个例子中，当页面滚动时，页面就会显示文档在垂直方向滚动的距离：
+```html
+<body>
+    br*100      <!-- 这里放了100 个br，为了看到滚动条 -->
+    <style>
+        div{
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            font-weight: 700;
+            color: red;
+            height: 40px;
+            line-height: 40px;
+            width: 200px;
+            padding: 10px 20px;
+            text-align: center;
+            border: 2px dashed #12accc;
+        }
+    </style>
+
+    <div>scrollY: <span>0</span></div>
+
+    <script>
+    
+        var span = document.querySelector('span');
+
+        window.onscroll = function(){
+            span.innerText = Math.floor(window.pageYoffset);
+        }
+    
+    </script>
+
+</body>
+```
+#### 兼容处理
+```js
+if(!('pageXoffset' in window)){
+    Object.defineProperty(window,'pageXOffset',{
+        get: function(){
+            return (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+        },
+        set: function(value){
+            return value;
+        }
+    });
+    Object.defineProperty(window,'pageYOffset',{
+        get: function(){
+            return (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        },
+        set: function(value){
+            return value;
+        }
+    });
+}
+```
+对于 `scrollX/Y` 的处理也是类似，因为 IE8 中未实现 `Object.defineProperties()` 方法，因此只能一个一个的来进行处理。在 set 函数中也可以添加条件判断，对传入的值进行限定。也可以添加 `configurable` 和 `enumerable` 等的选项。  
+
+### `getBoundingClientRect()`
