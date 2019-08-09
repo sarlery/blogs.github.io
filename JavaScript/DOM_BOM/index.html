@@ -118,7 +118,7 @@
     <br>
 
     <style>
-        div{
+        div.fixed{
             position: fixed;
             top: 20%;
             left: 50%;
@@ -133,32 +133,21 @@
             text-align: center;
             border: 2px dashed #12accc;
         }
+        div.wrapper{
+            height: 100px;
+            width: 100px;
+            padding: 8px;
+            border: 1px solid red;
+            background: green;
+            overflow:scroll;
+        }
     </style>
 
-    <div>scrollY: <span>0</span></div>
+    <div class="fixed">scrollY: <span>0</span></div>
+        <div class="wrapper"></div>
 
     <script>
-    
-        var span = document.querySelector('span');
 
-        if(!('scrollX' in window)){
-            Object.defineProperty(window,'scrollX',{
-                get: function(){
-                    return (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-                },
-                set: function(value){
-                    return value;
-                }
-            });
-            Object.defineProperty(window,'scrollY',{
-                get: function(){
-                    return (document.documentElement || document.body.parentNode || document.body).scrollTop;
-                },
-                set: function(value){
-                    return value;
-                }
-            });
-        }
         if(!('pageXoffset' in window)){
             Object.defineProperty(window,'pageXOffset',{
                 get: function(){
@@ -177,10 +166,36 @@
                 }
             });
         }
+    
+        var span = document.querySelector('span');
+        var div = document.querySelector('.wrapper');
+
+        console.log(div.getBoundingClientRect().top,document.body.scrollHeight - window.pageYOffset - div.offsetHeight);
+
+        // console.log(div.getClientRects()[0].top);
+
+        // Element.prototype.getBoundingClientRect = function(){
+
+        //     return {
+        //         height: this.offsetHeight,
+        //         width: this.offsetWidth,
+        //         top: this.offsetTop,
+        //         right: '',
+        //         bottom: '',
+        //         left: '',
+        //         x: '',
+        //         y: '',
+        //     }
+
+        // }
+        
+
+
 
         window.onscroll = function(){
-            span.innerText = Math.floor(window.scrollY);
+            span.innerText = Math.floor(window.pageYOffset);
         }
+
     
     </script>
 

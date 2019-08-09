@@ -239,4 +239,34 @@ if(!('pageXoffset' in window)){
 ```
 对于 `scrollX/Y` 的处理也是类似，因为 IE8 中未实现 `Object.defineProperties()` 方法，因此只能一个一个的来进行处理。在 set 函数中也可以添加条件判断，对传入的值进行限定。也可以添加 `configurable` 和 `enumerable` 等的选项。  
 
-### `getBoundingClientRect()`
+### `element.getBoundingClientRect()`
+该方法会返回一个只读的对象，这个对象包含元素的几个几何尺寸：  
+
+![](./img/getBoundingClientRect.png)  
+
+除了图片中提到的top、left、right 和 bottom 属性之外，还会返回两个属性 —— height 和 width 属性。图中的四个属性是相对于 **视口** 坐标位置而言的（**但在 IE 中，却是相对于整个文档的！**）。后两个属性的值不光包括 CSS 中设置的 width 和 height 属性值，还有设置的 border 和
+padding两个属性值（即:视觉上的宽度或高度）。  
+但在 IE 中并没有 height 和 width 这两个属性，在 Chrome 和 FireFox 中还额外有两个属性 —— x 和 y，这两个属性相对于视口坐标位置，分别表示该元素的左上角距离视口最左侧或最顶部的距离。  
+
+![](./img/x_y.png)  
+
+#### 兼容性处理  
+这里如果重写该方法，很难做到原来的效果。特别是对于 top、left、bottom、right 这里是个属性，如果用 offsetTop 来实现是会存在风险的，因为 offsetTop 是相对于具有定位的父元素而言的，而不一定相对于视口。  
+
+![](./img/offsetTop.png)  
+
+在这里只实现以下 width 和 height（x 和 y 和 对象中的 left、top 是一样的）。
+```js
+var box = elem.getBoundingClientRect();
+var w = box.width || (box.right - box.left),
+    h = box.height || (box.bottom - box.top);
+```
+至于 IE 中 top 等四个属性返回的是相对于文档的值，可以利用以下运算或得到相对于视口的结果：  
+```js
+var top = (document.body.scrollHeight || document.documentElement.scrollHeight) - window.pageYOffset - div.offsetHeight;
+var left = (document.body.scrollWidth || document.documentElement.scrollWidth) - window.pageXOffset - div.offsetWidth;
+```
+`document.body.scrollHeight/Width` 会返回 整个文档的高度/宽度。  
+需要注意的是：`getBoundingClientRect()` 方法所返回的矩形对象并不是实时的，它只是调用方法时文档视觉状态的静态快照，在用户滚动或改变浏览器窗口大小时不会更新它们（当再次调用时值才会变）。与该方法类似的还有 [`getClientRects`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getClientRects) ，他返回的是一个类数组对象，主要用于获取内联元素位置参数，一般用的也不多。  
+
+### `window.getComputedStyle()`
