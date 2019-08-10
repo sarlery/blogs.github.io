@@ -270,3 +270,166 @@ var left = (document.body.scrollWidth || document.documentElement.scrollWidth) -
 需要注意的是：`getBoundingClientRect()` 方法所返回的矩形对象并不是实时的，它只是调用方法时文档视觉状态的静态快照，在用户滚动或改变浏览器窗口大小时不会更新它们（当再次调用时值才会变）。与该方法类似的还有 [`getClientRects`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getClientRects) ，他返回的是一个类数组对象，主要用于获取内联元素位置参数，一般用的也不多。  
 
 ### `window.getComputedStyle()`
+这个方法返回一个对象，该对象在应用活动样式表并解析这些值可能包含的任何基本计算后报告元素的所有CSS属性的值。该方法有两个参数，第一个是要查询的元素，第二个是可选的，他表示获取（第一个参数）元素的伪元素的样式值。  
+这个方法在 IE8 及其以下版本没有实现。不过在 IE 中每个 HTML 元素都有自己的 `currentStyle` 属性，该属性会返回一个对象，但与 `getComputedStyle` 方法相比，并不是真正的计算，设置的相对属性值并不会转化为绝对值（比如 CSS 中的 `%`、`em` 等单位）。如果想使用绝对值，可以使用像 `getBoundingClientRect`、`offsetWidth`、`scrollTop` 等一些属性还获取。  
+
+### `getSelection()`  
+该方法可以获取到当前选取的文本内容，该方法是个全局的方法（存在于window对象下），在 IE8 及其以下版本并未实现。下面是一个搜索的例子，当鼠标按下然后抬起之后，我们就会跳转页面使用百度去搜索我们选中的内容。
+```html
+<body>
+
+    <style>
+        div.wrapper{
+            width: 1000px;
+            margin: 100px auto;
+            padding: 10px;
+            border: 1px dashed #2a304f;
+        }
+    </style>
+
+    <div class="wrapper">
+        selection 是一个 Selection 对象。 如果想要将 selection 转换为字符串，可通过连接一个空字符串（""）或使用 String.toString() 方法。
+        在 JavaScript中，当一个对象被传递给期望字符串作为参数的函数中时（如 window.alert 或 document.write），对象的toString()方法会被调用，然后将返回值传给该函数。
+        在上例中，selObj.toString() 会在传递到 window.alert()时自动调用。
+        然而，当你试图在 Selection 对象上使用一个 JavaScript 的String 对象上的属性或者方法时（如
+        String.prototype.length 或者 String.prototype.substr()），会导致错误（如果没有相应的属性或方法时）或返回不是期望的结果（如果存在相应的属性或方法）。
+    </div>
+
+    <script>
+
+        var div = document.querySelector('.wrapper');
+
+        function search(key){
+            window.open('https://www.baidu.com/s?ie=UTF-8&wd=' + key);
+            div.onmouseup = null;
+        }
+
+        div.onmousedown = function(){
+            div.onmouseup = function(){
+                if(window.getSelection){
+                    var str = window.getSelection().toString();
+                    search(str);
+                }
+            }
+        }
+
+    
+    </script>
+
+</body>
+```
+
+## 事件类型与事件对象
+### 时间对象 —— `event object`
+事件对象是与特定事件相关且包含该事件详细信息的对象，事件对象作为参数传递给事件处理函数。比如：
+```js
+elem.onclick = function(event){
+    // event 就是点击事件的时间对象
+}
+```
+但在 IE8 及其之前的版本浏览器中，事件对象是存在于全局中的。因此做兼容时可以这么写：
+```js
+elem.onclick = function (e){
+    var event = e || event;
+    // 右边的 event 变量是 IE 中全局的事件对象
+}
+```
+所有的事件对象都有用来指定事件类型的 type 属性和 指定事件目标的 target 属性。但在 IE8 之前事件目标并不是 target 属性，而是 `srcElment` 属性
+```js
+elem.onclick = function(e){
+    var e = e || event,
+        target = e.target || e.srcElement;
+}
+```
+### 阻制事件冒泡
+在绑定事件后，事件冒泡可能会发生，但有时我们不想让它出现。就可以调用 `event.stopPropagation()` 方法让该事件取消冒泡。在 IE9 之前没有该属性，它提供了另一个属性 —— `cancelBubble` 属性，当该属性值为 `true` 时，会阻制事件冒泡。下面一个简单的例子，让子元素在点击时父元素的背景不出现变化。
+```html
+<style>
+    div.parent{
+        height: 300px;
+        width: 300px;
+        background-color: brown;
+        color: white;
+        margin: 100px auto;
+        cursor: pointer;
+    }
+    div.child{
+        height: 100px;
+        width: 100px;
+        color: hotpink;
+        background-color: green;
+        margin: 100px;
+        cursor: pointer;
+    }
+</style>
+
+    <div class="parent">parent
+        <div class="child">child</div>
+    </div>
+
+<script>
+
+    var parent = document.querySelector('.parent');
+    var child = document.querySelector('.child');
+
+    parent.onclick = function(){
+        this.style.backgroundColor = "black";
+    }
+
+    child.onclick = function(e){
+        var e = e || event;
+        if(e.stopPropagation){
+            // 有该属性就调用
+            e.stopPropagation();
+        }else{
+            e.cancelBubble = true;
+        }
+        this.style.backgroundColor = "purple";
+    }
+</script>
+```
+我们可以实现一个方法，把 event 传入该方法后就会取消冒泡：
+```js
+var stopBubble = function(event){
+    if(e.stopPropagation){
+        // 有该属性就调用
+        e.stopPropagation();
+    }else{
+        e.cancelBubble = true;
+    }
+}
+```
+### 阻制默认事件的发生
+当绑定一个元素时，这个元素可能自身带有一些脚本的特性，比如当点击 form 表单中的 submit 按钮时页面默认会进行跳转。该函数就是 `event.preventDefault()` 。但在 IE9 之前的 IE 中，可以通过事件对象的 `returnValue` 属性设置为 `false` 来达到同样的效果。
+比如下面例子，当点击后，我们不让页面跳转，这样可以在页面跳转之前验证一些东西。
+```html
+<form action="https://www.baidu.com">
+    <button type="submit">submit</button>
+</form>
+
+<script>
+    var parent = document.querySelector('form');
+    var btn = document.querySelector('button');
+
+    btn.onclick = function(e){
+        var e = e || event;
+        if(e.preventDefault)
+            e.preventDefault();
+        else{
+            e.returnValue = false;
+        }
+    }
+</script>
+```
+同样我们也可以写个方法
+```js
+var stopDefault = function(event){
+    if(e.preventDefault)
+        e.preventDefault();
+    else{
+        e.returnValue = false;
+    }
+}
+```
+
+### `addEventListener()`

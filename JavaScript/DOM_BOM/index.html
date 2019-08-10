@@ -16,184 +16,34 @@
 
 <body>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
     <style>
-        div.fixed{
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 30px;
-            font-weight: 700;
-            color: red;
-            height: 40px;
-            line-height: 40px;
-            width: 200px;
-            padding: 10px 20px;
-            text-align: center;
-            border: 2px dashed #12accc;
+        form{
+            height: 300px;
+            width: 300px;
+            background-color: brown;
+            color: white;
+            margin: 100px auto;
+            cursor: pointer;
         }
-        div.wrapper{
-            height: 100px;
-            width: 100px;
-            padding: 8px;
-            border: 1px solid red;
-            background: green;
-            overflow:scroll;
-        }
+
     </style>
 
-    <div class="fixed">scrollY: <span>0</span></div>
-        <div class="wrapper"></div>
+    <form action="https://www.baidu.com">
+        <button type="submit">submit</button>
+    </form>
 
     <script>
 
-        if(!('pageXoffset' in window)){
-            Object.defineProperty(window,'pageXOffset',{
-                get: function(){
-                    return (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-                },
-                set: function(value){
-                    return value;
-                }
-            });
-            Object.defineProperty(window,'pageYOffset',{
-                get: function(){
-                    return (document.documentElement || document.body.parentNode || document.body).scrollTop;
-                },
-                set: function(value){
-                    return value;
-                }
-            });
-        }
-    
-        var span = document.querySelector('span');
-        var div = document.querySelector('.wrapper');
+        var parent = document.querySelector('form');
+        var btn = document.querySelector('button');
 
-        console.log(div.getBoundingClientRect().top,document.body.scrollHeight - window.pageYOffset - div.offsetHeight);
-
-        // console.log(div.getClientRects()[0].top);
-
-        // Element.prototype.getBoundingClientRect = function(){
-
-        //     return {
-        //         height: this.offsetHeight,
-        //         width: this.offsetWidth,
-        //         top: this.offsetTop,
-        //         right: '',
-        //         bottom: '',
-        //         left: '',
-        //         x: '',
-        //         y: '',
-        //     }
-
-        // }
-        
-
-
-
-        window.onscroll = function(){
-            span.innerText = Math.floor(window.pageYOffset);
+        btn.onclick = function(e){
+            var e = e || event;
+            if(e.preventDefault)
+                e.preventDefault();
+            else{
+                e.returnValue = false;
+            }
         }
 
     
