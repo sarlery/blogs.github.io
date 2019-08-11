@@ -2,6 +2,35 @@
 汇集了许多关于DOM和BOM的兼容性问题，主要是关于 IE 浏览器的，考虑到浏览器迭代，这里主要列出了 IE8 以及之后的浏览器版本。  
 IE8 浏览器在 2008年推出，距现在（2019）已有11年之久，已经是很老的一款浏览器了。但是在一些项目中，可能仍需要考虑到兼容性，如果兼容到 IE8 已经是很兼容了，毕竟该浏览器也几乎没多少市场份额了。多是一些机构或政府部门在使用。 而有些兼容性问题也可能是其它浏览器之间的差异，比如 Chrome 和 FireFox 对于鼠标滚轮事件对象的滚轮方向判断方式不同，Chrome使用 wheelDelta，而FireFox 则采用 detail 做判断。下面将一一说明或做补充实现来尽量弥补浏览器之间的差异。其实大部分就是为了兼容 IE 早期浏览器。  
 
+<!-- TOC -->
+
+- ## [DOM、BOM一些兼容性问题](#dombom一些兼容性问题)
+    - ### [DOM 部分](#dom-部分)
+        - [DOM 选择器的差异](#dom-选择器的差异)
+            - [`getElementById` 和 `getElementsByName`](#getelementbyid-和-getelementsbyname)
+            - [`getElementsByClassName()`](#getelementsbyclassname)
+            - [选取子类和兄弟元素](#选取子类和兄弟元素)
+        - [`textContent`](#textcontent)
+            - [实现一个 `textContent`](#实现一个-textcontent)
+    - ### [CSSOM](#cssom)
+        - [`window.pageXoffset` 和 `window.pageYoffset`](#windowpagexoffset-和-windowpageyoffset)
+            - [兼容处理](#兼容处理)
+        - [`element.getBoundingClientRect()`](#elementgetboundingclientrect)
+            - [兼容性处理](#兼容性处理)
+        - [`window.getComputedStyle()`](#windowgetcomputedstyle)
+        - [`getSelection()`](#getselection)
+    - ### [事件类型与事件对象](#事件类型与事件对象)
+        - [事件对象 —— `event object`](#事件对象--event-object)
+        - [阻制事件冒泡](#阻制事件冒泡)
+        - [阻制默认事件的发生](#阻制默认事件的发生)
+        - [`addEventListener()`](#addeventlistener)
+            - [兼容处理](#兼容处理-1)
+        - [`removeEventListener()`](#removeeventlistener)
+            - [兼容处理](#兼容处理-2)
+        - [`mousewheel` 事件](#mousewheel-事件)
+
+<!-- /TOC -->
+
 ## DOM 部分
 DOM 即：文档对象模型，其中定义了许多操作 HTML 文档内容的 API，在早期的浏览器中，特别是 IE，有些API是不支持的，或者API的名称或功能和标准不太一样，这样就造成了差异。  
 ### DOM 选择器的差异
@@ -320,7 +349,7 @@ var left = (document.body.scrollWidth || document.documentElement.scrollWidth) -
 ```
 
 ## 事件类型与事件对象
-### 时间对象 —— `event object`
+### 事件对象 —— `event object`
 事件对象是与特定事件相关且包含该事件详细信息的对象，事件对象作为参数传递给事件处理函数。比如：
 ```js
 elem.onclick = function(event){
@@ -432,4 +461,53 @@ var stopDefault = function(event){
 }
 ```
 
-### `addEventListener()`
+### `addEventListener()`  
+在 IE9 之前的 IE 版本中是不支持该方法的，但也提供了另一个与之类似的方法 —— `attachEvent()` 。`attachEvent()` 用法如下：  
++ 它的第一个参数与 `addEventListener` 的第一个参数一样，是个事件名称，用字符串表示，只不过前面需要加 `on`，比如 `onclick`。
++ 因为 IE 事件模型不支持事件捕获，因此该方法只接受两个参数：事件类型和事件处理函数。
++ `attachEvent()` 运行相同的事件处理函数注册多次，当特定的事件类型触发时，注册函数的调用次数和注册次数一样。  
+
+#### 兼容处理
+```js
+Element.prototype.addEvent = function(type,fn,bool){
+    //这个 bool 表示是否在捕获阶段调用事件处理程序。
+    var bool = bool || false;
+    if(this.addEventListener){
+        this.addEventListener(type,fn,bool);
+    }else{
+        this.attachEvent('on' + type,fn);
+    }
+}
+```
+
+### `removeEventListener()` 
+在 IE9 之前，也有一个与之类似的事件取消方法 —— `detachEvent()` ，该方法也是接受两个参数：事件类型和要取消的事件调用函数。  
+#### 兼容处理
+```js
+Element.prototype.removeEvent = function(type,fn,bool){
+    var bool = bool || false;
+    if(this.removeEventListener){
+        this.removeEventListener(type,fn,bool);
+    }else{
+        this.detachEvent('on' + type,fn);
+    }
+}
+```
+当给函数传递事件对象时，别忘了做兼容处理：`var e = e || event`  
+`addEventListener` 函数的第三个参数也可以传递一个对象，用来做更多的配置。但考虑兼容性问题时，可能不太好用。配置项一般有三个属性：  
++ `capture` 接受一个布尔值，当为 true 时，表示事件函数会在该类型的事件捕获阶段传播到该 EventTarget（绑定的元素） 时触发。  
++ `once` 也是接受一个布尔值，默认为false，当为 true 时，表示事件函数在添加之后最多只调用一次，在其被调用之后会自动移除。  
++ `passive` 也是接受一个布尔值，当设置为 true 时，表示函数永远都不会调用 `preventDefault()`（阻制默认事件的发生），如果函数中仍然调用了这个方法，客户端将会忽略它并抛出一个控制台警告。  
+这三个属性默认都是 `false`。  
+
+### `mousewheel` 事件
+该事件并不是一个标准的事件，但是大部分浏览器均有实现，除了早期的 Firefox 使用 `DOMMouseScroll` 事件名称。在之后，W3C 标准化了鼠标滚轮事件 —— `wheel` ，名字有所改变。标准化后的滚轮事件几乎和原来的事件对象一样。但是兼容性比较差，IE 压根没有这个事件名称。IE 上的滚轮事件名称是 `mousewheel`。微软的 Edge 浏览器实现了。因此，为了兼容 IE 还是要做判断，当没有 `wheel` 事件名称时，就用 `mousewheel`，如果还没有，则就要兼容 Firefox 的 `DOMMouseScroll`。  
+滚轮事件中有一个属性可以判断鼠标滚轴是向下滚动的还是向上滚动的，这个属性的值是一个数值。除了 Firefox 之外，都是有这么一个属性来表示： `wheelDelta`，它的值通常是 120 或 -120，在 Chrome 中却是 150 和 -150。向上滚动是正值，向下滚动是负值。  
+```js
+if(e.wheelDelta > 0){
+    // 向上滚动时的操作
+}else{
+    // 向下滚动时的操作
+}
+```
+而 FireFox 中使用 detail 来判断（`DOMMouseScroll`），大于 0 时是向上滚动，小于 0 时是向下滚动。Firefox 支持的 `wheel` 事件名称获取到的 `detail` 值好像判断不了滚轮滚动方向（其中有一个 `deltaY`，属性可做判断，大于零时表示向下滚动，小于零时表示向上滚动），使用 `DOMMouseScroll` 事件名称时，该事件不能用 `on` 来绑定，只能用 `addEventListener`。

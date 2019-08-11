@@ -17,34 +17,46 @@
 <body>
 
     <style>
-        form{
-            height: 300px;
-            width: 300px;
-            background-color: brown;
-            color: white;
-            margin: 100px auto;
-            cursor: pointer;
+        div.wrapper{
+            height: 200px;
+            width: 200px;
+            background-color: blue;
+            color: aliceblue;
+            font-size: 24px;
+            font-weight: 700;
         }
-
     </style>
 
-    <form action="https://www.baidu.com">
-        <button type="submit">submit</button>
-    </form>
+    <div class="wrapper">click</div>
 
     <script>
 
-        var parent = document.querySelector('form');
-        var btn = document.querySelector('button');
-
-        btn.onclick = function(e){
-            var e = e || event;
-            if(e.preventDefault)
-                e.preventDefault();
-            else{
-                e.returnValue = false;
+        Element.prototype.addEvent = function(type,fn,bool){
+            var bool = bool || false;
+            if(this.addEventListener){
+                this.addEventListener(type,fn,bool);
+            }else{
+                this.attachEvent('on' + type,fn);
             }
         }
+
+        Element.prototype.removeEvent = function(type,fn,bool){
+            var bool = bool || false;
+            if(this.removeEventListener){
+                this.removeEventListener(type,fn,bool);
+            }else{
+                this.detachEvent('on' + type,fn);
+            }
+        }
+
+        // document.onDOMMouseScroll = function(e){
+        //     var e = e || event;
+        //     console.log(e);
+        // }
+
+        document.addEventListener('wheel',function(e){
+            console.log(e);
+        })
 
     
     </script>
