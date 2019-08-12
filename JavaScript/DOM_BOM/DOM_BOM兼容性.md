@@ -4,22 +4,22 @@ IE8 浏览器在 2008年推出，距现在（2019）已有11年之久，已经�
 
 <!-- TOC -->
 
-- ## [DOM、BOM一些兼容性问题](#dombom一些兼容性问题)
-    - ### [DOM 部分](#dom-部分)
+- [DOM、BOM一些兼容性问题](#dombom一些兼容性问题)
+    - [DOM 部分](#dom-部分)
         - [DOM 选择器的差异](#dom-选择器的差异)
             - [`getElementById` 和 `getElementsByName`](#getelementbyid-和-getelementsbyname)
             - [`getElementsByClassName()`](#getelementsbyclassname)
             - [选取子类和兄弟元素](#选取子类和兄弟元素)
         - [`textContent`](#textcontent)
             - [实现一个 `textContent`](#实现一个-textcontent)
-    - ### [CSSOM](#cssom)
+    - [CSSOM](#cssom)
         - [`window.pageXoffset` 和 `window.pageYoffset`](#windowpagexoffset-和-windowpageyoffset)
             - [兼容处理](#兼容处理)
         - [`element.getBoundingClientRect()`](#elementgetboundingclientrect)
             - [兼容性处理](#兼容性处理)
         - [`window.getComputedStyle()`](#windowgetcomputedstyle)
         - [`getSelection()`](#getselection)
-    - ### [事件类型与事件对象](#事件类型与事件对象)
+    - [事件类型与事件对象](#事件类型与事件对象)
         - [事件对象 —— `event object`](#事件对象--event-object)
         - [阻制事件冒泡](#阻制事件冒泡)
         - [阻制默认事件的发生](#阻制默认事件的发生)
@@ -28,6 +28,9 @@ IE8 浏览器在 2008年推出，距现在（2019）已有11年之久，已经�
         - [`removeEventListener()`](#removeeventlistener)
             - [兼容处理](#兼容处理-2)
         - [`mousewheel` 事件](#mousewheel-事件)
+        - [`input` 事件](#input-事件)
+        - [`keypress` 事件](#keypress-事件)
+        - [`xhr` 网络请求](#xhr-网络请求)
 
 <!-- /TOC -->
 
@@ -510,4 +513,79 @@ if(e.wheelDelta > 0){
     // 向下滚动时的操作
 }
 ```
-而 FireFox 中使用 detail 来判断（`DOMMouseScroll`），大于 0 时是向上滚动，小于 0 时是向下滚动。Firefox 支持的 `wheel` 事件名称获取到的 `detail` 值好像判断不了滚轮滚动方向（其中有一个 `deltaY`，属性可做判断，大于零时表示向下滚动，小于零时表示向上滚动），使用 `DOMMouseScroll` 事件名称时，该事件不能用 `on` 来绑定，只能用 `addEventListener`。
+而 FireFox 中使用 detail 来判断（`DOMMouseScroll`），大于 0 时是向上滚动，小于 0 时是向下滚动。Firefox 支持的 `wheel` 事件名称获取到的 `detail` 值好像判断不了滚轮滚动方向（其中有一个 `deltaY`，属性可做判断，大于零时表示向下滚动，小于零时表示向上滚动），使用 `DOMMouseScroll` 事件名称时，该事件不能用 `on` 来绑定，只能用 `addEventListener`。  
+
+### `input` 事件
+input 事件会在 input 框中输入内容时触发。但在 IE8 中并没有被实现。IE 中有另一套事件 —— `propertychange`。该事件可以检测文本输入元素的 value 属性改变来实现相似的效果。比如下面的例子:
+```js
+// 获得一个 文本输入元素
+var ipt = document.querySelector('.ipt');
+ipt.onpropertychange = function(e){
+    var e = e || event;
+    // 如果 value 属性发生改变，就打印出来
+    if(e.propertyName === 'value'){
+        console.log(this.value);
+    }
+}
+```
+
+### `keypress` 事件
+`keypress` 与 `keydown` 很相似，都是表示鼠标按下然后触发的事件。但 `keypress` 事件已经被标准遗弃，考虑到浏览器兼容性，有时可能还会用的，IE8 支持 `onkeydown` 而不支持 `onkeypress` 而且 `onkeydown` 是大部分浏览器所支持的，应尽量使用该事件。两者不同的地方在于：  
++ `keypress` 按下能产生字符值的键时会触发该事件。产生字符值的键的示例是字母，数字和标点符号键。不产生字符值的键的例子是修饰键如 `Alt`，`Shift`，`Ctrl`，或 `Meta`。而 `keydown` 会触发所有键的事件，无论它们是否产生字符值。  
++ 的 `keydown` 和 `keyup` 事件提供指示哪个键按下，而一个代码 `keypress` 指示哪个字符被输入。例如，小写“a” 或大写 “A” 将被报告为 65 在`keydown` 和 `keyup` 中；而在 keypress 中，当按下 “Tab” 键时，会输出大写的 A “65”，不按 “Tab” 键时，按下 “a”，是 97。  
++ 比如当在键盘上输入符号是，`keydown`、`keyup` 是很难办到的，因为输入字符需要组合键，而且他们每个键都会触发事件。而使用 `keypress` ，却可以触发，因为他只触发字符能被输入的键，并返回可以用事件对象中的 `keyCode` 找到该字符的 ASCII 码，或者直接用事件对象中的 `key` 获取输入的字符。  
+
+有些浏览器可能对 `keypress` 触发后，哪些键不会触发该事件有些不一样。如 Google Chrome 及 Safari 不会触发方向键的 keypress 事件；而Firefox 不会触发如 SHIFT 键等修改键的 keypress 事件。  
+有时我们填写完 input 框后，想要按下 `Enter` 键之后就完成操作，既可以使用 `keypress` 也可以使用 `keydown`。
+```js
+input.onkeypress = function(e){
+    if(e.keyCode === 13){
+        // 完成操作
+        alert(this.value);
+    }
+}
+```
+如果是为了兼容，能不用 `keypress` 就不用，尽量使用 `keydown` 来代替。  
+
+### `xhr` 网络请求
+在早期的浏览器中，发起网络请求可以使用 `AJAX` 技术，通常使用 `XMLHttpRequest` 创建一个实例来发起网络请求：
+```js
+var getData = function (url) {
+            
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200 || xhr.status === 304) {
+                var data = xhr.responseText;
+                console.log(JSON.parse(data));
+            }
+        }
+    }
+    xhr.send();
+}
+```
+在很早期的 IE 浏览器中（已经很早了，IE5、IE7），是使用 `new ActiveXObject("Microsoft.XMLHTTP")` 的形式来创建的。
+```js
+if (window.XMLHttpRequest){
+    xmlhttp = new XMLHttpRequest();
+}
+else if (window.ActiveXObject){
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
+// 之后的写法就跟上面的一样了 open、 readystatechange、 send
+```
+其实不做兼容也没多大问题了，毕竟 IE7 距离现在已经很远了。  还有一个属性在 IE8 一些版本没有实现 —— `xhr.readyState` ，该属性会返回一个数字，代表当前所处的状态。所有状态如下:   
+
+|值|状态|描述|  
+|:---|:----|:----|  
+0|  UNSENT| 代理被创建，但尚未调用 `open()` 方法。|
+1|  OPENED| `open()` 方法已经被调用|
+2|  HEADERS_RECEIVED|   `send()` 方法已经被调用，并且头部和状态已经可获得。|
+3|  LOADING|    下载中； `responseText` 属性已经包含部分数据|
+4|  DONE|   下载操作已完成。
+
+因此我们可以用 `xhr.readyState === 4` 来判断下载操作是否已完成。 幸运的是，该属性在 IE8 及其以上 IE 版本是兼容的，可以使用。  
+
+以上就是关于 DOM、BOM 的一些兼容性问题，在实际开发中可能比这要多得多，而且现代 CSS 兼容性问题也很多，想要做很好的兼容效果，`jQuery` 的早期版本是个很不错的选择，对于如今的 ES6/7/8/9 等也可以使用 `Babel` 做兼容转化。CSS 中也可以使用 `postCSS`、`Sass`、`Less` 等工具做一些弥补。

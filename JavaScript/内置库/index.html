@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        var Person = function (sex, age) {
+            this.sex = sex;
+            this.age = age;
+            this.home = 'BeiJing';
+            this.getAge = function () {
+                return this.age;
+            };
+            // 这个类的原型上有一个方法
+            Person.prototype.getSex = function () {
+                return this.sex;
+            }
+        }
+
+        // 实例化一个对象出来
+        var person = new Person('男', 18);
+
+        for(let p in person){
+            console.log(p);
+            // 这时就会打印出：sex、age、home、getAge 和原型上的 getSex
+        }
+
+        // 当使用 hasOwnProperty() 访问 getSex 时却会返回 false：
+        console.log(person.hasOwnProperty('getSex'));
+
+    </script>
+
+</body>
+
+</html>
