@@ -11,29 +11,30 @@
 <body>
 
     <script>
-        var Person = function (sex, age) {
+
+        Function.prototype.myNew = function(...args){
+            var obj = {};
+            this.apply(obj,args);
+            Object.setPrototypeOf(obj,this.prototype);
+            return obj;
+        }
+        
+        var Per = function(sex){
+            this.age = 18;
             this.sex = sex;
-            this.age = age;
-            this.home = 'BeiJing';
-            this.getAge = function () {
-                return this.age;
-            };
-            // 这个类的原型上有一个方法
-            Person.prototype.getSex = function () {
-                return this.sex;
-            }
         }
 
-        // 实例化一个对象出来
-        var person = new Person('男', 18);
+        // console.log(new Per('male'));
 
-        for(let p in person){
-            console.log(p);
-            // 这时就会打印出：sex、age、home、getAge 和原型上的 getSex
-        }
+        var d = [1,2,3];
 
-        // 当使用 hasOwnProperty() 访问 getSex 时却会返回 false：
-        console.log(person.hasOwnProperty('getSex'));
+        var a = {
+            a: 1,
+            c:{ b:2 },
+            e: d
+        };
+        var b = Object.assign({},a);
+
 
     </script>
 

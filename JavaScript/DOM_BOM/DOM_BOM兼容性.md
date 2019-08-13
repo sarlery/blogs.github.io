@@ -576,7 +576,7 @@ else if (window.ActiveXObject){
 }
 // 之后的写法就跟上面的一样了 open、 readystatechange、 send
 ```
-其实不做兼容也没多大问题了，毕竟 IE7 距离现在已经很远了。  还有一个属性在 IE8 一些版本没有实现 —— `xhr.readyState` ，该属性会返回一个数字，代表当前所处的状态。所有状态如下:   
+其实不做兼容也没多大问题了，毕竟 IE7 距离现在已经很远了。  还有一个属性在 IE 的一些版本没有实现 —— `xhr.readyState` ，该属性会返回一个数字，代表当前所处的状态。所有状态如下:   
 
 |值|状态|描述|  
 |:---|:----|:----|  
@@ -586,6 +586,7 @@ else if (window.ActiveXObject){
 3|  LOADING|    下载中； `responseText` 属性已经包含部分数据|
 4|  DONE|   下载操作已完成。
 
-因此我们可以用 `xhr.readyState === 4` 来判断下载操作是否已完成。 幸运的是，该属性在 IE8 及其以上 IE 版本是兼容的，可以使用。  
+`xhr.readyState` 返回的是表中的值那一列。
+因此我们可以用 `xhr.readyState === 4` 或者 `xhr.readyState === xhr.DONE` 来判断下载操作是否已完成。 幸运的是，该属性在 IE8 及其以上 IE 版本是兼容的，可以使用。  
 
 以上就是关于 DOM、BOM 的一些兼容性问题，在实际开发中可能比这要多得多，而且现代 CSS 兼容性问题也很多，想要做很好的兼容效果，`jQuery` 的早期版本是个很不错的选择，对于如今的 ES6/7/8/9 等也可以使用 `Babel` 做兼容转化。CSS 中也可以使用 `postCSS`、`Sass`、`Less` 等工具做一些弥补。
