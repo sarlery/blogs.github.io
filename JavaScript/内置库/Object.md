@@ -1,23 +1,25 @@
 # Object 中的几个很相似的方法  
+这里主要讨论这么几个方法，他们用法很相似，但又有所不同。在实际开发中就有可能陷入其中，搞不清到底用哪个方法比较好。下面就开始一一介绍。  
 
 <!-- TOC -->
 
-- ### [`in` 和 `hasOwnProperty()` 两方法的区别](#in-和-hasownproperty-两方法的区别)
-- ### [`for-in` 循环可以遍历对象中的哪些属性？](#for-in-循环可以遍历对象中的哪些属性)
-    - #### [1.使用 `Object.defineProperties()` 或者 `Object.defineProperty()` 方法](#1使用-objectdefineproperties-或者-objectdefineproperty-方法)
-    - #### [2.使用 ES6 中的类来实现](#2使用-es6-中的类来实现)
-- ### [`Object.keys()` 和 `Object.getOwnPropertyNames()` 的区别](#objectkeys-和-objectgetownpropertynames-的区别)
-    - #### [`Object.keys()`](#objectkeys)
-    - #### [`Object.getOwnPropertyNames()`](#objectgetownpropertynames)
-- ### [`Object.assign()`、`Object.create()` 和 `new Object()` 这三个方法](#objectassignobjectcreate-和-new-object-这三个方法)
-    - #### [通过对象字面量创建的对象](#通过对象字面量创建的对象)
-    - #### [`Object.create()`](#objectcreate)
-    - #### [`new Object()`](#new-object)
-    - #### [`Object.assign()`](#objectassign)
+- [Object 中的几个很相似的方法](#object-中的几个很相似的方法)
+    - [`in` 和 `hasOwnProperty()` 两方法的区别](#in-和-hasownproperty-两方法的区别)
+    - [`for-in` 循环可以遍历对象中的哪些属性？](#for-in-循环可以遍历对象中的哪些属性)
+            - [通过传统的自定义构造函数法构造的对象默认都是会被遍历的](#通过传统的自定义构造函数法构造的对象默认都是会被遍历的)
+        - [1.使用 `Object.defineProperties()` 或者 `Object.defineProperty()` 方法](#1使用-objectdefineproperties-或者-objectdefineproperty-方法)
+        - [2.使用 ES6 中的类来实现](#2使用-es6-中的类来实现)
+    - [`Object.keys()` 和 `Object.getOwnPropertyNames()` 的区别](#objectkeys-和-objectgetownpropertynames-的区别)
+        - [`Object.keys()`](#objectkeys)
+        - [`Object.getOwnPropertyNames()`](#objectgetownpropertynames)
+    - [`Object.assign()`、`Object.create()` 和 `new Object()` 这三个方法](#objectassignobjectcreate-和-new-object-这三个方法)
+        - [通过对象字面量创建的对象](#通过对象字面量创建的对象)
+        - [`Object.create()`](#objectcreate)
+        - [`new Object()`](#new-object)
+        - [`Object.assign()`](#objectassign)
 
 <!-- /TOC -->
 
-这里主要讨论这么几个方法，他们用法很相似，但又有所不同。在实际开发中就有可能陷入其中，搞不清到底用哪个方法比较好。下面就开始一一介绍。  
 ## `in` 和 `hasOwnProperty()` 两方法的区别
 这两个方法用来判断一个属性是否是某个对象中的，都会返回一个布尔值。
 ```js
@@ -227,7 +229,7 @@ per.__proto__.getAge = function(){
     return this.sex;
 }
 ```
-当在调用 getAge 方法时，就不再返回 `this.age` 而返回性别！在实际开发中实例对象动图修改构造函数原型是很糟糕的一件事情，一旦修改，所有的实例化对象的该部分功能都将改变。  
+当在调用 getAge 方法时，就不再返回 `this.age` 而返回性别！在实际开发中实例对象动态修改构造函数原型是很糟糕的一件事情，一旦修改，所有的实例化对象的该部分功能都将改变。  
 ### 通过对象字面量创建的对象
 通过字面量创建的对象，对象默认的原型是 `Object.prototype`。比如：
 ```js
@@ -307,4 +309,4 @@ a.p.name = "Xiaoming";
 因此，如果想要进行深拷贝，`Object.assign()` 函数是做不到的，但可以使用 `JSON.stringify(object)` 方法，先把对象变成 json，然后在使用 `JSON.parse(json)` 将 json 变成对象。这样就可以做到深拷贝。  
 `Object.assign()` 函数的作用不止可以复制对象，还可以将多个对象合并成一个对象，并返回新的合并后的对象。上面的例子中，`Object.assign({},a)` 其实就是将一个空对象与对象a 进行合并，返回的新对象赋给b。`assign` 函数的参数可以有很多个，它会从左到右依次合并，如果合并途中有的属性名一样，则它就会把它之前的该属性对应的值的覆盖掉。
 
-综上，`Object.create()` 方法可以改变一个对象的原型，或者说创建一个对象，时这个对象的原型变成你指定的对象；而 `new Object()` 可以包装任意的变量，使之成为一个包装类；而 `Object.assign()` 方法可以合并多个对象并返回合并后的一个新的对象。这就是三者的区别。
+综上，`Object.create()` 方法可以改变一个对象的原型，或者说创建一个对象，让这个对象的原型变成你指定的对象；而 `new Object()` 可以包装任意的变量，使之成为一个包装类；而 `Object.assign()` 方法可以合并多个对象并返回合并后的一个新的对象。这就是三者的区别。

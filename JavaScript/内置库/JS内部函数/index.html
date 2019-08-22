@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        // Object.prototype.toString = function(){
+        //     console.log("toString");
+        // }
+        // Object.prototype.valueOf = function(){
+        //     console.log("valueOf");
+        // }
+
+        var a = {
+            idx: 1,
+            valueOf: function(){
+                return this.idx ++;
+            }
+        }
+
+        console.log(a == 1 && a == 2 && a == 3 && a== 4);
+
+        // var a = {
+        //     i: 1,
+        //     toString(){
+        //         return a.i ++;
+        //     }
+        // }
+
+        // console.log(a == 1 && a == 2 && a == 3);
+    </script>
+
+</body>
+
+</html>

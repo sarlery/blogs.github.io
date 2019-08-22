@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+    <div class="carousel">
+
+        <div class="img-box">
+            <img src="./img/04.jpg" alt="4">
+            <img src="./img/01.jpg" alt="1">
+            <img src="./img/02.jpg" alt="2">
+            <img src="./img/03.jpg" alt="3">
+            <img src="./img/04.jpg" alt="4">
+            <img src="./img/01.jpg" alt="1">
+        </div>
+
+        <!-- <div class="broadside left-side">&gt;</div>
+        <div class="broadside right-side">&lt;</div> -->
+
+        <ul class="points-box">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+    </div>
+
+    <script src="./index.js"></script>
+
+    <script>
+
+        var clientElem = document.querySelector('.carousel');
+
+        // console.log(getComputedStyle(clientElem,null).width);
+        // console.log('offsetWidth',clientElem.offsetWidth);
+        // console.log('getBoundingClientRect',clientElem.getBoundingClientRect().width);
+        // console.log('clientWidth',clientElem.clientWidth);
+        
+        var carousel = new Carousel({
+            width: 600,
+            target: clientElem,
+            transition: 0.3,
+            delay: 3000
+        })
+    
+    </script>
+    
+</body>
+</html>

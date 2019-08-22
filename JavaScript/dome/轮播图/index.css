@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.carousel{
+    position: relative;
+    width: 600px;
+    height: 360px;
+    /* 用户自定 */
+    margin: 100px auto;
+    overflow: hidden;
+}
+
+.carousel > .img-box{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    font-size: 0;
+}
+
+.carousel > .img-box img{
+    height: 100%;
+    /* 这里也可以动态设定 */
+    width: 600px;
+}
+
+.carousel > .broadside{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 360%;
+    text-shadow: 3px 3px 2px rgb(45, 46, 63);
+    font-weight: 700;
+    opacity: 0.2;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.carousel>.broadside:hover{
+    opacity: 0.8;
+    background-color: rgba(255, 255, 255, 0.6);
+    transition: all 0.4s ease;
+}
+
+.carousel > .broadside:nth-of-type(1){
+    left: 0;
+}
+.carousel>.broadside:nth-of-type(2){
+    right: 0;
+}
+
+.carousel>.points-box{
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    transform: translateX(-50%);
+}
+
+.carousel > .points-box > *{
+    height: 10px;
+    flex-basis: 10%;
+    margin-left: 8%;
+    background: white;
+    cursor: pointer;
+    border: 1px solid #23e;
+}
+
+.carousel>.points-box>.selected{
+    background: #f44;
+}
+

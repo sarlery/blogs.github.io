@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    
+    <div class="carousel">
+
+        <div class="img-box">
+            <img src="./img/04.jpg" alt="4">
+            <img src="./img/01.jpg" alt="1">
+            <img src="./img/02.jpg" alt="2">
+            <img src="./img/03.jpg" alt="3">
+            <img src="./img/04.jpg" alt="4">
+            <img src="./img/01.jpg" alt="1">
+        </div>
+
+        <!-- <div class="broadside left-side">&gt;</div>
+        <div class="broadside right-side">&lt;</div> -->
+
+        <ul class="points-box">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+    </div>
+
+    <script>
+        const main = document.querySelector('.carousel');
+        const imgBox = main.querySelector('.img-box');
+        const pointWrap = main.querySelector('.points-box');
+        const pointLen = pointWrap.children.length;
+        const width = 600;
+        var index = 0;
+        var timer = null;
+
+        init();
+
+        function init(){
+            imgBox.style.left = -width + 'px';
+            pointWrap.children[index].classList.add('selected');
+            sport();
+        }
+
+        function sport(){
+            timer = setInterval(leftToMove,3000);
+            for(let i = 0;i < pointLen;i ++){
+                pointWrap.children[i].addEventListener('click',handlePoint.bind(null,i),false);
+            }
+            slide();
+        }
+
+        function slide(){
+            var start = 0,middle = 0,end = 0;
+            const original = parseInt(imgBox.style.left);
+            main.addEventListener('mousedown',function(e){
+                clearInterval(timer);
+                e.preventDefault();
+                start = e.offsetX;
+                console.log('start: ',e.offsetX);
+                document.onmousemove = function(ev){
+                    middle = ev.offsetX;
+                    var res = middle - start;
+                    imgBox.style.left = parseInt(imgBox.style.left) + res + 'px';
+                    imgBox.style.transition = 'left 0.3s';
+                    start = middle;
+                }
+
+                main.onmouseup = function(event){
+                    document.onmousemove = false;
+                    console.log('end: ',event.offsetX);
+                    imgBox.style.left = original + 'px';
+                    timer = setInterval(leftToMove,3000);
+                }
+            },false)
+        }
+
+        function handlePoint(i){
+            clearInterval(timer);
+            imgBox.style.left = (i + 1) * (-600) + 'px';
+            var prev = index;
+            index = i;
+            changePoint(prev,index);
+            timer = setInterval(leftToMove,3000);
+        }
+
+        function leftToMove(){
+            var temp = parseInt(imgBox.style.left);
+            if(temp <= -3000){
+                temp = -600;
+            }
+            imgBox.style.left = temp - width + 'px';
+            var prev = index;
+            index += 1;
+            if(index === 4){
+                index = 0;
+            }
+            changePoint(prev,index);
+        }
+
+        function rightTomove(){
+            var temp = parseInt(imgBox.style.right);
+            if(temp >= 0){
+                temp = -2400;
+            }
+            imgBox.style.left = temp + width + 'px';
+            var prev = index;
+            index -= 1;
+            if(index === -1){
+                index = 3;
+            }
+            changePoint(prev,index);
+        }
+
+        function changePoint(prev,now){
+            pointWrap.children[prev].classList.remove('selected');
+            pointWrap.children[now].classList.add('selected');
+        }
+    
+    
+    </script>
+
+</body>
+</html>
