@@ -1,0 +1,14 @@
+# 文件夹
+node_modules
+build
+
+文件
+package-lock.json
+
+# 文件后缀
+*.ini
+*.txt
+*.log
+*.dat
+*.html
+*.lock

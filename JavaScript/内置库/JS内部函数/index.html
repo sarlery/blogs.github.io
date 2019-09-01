@@ -11,30 +11,31 @@
 <body>
 
     <script>
-        // Object.prototype.toString = function(){
-        //     console.log("toString");
-        // }
-        // Object.prototype.valueOf = function(){
-        //     console.log("valueOf");
-        // }
 
-        var a = {
-            idx: 1,
-            valueOf: function(){
-                return this.idx ++;
+        function add(...args){
+            return args.reduce((p,c) => p + c);
+        }
+
+        function currie(fn){
+            var fnLen = fn.length;
+            return function curred (...args) {
+                if(!args.length){
+                    return fn.apply(this,args);
+                }
+                return function(...args_2){
+                    if(!args_2.length){
+                        return fn.apply(this,args);
+                    }
+                    return curred.apply(this,[...args,...args_2]);
+                }
             }
         }
 
-        console.log(a == 1 && a == 2 && a == 3 && a== 4);
 
-        // var a = {
-        //     i: 1,
-        //     toString(){
-        //         return a.i ++;
-        //     }
-        // }
+        var func = currie(add);
 
-        // console.log(a == 1 && a == 2 && a == 3);
+        console.log(func(1)(2,3)(3)(6)());
+
     </script>
 
 </body>

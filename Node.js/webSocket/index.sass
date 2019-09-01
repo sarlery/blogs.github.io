@@ -1,0 +1,131 @@
+*
+    margin: 0
+    padding: 0
+
+@mixin userState
+    border-bottom: 1px solid #dddddd
+    font-size: 13px
+    margin-left: 20px
+
+html,body
+    background-color: skyblue
+
+div.box
+    width: 80%
+    height: 90vh
+    background-color: #ffffff
+    border-radius: 20px
+    margin: 5vh auto
+    overflow: hidden
+
+    @media screen and (max-width: 1000px)
+        &
+            width: calc(100% - 20px)
+            margin: 10px
+            margin: 10px auto
+            height: calc(100vh - 20px)
+
+    div.msgBox
+        width: 100%
+        overflow-y: auto
+        height: 70%
+        border-bottom: 1px solid #cccccc
+        div.userLeave
+            @include userState
+            color: red
+            span.timer
+                padding: 0px 10px
+            &::after
+                content: "已离开聊天室"
+                color: gray
+                font-size: 13px
+                padding-left: 10px
+
+        div.userName
+            color: green
+            @include userState
+            span.timer
+                padding: 0px 10px
+            &::after
+                content: "已进入聊天室"
+                color: gray
+                font-size: 13px
+                padding-left: 10px
+        div.title
+            width: 100%
+            font-weight: 600
+            font-size: 24px
+            text-align: center
+            height: 30px
+            padding-top: 16px
+            animation: hideWelcome 2s linear 0.2s infinite alternate
+
+            @keyframes hideWelcome
+                0%
+                    color: rgba(0,0,0,0.6)
+                50%
+                    color: rgba(0,0,0,0.3)
+                100%
+                    color: rgba(0,0,0,0.0)
+
+        div.bubble
+            width: 80%
+            display: flex
+            flex-direction: row-reverse
+            align-items: center
+            margin: 20px
+            border-bottom: 1px solid #dddddd
+            color: #424242
+            font-size: 16px
+            font-weight: 600
+
+            div.content
+                // width: 60%
+            span.timer
+                width: 200px
+                font-size: 13px
+                color: gray
+                &::before
+                    content: attr(data-name)
+                    font-size: 13px
+                    color: green
+                    padding: 0px 10px 0px 30px
+
+
+    div.iptBox
+        background-color: #f6f6f6
+        height: 30%
+        width: 100%
+        text-align: center
+        div.tools
+            width: 100%
+            height: 30px
+            margin: 0 auto
+            padding: 6px
+            border-bottom: 1px solid #ccc
+            button.submit
+                cursor: pointer
+                height: 30px
+                width: 80px
+                background-color: green
+                border-radius: 15px
+                outline: none
+                border: none
+                color: #ffffff
+
+        textarea
+            width: 90%
+            background-color: #f6f6f6
+            border: none
+            height: 100%
+            outline: none
+            font-size: 17px
+            font-family: "宋体"
+            line-height: 20px
+            padding: 12px
+
+            @media screen and (max-width: 1000px)
+                &
+                    width: calc(100% - 20px)
+                    height: calc(100% - 20px)
+                    padding: 10px
