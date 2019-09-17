@@ -12,28 +12,9 @@
 
     <script>
 
-        Function.prototype.myNew = function(...args){
-            var obj = {};
-            this.apply(obj,args);
-            Object.setPrototypeOf(obj,this.prototype);
-            return obj;
-        }
-        
-        var Per = function(sex){
-            this.age = 18;
-            this.sex = sex;
-        }
+        var arr = [1,2,[3,4,[5,6]]];
 
-        // console.log(new Per('male'));
-
-        var d = [1,2,3];
-
-        var a = {
-            a: 1,
-            c:{ b:2 },
-            e: d
-        };
-        var b = Object.assign({},a);
+        console.log(arr.flat());
 
 
     </script>

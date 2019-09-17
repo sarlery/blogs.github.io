@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-    
+
     <div class="wrapper">^__^</div>
 
     <script>
@@ -59,14 +59,14 @@
         box.onmousedown = function(e){
             document.onmousemove = function(ev){
                 box.style.top = ev.pageY - e.offsetY + 'px';
-                box.style.left = ev.pageX - e.offsetY + 'px';
+                box.style.left = ev.pageX - e.offsetX + 'px';
             }
         }
 
         box.onmouseup = function () {
             document.onmousemove = null;
         }
-        
+
 
     </script>
 
