@@ -1,3 +1,4 @@
+
 /**
  * 数组深度扁平化
  * @param {Array} arr
@@ -22,7 +23,7 @@ function flat(arr){
  * 深度拷贝对象或者数组
  * @param {Object} value
  */
-function deepClone(data){
+function deepClone_1(data){
 
     function judge(val){
         var toString = Object.prototype.toString;
@@ -57,6 +58,36 @@ function deepClone(data){
         }
     }
     return result;
+}
+
+/**
+ * 深度克隆，解决循环引用
+ * @param {Object} object
+ * @param {WeakMap} wMap
+ */
+function deepClone(object, wMap = new WeakMap()) {
+    var res = null;
+    if (object === null || !typeof object === 'object') {
+        return object;
+    }
+    if (Array.isArray(object)) {
+        res = [];
+    } else if (Object.prototype.toString.call(object) === "[object Object]") {
+        res = {};
+    }
+    const obj = wMap.get(object);
+    if (obj) {
+        return obj;
+    }
+    wMap.set(object, res);
+    for (let p in object) {
+        if (typeof object[p] === "object") {
+            res[p] = deepClone(object[p], wMap);
+        } else {
+            res[p] = object[p];
+        }
+    }
+    return res;
 }
 
 
@@ -137,8 +168,6 @@ Number.prototype.minus = function(num){
     return this - num;
 }
 
-console.log((5.5).add(3.5).add(5.5).minus(3.5));
-
 
 /**
  * Promise Ajax 请求
@@ -168,4 +197,84 @@ function ajax(url,method = 'GET',data = null,headers = {}){
         }
         xhr.send(data);
     });
+}
+
+/**
+ * 输入一个形如 “2019/10/9” 或者 “2019-10-9” 的日期格式，判断这个日期是不是今天
+ * @param {string} str
+ */
+function isToday_1(str){
+    var s = str.replace(/\-/g,"/"),
+        // 考虑到 IE 兼容性
+        // 在 IE 中，toLocaleString() 的日期格式是这样的："xxxx年xx月xx日"
+        nowDate = (new Date()).toLocaleString().replace(/年|月|日/g,"/");
+    if(s === nowDate){
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 输入一个形如 “2019/10/9” 或者 “2019-10-9” 的日期格式，判断这个日期是不是今天 的第二种方案
+ * @param {string} str
+ */
+function isToday(str){
+    var s = str.split("-");
+    if(s.length === 1){
+        s = str.split("/");
+    }
+    var now = new Date();
+    return (
+        Number(s[0]) === now.getFullYear() &&
+        Number(s[1]) === now.getMonth() + 1 &&
+        Number(s[2]) === now.getDate()
+    );
+}
+
+/**
+ * URL 解析，输入 URL，输出一个对象
+ * @param {string} url
+ */
+function parseURL_1(url) {
+    url = new URL(url);
+    var res = {},
+        search = decodeURIComponent(url.search.replace("?", ""));
+    arr = search.split("&");
+    arr.forEach(item => {
+        var a = item.split("=");
+        res[a[0]] = a[1];
+    });
+    return res;
+}
+
+/**
+ * URL 解析， 输入 URL， 输出一个对象
+ * @param {string} url
+ */
+function parseURL(url) {
+    var reg = /\?((%?.*)\=(%?.*))&?/g;
+    query = url.match(reg);
+    if (query) {
+        query = decodeURIComponent(query[0].replace("?", ""));
+        var arr = query.split("&"),
+            res = {};
+        arr.forEach(item => {
+            var a = item.split("=");
+            res[a[0]] = a[1];
+        });
+        return res;
+    }
+    return null;
+}
+
+/**
+ * 对象序列化
+ * @param {Object} object
+ */
+function stringifyURL(object) {
+    var str = "";
+    for (let p in object) {
+        str = str + p + "=" + object[p] + "&";
+    }
+    return str.replace(/&$/, "");
 }

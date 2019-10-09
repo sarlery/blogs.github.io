@@ -17,7 +17,7 @@
 1. 对象是一组键/值对的集合，其中的键是弱引用的；
 2. 其键必须是对象，而值可以是任意的；  
 
-**弱引用的特点：**在没有其他引用存在时垃圾回收能正确进行。正由于这样的弱引用，WeakMap 的 key 是不可枚举的 (没有方法能给出所有的 key)。如果key 是可枚举的话，其列表将会受垃圾回收机制的影响，从而得到不确定的结果。  
+**弱引用的特点：** 在没有其他引用存在时垃圾回收能正确进行。正由于这样的弱引用，WeakMap 的 key 是不可枚举的 (没有方法能给出所有的 key)。如果key 是可枚举的话，其列表将会受垃圾回收机制的影响，从而得到不确定的结果。  
 
 通过以下形式对数据进行包装：
 ```js
@@ -240,8 +240,8 @@ insert(idx, elem){
         var head = new Node(elem);
         head.next = link;
         list.set(this,head);
-    }
-    while(idx){
+    }else{
+        while(idx){
         var prevNode = link;
         link = link.next;
         idx --;

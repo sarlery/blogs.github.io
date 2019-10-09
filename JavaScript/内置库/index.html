@@ -12,10 +12,56 @@
 
     <script>
 
-        var arr = [1,2,[3,4,[5,6]]];
+        function deepClone(object, wMap = new WeakMap()){
+            var res = null;
+            if(object === null || !typeof object === 'object'){
+                return object;
+            }
+            if(Array.isArray(object)){
+                res = [];
+            }else if(Object.prototype.toString.call(object) === "[object Object]"){
+                res = {};
+            }
+            const obj = wMap.get(object);
+            if(obj){
+                return obj;
+            }
+            wMap.set(object,res);
+            for(let p in object){
+                if(typeof object[p] === "object"){
+                    res[p] = deepClone(object[p],wMap);
+                }else{
+                    res[p] = object[p];
+                }
+            }
+            return res;
+        }
 
-        console.log(arr.flat());
+        function parseURL(url){
+            var reg = /\?((.*)\=(.*)&?)/g;
+                query = url.match(reg);
+            if(query){
+                query = decodeURIComponent(query[0].replace("?",""));
+                var arr = query.split("&"),
+                    res = {};
+                arr.forEach(item => {
+                    var a = item.split("=");
+                    res[a[0]] = a[1];
+                });
+                return res;
+            }
+            return null;
+        }
 
+        var obj = parseURL("https://www.example.com/info.json?name=");
+
+        function stringifyURL(object){
+            var str = "";
+            for(let p in object){
+                str = str + p + "=" + object[p] + "&";
+            }
+            return str.replace(/&$/,"");
+        }
 
     </script>
 
