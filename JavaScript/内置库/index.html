@@ -11,37 +11,36 @@
 <body>
 
     <script>
-
-        function deepClone(object, wMap = new WeakMap()){
+        function deepClone(object, wMap = new WeakMap()) {
             var res = null;
-            if(object === null || !typeof object === 'object'){
+            if (object === null || !typeof object === 'object') {
                 return object;
             }
-            if(Array.isArray(object)){
+            if (Array.isArray(object)) {
                 res = [];
-            }else if(Object.prototype.toString.call(object) === "[object Object]"){
+            } else if (Object.prototype.toString.call(object) === "[object Object]") {
                 res = {};
             }
             const obj = wMap.get(object);
-            if(obj){
+            if (obj) {
                 return obj;
             }
-            wMap.set(object,res);
-            for(let p in object){
-                if(typeof object[p] === "object"){
-                    res[p] = deepClone(object[p],wMap);
-                }else{
+            wMap.set(object, res);
+            for (let p in object) {
+                if (typeof object[p] === "object") {
+                    res[p] = deepClone(object[p], wMap);
+                } else {
                     res[p] = object[p];
                 }
             }
             return res;
         }
 
-        function parseURL(url){
-            var reg = /\?((.*)\=(.*)&?)/g;
-                query = url.match(reg);
-            if(query){
-                query = decodeURIComponent(query[0].replace("?",""));
+        function parseURL(url) {
+            var reg = /\?((.+)\=(.*)&?)/g;
+            query = url.match(reg);
+            if (query) {
+                query = decodeURIComponent(query[0].replace("?", ""));
                 var arr = query.split("&"),
                     res = {};
                 arr.forEach(item => {
@@ -53,14 +52,28 @@
             return null;
         }
 
-        var obj = parseURL("https://www.example.com/info.json?name=");
-
-        function stringifyURL(object){
+        function stringifyURL(object) {
             var str = "";
-            for(let p in object){
+            for (let p in object) {
                 str = str + p + "=" + object[p] + "&";
             }
-            return str.replace(/&$/,"");
+            return str.replace(/&$/, "");
+        }
+
+
+        function isToday(str) {
+            const reg = /^\d{4}(-|\/)(1[0-2]|(0?[1-9]))\1([0-2][1-9]|[1-9]|30|31)/;
+            if(!reg.test(str)){
+                throw Error("The arguments' format must be like 'xxxx-xx-xx' or 'xxxx/xx/xx'");
+            }
+            str = str.replace(/\-/g, '/');
+            var s = str.split("/");
+            var now = new Date();
+            return (
+                Number(s[0]) === now.getFullYear() &&
+                Number(s[1]) === now.getMonth() + 1 &&
+                Number(s[2]) === now.getDate()
+            );
         }
 
     </script>
