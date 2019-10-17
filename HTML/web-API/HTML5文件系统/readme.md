@@ -228,7 +228,7 @@ fileIpt.onchange = function(){
 ### 使用 Canvas 生成缩略图
 
 ## 上传文件
-使用 `Blob`对象或者 `FileReader`可以实现文件上传，或者使用 HTML5 提供的 `FormData` 来实现。下面一一介绍这三个方法。  
+使用 `FormData`对象或者 `FileReader`可以实现文件上传，或者使用 HTML5 提供的 `FormData` 来实现。下面一一介绍这三个方法。  
 ### 使用 `FileReader` 上传文件
 在展示图片缩略图部分以及使用过 `FileReader` API。对于上传文件，可以使用 `FileReader` API 中的一个方法来实现文件上传的目的 —— `readAsBinaryString(blob)` 或者 `readAsArrayBuffer(blob)`。`readAsDataURL(file)` 方法可以给文件生成一个 URL，而 `readAsBinaryString` 方法可以读取指定的Blob中的内容。一旦完成，result属性中将包含所读取文件的原始二进制数据。而 `readAsArrayBuffer(blob)`可以读取指定的 Blob 或 File 内容，同时 result 属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据。
 
@@ -628,3 +628,112 @@ function createImage(imgURL){
     div.style.display = "none";
 }
 ```
+
+CSS 展示文件上传进度
+```css
+.loadWrapper{
+    height: 100px;
+    width: 100px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+}
+.loadWrapper .describe{
+    color: #999999;
+}
+.loadWrapper .progressNum{
+    color: orangered;
+    font-weight: bold;
+}
+.loadWrapper .loadBox{
+    width: 80px;
+    height: 10px;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    margin: 6px 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.loadWrapper .loadBox .loadBar{
+    width: 0px;
+    height: 20px;
+    background: green;
+}
+```
+
+### 使用 `FormData` 实现文件上传
+
+`FormData` 是 HTML5 的一个 API。下面就是使用 `FormData` 进行提交表单的例子。
+```html
+<body>
+
+    <form id="form" method="POST" action="/form.php">
+
+        name: <input required class="name-ipt" name="name" type="text"><br />
+        password: <input required class="psd-ipt" name="password" type="password"><br />
+        <button class="submitBtn" type="submit">submit</button>
+
+    </form>
+
+    <script>
+        const form = document.getElementById("form");
+        const submitBtn = document.getElementsByClassName("submitBtn")[0];
+
+        // 把 from 表单元素传给 FormData 类
+        const formData = new FormData(form);
+
+        function ajax(xhr, method = "GET", url, data = "", headers = {}) {
+            return new Promise((resolve, reject) => {
+                xhr.open(method, url);
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200 || this.status === 304) {
+                            resolve(this.response);
+                        }else{
+                            reject("Warnning!",this.status);
+                        }
+                    }
+                }
+                for(let p in headers){
+                    xhr.setRequestHeader(p,headers[p]);
+                }
+                xhr.send(data);
+            });
+        }
+
+        submitBtn.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            const xhr = new XMLHttpRequest();
+            var res = await ajax(
+                xhr,
+                "POST",
+                form.action,
+                // 发送的数据是得到的 FormData 实例 
+                formData,
+                {"Content-Type": "multipart/form-data"}
+            );
+            console.log(res);
+        }, false);
+
+    </script>
+
+</body>
+```
+
+`FormData` 实例是一个 Set。里面有 `append`、`delete`、`has` 等方法。
+
+使用 `FormData(form)` 去实例化一个表单后，如果表单中有 File input 元素，那么上传的是这个元素的文件名，如果要上传文件，需要做进一步处理。
+
+```js
+const fileElem = document.getElementById("file-ipt");
+
+// append 方法支持 Blob 对象。
+// 把文件放入后发送请求，后端就可以得到文件内容数据（二进制）
+formData.append(fileElem.files[0]);
+```
+需要注意的是，如果 file input 在 form 表单中，想要上传文件，需要阻制默认事件的产生（submit 按钮提交后页面会跳转）。不然文件上传不了。重定向可以使用 `window.location.href` 来定义。
