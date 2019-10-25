@@ -3,10 +3,10 @@
 在 HTML5 的 input 标签中，新增了一个 `type=file` 属性的表单控件。这个控件可以让我们能调出文件选择窗口然后读取这些文件的内容成为可能。  
 
 ```html
-<input type="file" id="file-ipt" name="file" accept=".jpg,.jpge,.gif,.png">
+<input type="file" id="file-ipt" name="file" accept=".jpg,.jpeg,.gif,.png">
 ```
 
-上面代码就是一个 file DOM。它支持选择以 .jpg、.jpge、.gif、.png 后缀格式的图片。当选择好一个文件后 input 元素就会触发 change 事件。  
+上面代码就是一个 file DOM。它支持选择以 .jpg、.jpeg、.gif、.png 后缀格式的图片。当选择好一个文件后 input 元素就会触发 change 事件。  
 该元素不仅可以点击选择文件，还支持拖拽选取文件。当将文件拖拽到 input 元素上方并松手后也会触发 change 事件。  
 
 通过文件 API，我们可以访问 FileList，包含了代表用户所选文件的对象 File。  
@@ -168,7 +168,7 @@ dropBox.addEventListener("dragover",drag,false);
 dropBox.addEventListener("drop", drop, false);
 ```
 
-## 展示图片缩略图
+## 展示图片预览图
 可以使用 `URL.createObjectURL()` 方法来实现。参数是一个用于创建 URL 的 `File` 对象、`Blob` 对象或者 `MediaSource` 的对象。  
 在上面代码的基础上，再添加以下代码：
 ```js
@@ -195,7 +195,7 @@ fileIpt.onchange = function(){
 ```
 需要注意的是，当不再需要这些 URL 对象时，每个对象必须通过调用 `URL.revokeObjectURL(src)` 方法来释放。浏览器会在文档退出的时候自动释放它们，但是为了获得最佳性能和内存使用状况，你应该在安全的时机主动释放掉它们。  
 
-### 使用 FileReader 创建缩略图
+### 使用 FileReader 创建预览图
 这需要改写上面的 `fileIpt.onchange` 事件。 
 ```js
 fileIpt.onchange = function(){
@@ -225,12 +225,10 @@ fileIpt.onchange = function(){
 ```
 `reader.readAsDataURL(files[i])` 方法可以读取指定的 Blob 中的内容。一旦完成，result（e.target.result）属性中将包含一个 **data: URL格式** 的Base64字符串以表示所读取文件的内容。
 
-### 使用 Canvas 生成缩略图
-
 ## 上传文件
 使用 `FormData`对象或者 `FileReader`可以实现文件上传，或者使用 HTML5 提供的 `FormData` 来实现。下面一一介绍这三个方法。  
-### 使用 `FileReader` 上传文件
-在展示图片缩略图部分以及使用过 `FileReader` API。对于上传文件，可以使用 `FileReader` API 中的一个方法来实现文件上传的目的 —— `readAsBinaryString(blob)` 或者 `readAsArrayBuffer(blob)`。`readAsDataURL(file)` 方法可以给文件生成一个 URL，而 `readAsBinaryString` 方法可以读取指定的Blob中的内容。一旦完成，result属性中将包含所读取文件的原始二进制数据。而 `readAsArrayBuffer(blob)`可以读取指定的 Blob 或 File 内容，同时 result 属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据。
+### 使用 FileReader 上传文件
+在展示图片预览图部分以及使用过 `FileReader` API。对于上传文件，可以使用 `FileReader` API 中的一个方法来实现文件上传的目的 —— `readAsBinaryString(blob)` 或者 `readAsArrayBuffer(blob)`。`readAsDataURL(file)` 方法可以给文件生成一个 URL，而 `readAsBinaryString` 方法可以读取指定的Blob中的内容。一旦完成，result属性中将包含所读取文件的原始二进制数据。而 `readAsArrayBuffer(blob)`可以读取指定的 Blob 或 File 内容，同时 result 属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据。
 
 ```js
 var reader = new FileReader();
@@ -249,7 +247,7 @@ HTML 骨架：
 ```html
 <body>
     <div class="wrapper">
-        <!-- imgBoxs 存放上传图片（缩略图）的容器 -->
+        <!-- imgBoxs 存放上传图片（预览图）的容器 -->
         <div class="imgsBox">
             <!-- dropBox 选择文件的按钮 -->
             <div class="dropBox">
@@ -320,7 +318,7 @@ function uploadFile(data){
 }
 
 /**
- * 展示缩略图
+ * 展示预览图
  * @param {string} imgURL
  */
 function createImage(imgURL){
@@ -604,7 +602,7 @@ function uploadFile(data){
 }
 
 /**
- * 展示缩略图
+ * 展示预览图
  * @param {string} imgURL
  */
 function createImage(imgURL){
@@ -665,13 +663,13 @@ CSS 展示文件上传进度
 }
 ```
 
-### 使用 `FormData` 实现文件上传
+### 使用 FormData 实现文件上传
 
 `FormData` 是 HTML5 的一个 API。下面就是使用 `FormData` 进行提交表单的例子。
 ```html
 <body>
 
-    <form id="form" method="POST" action="/form.php">
+    <form id="form" enctype="multipart/form-data" method="POST" action="/form.php">
 
         name: <input required class="name-ipt" name="name" type="text"><br />
         password: <input required class="psd-ipt" name="password" type="password"><br />
@@ -706,7 +704,6 @@ CSS 展示文件上传进度
         }
 
         submitBtn.addEventListener("click", async function (e) {
-            e.preventDefault();
 
             const xhr = new XMLHttpRequest();
             var res = await ajax(
@@ -714,8 +711,7 @@ CSS 展示文件上传进度
                 "POST",
                 form.action,
                 // 发送的数据是得到的 FormData 实例 
-                formData,
-                {"Content-Type": "multipart/form-data"}
+                formData
             );
             console.log(res);
         }, false);
@@ -725,15 +721,15 @@ CSS 展示文件上传进度
 </body>
 ```
 
-`FormData` 实例是一个 Set。里面有 `append`、`delete`、`has` 等方法。
+`FormData` 实例是一个 Map。里面有 `append`、`delete`、`has` 等方法。
 
-使用 `FormData(form)` 去实例化一个表单后，如果表单中有 File input 元素，那么上传的是这个元素的文件名，如果要上传文件，需要做进一步处理。
+需要注意的是，使用 `FormData` 时，form 元素应增加一个属性：`enctype="multipart/form-data"`。不添加的话，生成的数据是 `key=value` 形式的数据，而且当有 file input 时，文件内容不会被上传。  
 
+如果不使用 form 元素进行包裹，可以使用 `formData.append()` 方法进行添加数据。`append()`方法接收两个参数，第一个参数是数据，可以是一个字符串，也可以是 blob 对象，file 数据就属于 blob。第二个参数是可选的，表示数据的文件名，是一个字符串。
 ```js
-const fileElem = document.getElementById("file-ipt");
+const formData = new FormData();
 
-// append 方法支持 Blob 对象。
-// 把文件放入后发送请求，后端就可以得到文件内容数据（二进制）
-formData.append(fileElem.files[0]);
+const file = document.getElementById("file-ipt");
+
+formData.append(file.files[0]);     // 添加数据
 ```
-需要注意的是，如果 file input 在 form 表单中，想要上传文件，需要阻制默认事件的产生（submit 按钮提交后页面会跳转）。不然文件上传不了。重定向可以使用 `window.location.href` 来定义。
