@@ -64,7 +64,7 @@
 
 下载之后，最好也要校验一下。来到 [这个网址进行校验](https://wiki.deepin.org/wiki/%E5%8E%9F%E7%94%9F%E5%AE%89%E8%A3%85)。  
 
-![校验]](img/md5.png)
+![校验](img/md5.png)
 
 校验之后，打开 Deepin 镜像文件，里面有一个软件。  
 
@@ -76,5 +76,9 @@
 
 
 
+- [ ] aaa
+- [x] bbbb
+
+H<sub>2</sub>  
 
 
