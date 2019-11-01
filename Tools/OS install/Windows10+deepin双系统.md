@@ -22,7 +22,7 @@
 
 没有装上系统我把这归结为系统下的不对。之后我去了一个令人信服的网站 —— [I tell you](https://msdn.itellyou.cn/)。这个网站的资源均来自于官方原版。  
 
-![](./img/itellyou.png)  
+![i tell you](./img/itellyou.png)  
 
 于是开始下载，Windows10 的版本很多，一开始我不太清楚下哪一个，导致之后重装了两次。大多数用户使用的是 Windows10 家庭版。而Windows分为家庭版、教育版、企业版、专业版等多个版本。想要下载家庭版却发现并没有 home、family的字样。出现比较多的是 `Muliple Editions`、`Education` 等版本。这些字样的版本一般保护多个版本。**在 `Muliple Editions` 和 `consumer editions` 中集成了多个版本，里面就有家庭版**。`Education` 是教育版，`Enterprise` 是企业版，`LTSB` 是长期服务支持版。  
 
@@ -35,7 +35,7 @@
 ### 制作启动盘与安装 Windows
 在制作启动盘之前，应该校验一下你下载的镜像。  
 
-![](./img/download.png)
+![校验镜像]](./img/download.png)
 
 制作启动盘也很简单。打开下载的 Rufus 软件，导入下好的 Windows 系统镜像文件。  
 
@@ -53,7 +53,7 @@
 2. 点击压缩卷；
 3. 如果要分出 30G，就是：30G * 1024 == 30720M，点击压缩  
    
-   ![](img/yasuo.png)  
+   ![磁盘分区](img/yasuo.png)  
 
 4. 这时候就会多出一个磁盘，只是这个磁盘还没有分配出来
 5. 右键然后选择 “新建简单卷”，下一步、下一步然后完成即可。
@@ -64,15 +64,15 @@
 
 下载之后，最好也要校验一下。来到 [这个网址进行校验](https://wiki.deepin.org/wiki/%E5%8E%9F%E7%94%9F%E5%AE%89%E8%A3%85)。  
 
-![](img/md5.png)
+![校验]](img/md5.png)
 
 校验之后，打开 Deepin 镜像文件，里面有一个软件。  
 
-![](./img/deepin.os.png)  
+![镜像文件](./img/deepin.os.png)  
 
 把这个软件复制一份到别的地方然后打开，这个软件是制作 Deepin U盘启动盘的工具。插入你的 U盘，如果U盘有重要数据，应备份一下。在 U 盘制作软件里选择下载的 Deepin 镜像文件，点击开始制作即可。  
 
-![](img/deepin_u.png)  
+![U盘制作](img/deepin_u.png)  
 
 
 
