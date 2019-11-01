@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        div.wrapper{
+            height: 500px;
+            width: 500px;
+            border: 1px solid #dddddd;
+            margin: 100px auto;
+            border-radius: 10px;
+        }
+        div.imgsBox{
+            margin: 60px;
+            width: 360px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto;
+        }
+        div.dropBox{
+            height: 100px;
+            width: 100px;
+            border: 1.5px dashed #999999;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        div.dropBox:hover{
+            border: 1.5px dashed #1890ff;
+            transition: border .6s;
+        }
+        #file-ipt{
+            display: none;
+        }
+        .dropBox .add{
+            color: #999999;
+            font-size: 50px;
+            width: 100%;
+            text-align: center;
+        }
+        .dropBox .describe{
+            color: #999999;
+            width: 100%;
+            text-align: center;
+        }
+        .imgWrapper{
+            height: 90px;
+            width: 90px;
+            padding: 8px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 10px;
+            position: relative;
+            background-color: white;
+            border: 1px solid #cccccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0px 10px 10px 0px;
+        }
+        .imgWrapper .imgBox{
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+        .loadWrapper{
+            height: 100px;
+            width: 100px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+        }
+        .loadWrapper .describe{
+            color: #999999;
+        }
+        .loadWrapper .progressNum{
+            color: orangered;
+            font-weight: bold;
+        }
+        .loadWrapper .loadBox{
+            width: 80px;
+            height: 10px;
+            border-radius: 5px;
+            border: 1px solid #cccccc;
+            margin: 6px 0px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .loadWrapper .loadBox .loadBar{
+            width: 0px;
+            height: 20px;
+            background: green;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- imgBoxs 存放上传图片的容器 -->
+        <div class="imgsBox">
+            <!-- dropBox 选择文件的按钮 -->
+            <div class="dropBox">
+                <input type="file" id="file-ipt" name="file" />
+                <div class="add">+</div>
+                <div class="describe">Upload</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./01.js"></script>
+
+</body>
+</html>

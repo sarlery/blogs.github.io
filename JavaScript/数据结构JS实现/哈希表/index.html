@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        // 链表
+        const LinkList = (function () {
+
+            class Node {
+                constructor(value) {
+                    this.value = value;
+                    this.next = null;
+                }
+            }
+
+            function isNum(val) {
+                var num = Number(val);
+                if (Number.isNaN(num)) {
+                    throw new TypeError(`${val} is not a number`);
+                }
+            }
+
+
+            let list = new WeakMap();
+
+            return class LinkList {
+                constructor(...items) {
+                    if (items.length) {
+                        list.set(this, new Node(items[0]));
+                        for (let i = 1, len = items.length; i < len; i++) {
+                            this.append(items[i]);
+                        }
+                    }
+                }
+
+                removeAt(idx) {
+                    isNum(idx);
+                    var idx = idx >= 0 ? idx : this.size() + idx;
+                    var link = list.get(this);
+                    if (!link || idx > this.size() - 1) {
+                        return false;
+                    }
+
+                    if (idx === 0) { // 要删除的是第一项
+                        var current = link.next;
+                        // 如果链表长度是 1，则直接删除链表
+                        if (!current) {
+                            list.delete(this);
+                        } else {
+                            // 长度大于 1 时，将第一项剔除
+                            list.set(this, current);
+                        }
+                    } else {
+                        // 如果删的不是第一项
+                        while (idx) {
+                            var prevNode = link;
+                            link = link.next;
+                            idx--;
+                        }
+                        prevNode.next = link.next;
+                    }
+                    return link.value;
+                }
+
+                remove(elem) {
+                    var idx = this.indexOf(elem);
+                    return idx !== -1 ? this.removeAt(idx) : false;
+                }
+
+                isEmpty() {
+                    return this.size() ? false : true;
+                }
+
+                values() {
+                    var link = list.get(this),
+                        result = [];
+                    while (link) {
+                        result.push(link.value);
+                        link = link.next;
+                    }
+                    return result;
+                }
+
+                insert(idx, elem) {
+                    isNum(idx);
+                    var idx = idx >= 0 ? idx : this.size() + idx,
+                        link = list.get(this);
+
+                    if (idx === 0) {
+                        var head = new Node(elem);
+                        head.next = link;
+                        list.set(this, head);
+                    }else{
+                        while (idx) {
+                            var prevNode = link;
+                            link = link.next;
+                            idx--;
+                        }
+                        prevNode.next = new Node(elem);
+                        prevNode.next.next = link;
+                    }
+                }
+
+                find(idx = 0){
+                    var link = list.get(this);
+                    while(idx){
+                        if(!link) return undefined;
+                        idx -= 1;
+                        link = link.next;
+                    }
+                    return link.value;
+                }
+
+                indexOf(elem) {
+                    var link = list.get(this),
+                        idx = 0;
+                    if (!link) {
+                        return -1;
+                    }
+                    while (link) {
+                        if (link.value === elem) {
+                            return idx;
+                        }
+                        link = link.next;
+                        idx += 1;
+                    }
+                    // 没有遍历到，则返回 -1
+                    return -1;
+                }
+
+                size() {
+                    var link = list.get(this),
+                        size = 0;
+                    if (link) {
+                        size = 1;
+                        while (link.next) {
+                            size += 1;
+                            link = link.next;
+                        }
+                    }
+                    return size;
+                }
+
+                replace(idx,data){
+                    var size = this.size(),
+                        link = list.get(this);
+                    idx = idx >= 0 ? idx : size + idx;
+                    if(!link || idx >= size){
+                        // 传入的索引值太大
+                        return;
+                    }
+                    while(idx){
+                        link = link.next;
+                        idx --;
+                    }
+                    link.value = data;
+                }
+
+                append(item) {
+                    var link = list.get(this);
+                    if (!link) {
+                        list.set(this, new Node(item));
+                    } else {
+
+                        while (link.next) {
+                            link = link.next;
+                        }
+                        link.next = new Node(item);
+                    }
+                }
+
+                clear() {
+                    list.delete(this);
+                }
+            }
+
+        })();
+
+    </script>
+
+
+    <script>
+        const HashTable = (function () {
+
+            let table = new WeakMap();
+
+            function getHashValue(key){
+                var num = 0;
+                for(let i = 0,len = key.length;i < len;i ++){
+                    num += key.charCodeAt(i);
+                }
+                return num % 37;
+            }
+
+            return class HashTable {
+                constructor(object) {
+                    table.set(this,[]);     // 初始化哈希表
+                    if (object) {
+                        if (Object.prototype.toString.call(object) !== '[object Object]') {
+                            throw new TypeError('this arguments must be object');
+                        } else {
+                            for (let props in object) {
+                                this.put(props, object[props]);
+                            }
+                        }
+                    }
+                }
+
+                put(key,value){
+                    // put 方法必须是一个 string
+                    var hash = getHashValue(String(key));
+                    var tb = table.get(this);
+                    if(!tb[hash]){
+                        // 没有就创建链表
+                        tb[hash] = new LinkList({key,value});
+                    }else{
+                        // 还要考虑重复插入时做替换
+                        var values = tb[hash].values(),
+                            mark = false,
+                            count = 0;
+                        for(let p of values){
+                            if(p.key === key){
+                                mark = true;
+                                tb[hash].replace(count,{key,value});
+                            }
+                            count += 1;
+                        }
+
+                        if(!mark){
+                            // 表示链表不更新，而是插入内容
+                            tb[hash].append({key,value});
+                        }
+                    }
+                }
+
+                get(k){
+                    var tb = table.get(this);
+                    if(typeof k === 'number'){
+                        var link = tb[k];
+                        if(link){
+                            // 是数字时，返回链表的第一项
+                            return tb[k].find().value;
+                        }
+                    }else{
+                        var hash = getHashValue(k),
+                            link = tb[hash];
+                        if(link){
+                            // 先遍历出数组
+                            // 然后遍历出 key 相等的项并返回结果
+                            var values = link.values();
+                            for(let p of values){
+                                if(p.key === k){
+                                    return p.value;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                remove(key){
+                    var tb = table.get(this);
+                    if(typeof key === 'number'){
+                        var link = tb[key];
+                        if(link){
+                            return link.removeAt(0);
+                        }
+                    }else{
+                        var hash = getHashValue(key),
+                            link = tb[hash];
+                        if(link){
+                            var values = link.values(),
+                                count = 0;
+                            for(let p of values){
+                                if(p.key === key){
+                                    return tb[hash].removeAt(count);
+                                }
+                                count += 1;
+                            }
+                            // 没有的话就返回 undefined
+                            return undefined;
+                        }
+                    }
+                }
+
+                values(){
+                    var tb = table.get(this);
+                    var arr = [];
+                    for(let item of tb){
+                        if(item){
+                            var res = item.values();
+                            arr.push(res);
+                        }
+                    }
+                    return arr;
+                }
+
+                toString(){
+                    var tb = table.get(this);
+                    return tb;
+                }
+            }
+        })();
+
+    </script>
+
+</body>
+
+</html>

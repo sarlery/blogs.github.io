@@ -10,6 +10,6 @@ package-lock.json
 *.txt
 *.log
 *.dat
-*.html
+# *.html
 *.lock
 *.vscode

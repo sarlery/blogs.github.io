@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        // 双向链表
+        const LinkList = (function () {
+
+            function loop(start,end){
+                start.prev = end;
+                end.next = start;
+            }
+
+            class Node {
+                constructor(value) {
+                    this.value = value;
+                    this.next = null;
+                    this.prev = null;
+                }
+            }
+
+            function isNum(val) {
+                var num = Number(val);
+                if (Number.isNaN(num)) {
+                    throw new TypeError(`${val} is not a number`);
+                }
+            }
+
+
+            let list = new WeakMap();
+            let tail = new WeakMap();
+
+            return class LinkList {
+                constructor(...items) {
+                    if (items.length) {
+                        // 头部元素
+                        list.set(this, new Node(items[0]));
+                        // 尾部元素
+                        tail.set(this,new Node(items[0]));
+                        for (let i = 1, len = items.length; i < len; i++) {
+                            this.append(items[i]);
+                        }
+                    }
+                }
+                removeAt(idx) {
+                    isNum(idx);
+                    var idx = idx >= 0 ? idx : this.size() + idx;
+                    var link = list.get(this);
+                    if (!link || idx > this.size() - 1) {
+                        return false;
+                    }
+
+                    if (idx === 0) { // 要删除的是第一项
+                        var current = link.next;
+                        // 如果链表长度是 1，则直接删除链表
+                        if (!current) {
+                            list.delete(this);
+                            tail.delete(this);
+                        } else {
+                            // 长度大于 1 时，将第一项剔除
+                            list.set(this, current);
+                        }
+                    } else {
+                        // 如果删的不是第一项
+                        while (idx) {
+                            var prevNode = link;
+                            link = link.next;
+                            idx--;
+                        }
+                        prevNode.next = link.next;
+                        if(link.next){
+                            // 如果要删除的不是最后一项
+                            link.next.prev = prevNode;
+                        }else{
+                            // 要删除的是最后一项
+                            tail.set(this,prevNode);
+                        }
+                    }
+                    return link.value;
+                }
+
+                remove(elem) {
+                    var idx = this.indexOf(elem);
+                    return idx !== -1 ? this.removeAt(idx) : false;
+                }
+
+                isEmpty() {
+                    return this.size() ? false : true;
+                }
+
+                values() {
+                    var link = list.get(this),
+                        vs = [];
+                    while (link) {
+                        vs.push(link.value);
+                        link = link.next;
+                    }
+                    return vs;
+                }
+
+                insert(idx, elem) {
+                    isNum(idx);
+                    var idx = idx >= 0 ? idx : this.size() + idx,
+                        link = list.get(this);
+
+                    if (idx === 0) {
+                        var head = new Node(elem);
+                        head.next = link;
+                        list.set(this, head);
+                    }
+                    while (idx) {
+                        var prevNode = link;
+                        link = link.next;
+                        idx--;
+                    }
+                    var node = new Node(elem);
+                    prevNode.next = node;
+                    node.prev = prevNode;
+                    node.next = link;
+                    if(link){       // link 有的话
+                        link.prev = node;
+                    }else{      // link 没有时，表示插入的是最后一项
+                        tail.set(this,node);
+                    }
+                }
+
+                indexOf(elem) {
+                    var link = list.get(this),
+                        idx = 0;
+                    if (!link) {
+                        return -1;
+                    }
+                    while (link) {
+                        if (link.value === elem) {
+                            return idx;
+                        }
+                        link = link.next;
+                        idx += 1;
+                    }
+                    // 没有遍历到，则返回 -1
+                    return -1;
+                }
+
+                size() {
+                    var link = list.get(this),
+                        size = 0;
+                    if (link) {
+                        size = 1;
+                        while (link.next) {
+                            size += 1;
+                            link = link.next;
+                        }
+                    }
+                    return size;
+                }
+
+                append(item) {
+                    var link = list.get(this);
+                    if (!link) {
+                        list.set(this, new Node(item));
+                        tail.set(this,new Node(item));
+                    } else {
+                        while (link.next) {
+                            link = link.next;
+                        }
+                        var node = new Node(item);
+                        link.next = node;
+                        node.prev = link;
+                        tail.set(this,node);
+                    }
+                }
+
+                getTail(){
+                    return tail.get(this);
+                }
+                getHead(){
+                    return list.get(this);
+                }
+
+                clear() {
+                    list.delete(this);
+                }
+
+                toString() {
+                    var link = list.get(this);
+                    return link;
+                }
+            }
+
+        })();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        html,body{
+            background-color: #cccccc;
+        }
+        div.wrapper{
+            width: 900px;
+            height: 500px;
+            margin: 30px auto;
+            text-align: center;
+        }
+        #myCvs{
+            background-color: white;
+            padding: 0;
+            border: 1px solid #eeeeee;
+            margin-left: 30px;
+        }
+        .selections{
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+        }
+        .selections button{
+            padding: 10px;
+            outline: none;
+            background-color: green;
+            border-radius: 6px;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            margin-right: 20px;
+            margin-bottom: 100px;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+        }
+        .selections button:hover{
+            transform: translateY(-3px);
+            transition: transform .3s;
+            box-shadow: 2px 2px 4px gray;
+        }
+
+        .showView{
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            flex-direction: row;
+            margin: 10px 0px 20px 0px;
+        }
+
+        .imgBox{
+            height: 400px;
+            width: 400px;
+            overflow: hidden;
+            border: 1px solid #eeeeee;
+            background-color: white;
+        }
+        .selections{
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <input type="file" accept=".jpg,.png,.jpeg" name="file" id="file-ipt">
+
+        <div class="showView">
+            <div class="imgBox"></div>
+        </div>
+
+        <div class="selections">
+            <button title="色彩反转" class="invertBtn">inver</button>
+            <button title="黑白色" class="grayscaleBtn">grayscale</button>
+            <button title="复古" class="ancientBtn">ancient</button>
+            <button title="红色蒙版" class="redMaskBtn">redMask</button>
+            <button title="亮度" class="brightnessBtn">brightness</button>
+            <button title="透明度" class="pellucidityBtn">pellucidity</button>
+        </div>
+    </div>
+
+    <script src="./index.js"></script>
+
+</body>
+</html>

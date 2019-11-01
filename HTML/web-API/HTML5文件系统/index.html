@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <form id="form" enctype="multipart/form-data" method="POST" action="/form.php">
+
+        name: <input required class="name-ipt" name="name" type="text"><br />
+        password: <input required class="psd-ipt" name="password" type="password"><br />
+        <input required type="file" name="file" id="file-ipt" accept=".jpg,.png,.gif"><br />
+        <button class="submitBtn" type="submit">submit</button>
+
+    </form>
+
+    <script>
+        const form = document.getElementById("form");
+        const submitBtn = document.getElementsByClassName("submitBtn")[0];
+
+        // 把 from 表单元素传给 FormData 类
+        const formData = new FormData(form);
+
+        function ajax(xhr, method = "GET", url, data = "", headers = {}) {
+            return new Promise((resolve, reject) => {
+                xhr.open(method, url);
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200 || this.status === 304) {
+                            resolve(this.response);
+                        } else {
+                            reject("Warnning!", this.status);
+                        }
+                    }
+                }
+                for (let p in headers) {
+                    xhr.setRequestHeader(p, headers[p]);
+                }
+                xhr.send(data);
+            });
+        }
+
+        submitBtn.addEventListener("click", async function (e) {
+            const xhr = new XMLHttpRequest();
+            var res = await ajax(
+                xhr,
+                "POST",
+                form.action,
+                formData
+            );
+            console.log(res);
+        }, false);
+    </script>
+
+</body>
+
+</html>

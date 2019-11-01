@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #img-file{
+            opacity: 0;
+        }
+        label.label-file{
+            display: block;
+            height: 200px;
+            width: 200px;
+            border: 1px solid greenyellow;
+            text-align: center;
+            line-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <section>
+        <div>
+            <label class="label-file" for="img-file">
+                Choose images to upload (PNG, JPG, GIF)
+            </label>
+            <input type="file" accept="image/*" name="pic" id="img-file">
+        </div>
+    </section>
+
+    <script>
+
+        const fileIpt = document.getElementById('img-file');
+
+    </script>
+
+</body>
+</html>

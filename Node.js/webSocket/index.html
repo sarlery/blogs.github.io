@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket 聊天室</title>
+    <link rel="stylesheet" href="/index.min.css">
+</head>
+<body>
+
+    <div class="box">
+
+        <div class="msgBox">
+            <div class="title">消息展示</div>
+
+
+        </div>
+
+
+        <div class="iptBox">
+
+            <div class="tools">
+                <button class="submit">提 交</button>
+            </div>
+            <textarea autofocus name="msg" id="ipt-msg"></textarea>
+
+        </div>
+
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+
+        const ipt = document.querySelector('#ipt-msg');
+        const submit = document.querySelector('.submit');
+        const msgBox = document.querySelector('.msgBox');
+        const title = document.querySelector('.title');
+        const socket = io('http://localhost:8888');
+
+        var nickName = window.prompt("请输入一个昵称：");
+        while(!nickName || !nickName.replace(/\s/g,'') || nickName.length >= 12){
+            alert("昵称长度不能长于12，也不能只有空白哦~")
+            nickName = window.prompt("请输入一个昵称：");
+        }
+        var id = +new Date();
+
+        title.innerText = "欢迎：" + nickName;
+
+        socket.on("joined",data => {
+            var div = document.createElement('div');
+            div.innerText = data;
+            createTime(div);
+            div.className = 'userName';
+            msgBox.appendChild(div);
+        });
+
+        socket.emit("disconnect",nickName)
+
+        socket.on('disconnect',function(data){
+            var div = document.createElement('div');
+            div.className = "userLeave";
+            div.innerText = data
+            createTime(div);
+            msgBox.appendChild(div);
+        });
+
+        socket.on('getMessage',function(data){
+            var d = JSON.parse(data);
+            createBubble(d);
+        });
+
+        socket.emit("first",JSON.stringify({
+            id,
+            nickName
+        }));
+
+        submit.onclick = function(){
+            const value = ipt.value;
+            if(value){
+                groupSending(value);
+                ipt.value = "";
+                ipt.focus();
+            }
+        }
+
+        function createTime(box,data){
+            var span = document.createElement('span');
+            span.innerText = new Date().toLocaleTimeString();
+            span.setAttribute("data-name",data);
+            span.className = "timer"
+            box.appendChild(span);
+        }
+
+        function groupSending(value){
+
+            socket.emit('message',JSON.stringify({
+                id,
+                nickName,
+                msg: value
+            }));
+        }
+
+        function createBubble(value){
+            var div = document.createElement('div');
+            div.className = 'content'
+            var bubble = document.createElement('div');
+            if(value.id == id){
+                bubble.style.color = 'blue';
+                createTime(bubble,"你");
+            }else{
+                createTime(bubble,value.nickName);
+            }
+
+            bubble.className = "bubble";
+            bubble.innerHTML += value.msg;
+            div.appendChild(bubble);
+            msgBox.appendChild(div);
+        }
+
+
+
+    </script>
+
+</body>
+</html>
