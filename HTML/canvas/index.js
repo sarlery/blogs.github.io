@@ -8,6 +8,7 @@ const ancientBtn = document.querySelector(".ancientBtn");
 const showView = document.querySelector(".showView");
 
 fileIpt.onchange = function(){
+    // 把获得的图片文件生成预览图（原图）
     createImg(this.files[0]);
 }
 
@@ -169,11 +170,77 @@ function initCanvas(img){
         ctx.putImageData(imageData, 0, 0);
     }
 
+    /**
+     * 得到随机的颜色
+     * @param {ImageData} obj 
+     * @param {number} x 
+     * @param {number} y 
+     */
+    function getXY(obj,x,y){
+        var w = obj.width,
+            data = obj.data,
+            color = [];
+        color[0] = data[4 * (y * w + x)];
+        color[1] = data[4 * (y * w + x) + 1];
+        color[2] = data[4 * (y * w + x) + 2];
+        color[3] = data[4 * (y * w + x) + 3];
+        return color;
+    }
+
+    /**
+     * 设置颜色
+     * @param {ImageData} obj 
+     * @param {number} x 
+     * @param {number} y 
+     * @param {Array} color 
+     */
+    function setXY(obj,x,y,color){
+        var w = obj.width,
+            data = obj.data;
+        data[4 * (y * w + x)] = color[0];
+        data[4 * (y * w + x) + 1] = color[1];
+        data[4 * (y * w + x) + 2] = color[2];
+        data[4 * (y * w + x) + 3] = color[3];
+    }
+
+    /**
+     * 马赛克效果
+     * @param {Event} e 
+     * @param {number} num 
+     */
+    function mosaic(e,num){
+        var stepW = cvs.width / num,
+            stepH = cvs.height / num;
+
+        debugger;
+        
+        for(let i = 0;i < stepH;i ++){
+            for(let j = 0;j < stepW;j ++){
+                var color = getXY(
+                    imageData,
+                    j * num + Math.floor(Math.random() * num),
+                    i * num + Math.floor(Math.random() * num)
+                )
+                for(let k = 0;k < num;k ++){
+                    for(let l = 0;l < num;l ++){
+                        setXY(
+                            imageData,
+                            j * num + l,
+                            i * num + k,
+                            color
+                        )
+                    }
+                }
+            }
+        }
+        ctx.putImageData(imageData,0,0);
+    }
+
     invertBtn.addEventListener("click", invert, false);
     grayscaleBtn.addEventListener("click", grayscale, false);
     ancientBtn.addEventListener('click',ancient,false);
-
     document.querySelector(".redMaskBtn").addEventListener("click",redMask,false);
+
     document.querySelector(".brightnessBtn").addEventListener("click", function(e){
         brightness.call(this,e,-50);
     }, false);
@@ -181,9 +248,9 @@ function initCanvas(img){
     document.querySelector(".pellucidityBtn").addEventListener("click", function (e) {
         pellucidity.call(this,e,0.2);
     },false);
+
+    document.querySelector(".mosaicBtn").addEventListener('click',function(e){
+        mosaic.call(this,e,6);
+    },false);
 }
-
-
-
-
 
