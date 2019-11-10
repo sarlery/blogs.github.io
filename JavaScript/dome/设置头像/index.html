@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>头像设置</title>
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+</head>
+<body>
+
+    <div id="main">
+        <div class="mask">
+            <div class="selectArea">
+                <h4 class="describe">Crop your new profile picture
+                    <span class="close">×</span>
+                </h4>
+                <div class="wrapper">
+                    <div class="imgBox">
+                        <div class="box">
+                            <div class="left-top"></div>
+                            <div class="right-top"></div>
+                            <div class="left-btm"></div>
+                            <div class="right-btm"></div>
+                            <!-- 要选择的区域 -->
+                        </div>
+                        <!-- 展示大图 -->
+                        <!-- <img class="bigImg" /> -->
+                    </div>
+                </div>
+                <div class="btnWrapper">
+                    <button class="submitBtn">set new profile picture</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="wrapper">
+                    <h4 class="describe">Profile picture</h4>
+                    <div class="imgWrapper">
+                        <!-- 头像 -->
+                        <img class="header-img" src="./img/绫小路.jpg" />
+
+                        <div class="replace-btn">
+                            <span class="edit">Edit</span>
+                            <div class="options">
+                                <div class="arrow"></div>
+                                <label for="file-ipt">Upload a photo...</label><br />
+                                <label>Remove photo</label>
+                                <input type="file" accept=".jpg,.jpeg,.png,.gif" name="file" id="file-ipt" style="display: none">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="./index.js"></script>
+
+</body>
+</html>
