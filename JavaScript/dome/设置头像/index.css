@@ -60,16 +60,16 @@ html,body{
 
 .mask .selectArea .wrapper{
     width: 100%;
-    box-sizing: border-box;
-    padding: 20px;
     max-height: 70vh;
     overflow: auto;
     border-bottom: 2px solid #dddddd;
 }
 
 .mask .selectArea .wrapper .imgBox{
-    width: 100%;
+    width: calc(100% - 40px);
+    margin: 20px;
     position: relative;
+    font-size: 0;
 }
 .mask .selectArea .wrapper .imgBox .box{
     position: absolute;

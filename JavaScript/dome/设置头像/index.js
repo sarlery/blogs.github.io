@@ -77,13 +77,14 @@
         const img_h = img.height;
 
         if(img_w >= img_h){
-            sctBox.style.width = img_h + 'px';
-            sctBox.style.height = img_h + 'px';
+            // sctBox.style.width = img_h + 'px';
+            sctBox.style.height = '100%';
+            sctBox.style.width = sctBox.offsetHeight + 'px';
             sctBox.style.top = '0px';
             sctBox.style.left = imgBox.offsetWidth / 2 - sctBox.offsetWidth / 2 + 'px';
         }else{
             sctBox.style.height = img_w + 'px';
-            sctBox.style.width = img_w + 'px';
+            sctBox.style.width = '100%';
             sctBox.style.left = '0px';
             sctBox.style.top = imgBox.offsetHeight / 2 - sctBox.offsetHeight / 2 + 'px';
         }

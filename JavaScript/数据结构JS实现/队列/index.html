@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+
+        function Queue(arr){
+            var q = arr || [];
+            this.enqueue = function(item){
+                q.push(item);
+            }
+            this.dequeue = function(){
+                return q.shift();
+            }
+            this.print = function(){
+                return q.toString();
+            }
+            this.size = function(){
+                return q.length;
+            }
+            this.values = function(){
+                return q;
+            }
+        }
+
+        const joseph = [
+            'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','y','z',
+            'A','B','C','D','E','F','G','H','I','J','K','O','P','Q','S','T'
+        ];
+
+        /* 约瑟夫环 */
+        function josephFn(arr,n = 2){
+            var per = arr.map((item,index) => ({
+                name: item,
+                position: index + 1,
+            }));
+
+            var queue = new Queue(per),
+                k = n;
+
+            while(queue.size() > 2){
+                console.log(k);
+                while(k --){
+                    var item = queue.dequeue();
+                    queue.enqueue(item);
+                }
+                k = n;
+                var del = queue.dequeue();
+                console.log("已经删除：",del);
+            }
+            return queue.values();
+        }
+
+        console.log("最终结果：",josephFn(joseph));
+
+        /* 击鼓传花 */
+        function hotPotato(nameList,num){
+            var queue = new Queue(nameList);
+
+            var el = '';
+            while(queue.size() > 1){
+                for(var i = 0;i < num;i ++){
+                    queue.enqueue(queue.dequeue());
+                }
+                el = queue.dequeue();
+                console.log(el + "被淘汰了！");
+            }
+            return queue.dequeue();
+        }
+
+        var names = [
+            "John",
+            "Jack",
+            "Camila",
+            "Ingrid",
+            "Carl"
+        ];
+
+        var winner = hotPotato(names,7);
+
+        console.log("胜利者 —— ",winner);
+    
+    </script>
+    
+</body>
+</html>
