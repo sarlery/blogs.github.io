@@ -188,7 +188,11 @@ tag 标签适用于整个项目，和具体的分支没有关系。
 - `git blame <file>` 查看文件的所有的提交 commit SHA1 值，以及作者名；  
 - `git show 标签名` 展示某个标签的信息；  
 
-> `git tag v1.0` 和 `git tag -a v1.0 -m "xxxx"` 的区别是，前者的标签信息很少，后者比较多。在新的一次提交后，前者的 commit SHA1 值不会变，而后者会随着当前 `commit` 的 SHA1 值改变而改变。
+> `git tag v1.0` 和 `git tag -a v1.0 -m "xxxx"` 的区别是，前者的标签信息很少，后者比较多。在新的一次提交后，前者的 commit SHA1 值不会变，而后者会随着当前 `commit` 的 SHA1 值改变而改变。  
+
+使用 `git push origin v1.0`（或者使用 `git push origin --tags` 将全部的标签都提交） 可以将版本提交到 GitHub 上。在 GitHub 上的 release 菜单中，可以看到提交的版本，这就相当于你的项目的版本，每个版本都可以进行下载。  
+
+![GitHub release](./img/git-tag.png)
 
 ### diff 命令
 diff 命令是 Linux 的命令。可以使用 `diff <file2> <file2>` 命令查看两个文件内容的不同。`diff -u <file1> <file2>` 可以详细查看内容的不同（有+、- 号表示两个文件的不同）。  
