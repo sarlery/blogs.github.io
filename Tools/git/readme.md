@@ -99,6 +99,9 @@ Git终端命令遵循Linux命令格式。比如 `touch`、`ls` 等命令都可�
   + `%ar`: 哪个时间提交的；
   + `%s`: 提交说明；  
 
+### 给命令起别名
+使用 `git config --global alias.ch checkout` 命令可以给 checkout 命令起一个 `ch` 别名，意思是以后在使用 `git checkout` 命令时，可以直接使用 `git ch` 命令代替。  
+
 ## Git 分支
 - `git branch` 查看分支；
 - `git branch 分支名` 创建分支；
@@ -163,7 +166,7 @@ Git终端命令遵循Linux命令格式。比如 `touch`、`ls` 等命令都可�
 
 比如这样一个场景：在开发时，你正在写你的分支，但还没有写完（不能 commit），但是项目经理说有另一个分支需要先解决，因此你需要切换分支，切换分支之前你还应该将原来的分支保存起来，但不能 commit。因此可以使用 `stash` 做临时保存（将先解决的分支解决完后再切换回原来的分支，知识后再把临时保存的分支还原回来）。  
 
-### 命令格式
+#### 命令格式
 - `git stash` 将当前的分支临时保存；
 - `git stash list` 查看临时保存了多少内容列表（你可以选择性回复）；
 - `git stash pop` 还原现场（将原来保存的删除，用于还原内容。当调用完该命令后，再使用 `git stash list` 时不会有保存列表）；
@@ -174,14 +177,18 @@ Git终端命令遵循Linux命令格式。比如 `touch`、`ls` 等命令都可�
 
 > 如果不同的分支，在同一个 commit 阶段，在 commit 之前，可以 checkout 切换分支。  
 
-### 版本
+### 标签
 tag 标签适用于整个项目，和具体的分支没有关系。  
-- `git tag v1.0` 给项目添加版本；
+- `git tag v1.0` 给项目添加版本（简单标签，里面存储着 `commit` 的 SHA1 值）；
 - `git tag v1.0 -m "版本说明"` 给标签添加说明文字；
 - `git tag` 查看标签；
 - `git tag -l "查询字段"` 查找标签；
+- `git tag -a v2.0 -m "标签说明"` 存储信息，其中包含了当前的 `commit` 的 `SHA1` 值（一次每次提交就会产生一个新的 SHA1 值）。
 - `git tag -d 'v1.0'` 删除标签；
 - `git blame <file>` 查看文件的所有的提交 commit SHA1 值，以及作者名；  
+- `git show 标签名` 展示某个标签的信息；  
+
+> `git tag v1.0` 和 `git tag -a v1.0 -m "xxxx"` 的区别是，前者的标签信息很少，后者比较多。在新的一次提交后，前者的 commit SHA1 值不会变，而后者会随着当前 `commit` 的 SHA1 值改变而改变。
 
 ### diff 命令
 diff 命令是 Linux 的命令。可以使用 `diff <file2> <file2>` 命令查看两个文件内容的不同。`diff -u <file1> <file2>` 可以详细查看内容的不同（有+、- 号表示两个文件的不同）。  
@@ -228,8 +235,36 @@ push 之前你应该先注册 GitHub，登录。然后通过命令 `git remote a
 这时就应该先把远程的仓库拉下来。这是使用 `git pull` 命令还会报错，因为 `pull` 命令不仅会将仓库内容拉下来，还会与本地仓库合并，因为有冲突，无法合并，因此报错。  
 这时，可以打开有冲突的文件进行修改来解决冲突。冲突解决之后别忘了 `add` 和 `commit` 操作。  
 
+### 分支提交
+在GitHub中，默认关联的是 master 分支，而如果想向远程中推送别的分支，比如 dev 分支，如何操作呢？  
+
+你只需要使用 `git push -u origin dev` 提交别的分支。或者使用 `git push --set-upstream origin dev` 命令也可以关联分支。  
+
+上面的情况是本地有别的分支，而远程并没有别的分支。如果远程有别的分支，你想要把别的分支拉取下来，如何操作呢？  
+
+第一步应先使用 `git pull` 命令，拉取到的分支是追踪分支，本地仓库并没有。如何将追踪分支变成本地分支？  
+- 方法 1： 使用命令 `git checkout -b dev origin/dev`（创建并切换到该分支，当然 `-b` 后的 dev 也可以不叫 dev，这是本地的分支名字，你可以随意改，但最好不要改）  
+- 方法 2：使用命令 `git checkout -b dev --track origin/dev`（创建并切换到 dev 分支。`-b dev` 参数可以不写，写了表示切换到该分支）    
+
+你如果想让远端的分支与本地的分支名称不一样，可以使用 `git push origin dev:dev2`（将本地的 dev 推成远端的 dev2 分支）。`git push origin HEAD:dev` 命令中的 `HEAD` 就是 `dev` 分支。  
+
+同样的，使用 `git push origin dev:dev2` 表示将远程分支的 dev 拉到本地，并将 dev 分支关联到本地的 dev2 分支（该命令相当于 `git pull` + `git checkout -b dev2 origin/dev`）。  
+
+如果本地没有 a 分支，但本地却感知远端 a 分支，则可以使用 `git remote prune origin --dry-run` 来检测到 a 这种分支。而使用 `git remote prune origin` 命令可以清空无效的追踪分支（也称本地中感知的远程分支））。  
+
+将远端分支拉取到本地的某个新分支也可以使用别的方法。在本地仓库的 `.git` 目录中有一个 `refs` 目录，该目录中保存着分支信息。  
+
+- 使用 `git fetch origin master:refs/remotes/origin/ms` 拉取远端的一个 master 分支感知到本地的 `ms` 分支当中（运行该命令后，`.git/refs/remotes/origin` 目录下就会多出一个 `ms` 文件）。  
+
+使用 `git push origin 标签名 标签名 标签名` 可以将标签推送到远端。也可以使用 `git push origin --tags` 命令将标签一次性推送完。获取远程标签可以直接使用 `git pull` 只是该命令会将所有的标签都拉下来，使用 `git fetch origin tag v2.0` 可以只将 `v2.0` 的标签拉取下来。  
+
+`git push origin  :v2.0` 可以将远程的标签删除。需要注意的是：如果将远程标签删除，其他用户无法直接感知，还需要通过 `pull` 感知（本地应该也把标签删除）。如果远端是新增标签，则 pull 可以将新增的标签拉取到本地；如果远程是删除标签，则 pull 无法感知。
+
+#### 删除远程分支
+使用命令 `git push origin :dev` 可以删除远端的 `dev` 分支（当然你可以在 GitHub 上直接删掉）。或者使用 `git push origin --delete dev` 把远端分支删除；
+
 ## Git GUI
-使用 `git gui` 命令或者 `gitk` 可以将 git 图形化界面调出。
+使用 `git gui` 命令或者 `gitk` 可以将 git 图形化界面调出。  
  
 ### 版本库
 版本库（version）存在于暂存区和对象区中。
