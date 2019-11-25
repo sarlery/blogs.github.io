@@ -250,22 +250,53 @@ push 之前你应该先注册 GitHub，登录。然后通过命令 `git remote a
 - 方法 1： 使用命令 `git checkout -b dev origin/dev`（创建并切换到该分支，当然 `-b` 后的 dev 也可以不叫 dev，这是本地的分支名字，你可以随意改，但最好不要改）  
 - 方法 2：使用命令 `git checkout -b dev --track origin/dev`（创建并切换到 dev 分支。`-b dev` 参数可以不写，写了表示切换到该分支）    
 
-你如果想让远端的分支与本地的分支名称不一样，可以使用 `git push origin dev:dev2`（将本地的 dev 推成远端的 dev2 分支）。`git push origin HEAD:dev` 命令中的 `HEAD` 就是 `dev` 分支。  
+* 你如果想让远端的分支与本地的分支名称不一样，可以使用 `git push origin dev:dev2`（将本地的 dev 推成远端的 dev2 分支）。`git push origin HEAD:dev` 命令中的 `HEAD` 就是 `dev` 分支。  
 
-同样的，使用 `git push origin dev:dev2` 表示将远程分支的 dev 拉到本地，并将 dev 分支关联到本地的 dev2 分支（该命令相当于 `git pull` + `git checkout -b dev2 origin/dev`）。  
+* 同样的，使用 `git push origin dev:dev2` 表示将远程分支的 dev 拉到本地，并将 dev 分支关联到本地的 dev2 分支（该命令相当于 `git pull` + `git checkout -b dev2 origin/dev`）。  
 
-如果本地没有 a 分支，但本地却感知远端 a 分支，则可以使用 `git remote prune origin --dry-run` 来检测到 a 这种分支。而使用 `git remote prune origin` 命令可以清空无效的追踪分支（也称本地中感知的远程分支））。  
+* 如果本地没有 a 分支，但本地却感知远端 a 分支，则可以使用 `git remote prune origin --dry-run` 来检测到 a 这种分支。而使用 `git remote prune origin` 命令可以清空无效的追踪分支（也称本地中感知的远程分支））。  
 
 将远端分支拉取到本地的某个新分支也可以使用别的方法。在本地仓库的 `.git` 目录中有一个 `refs` 目录，该目录中保存着分支信息。  
 
 - 使用 `git fetch origin master:refs/remotes/origin/ms` 拉取远端的一个 master 分支感知到本地的 `ms` 分支当中（运行该命令后，`.git/refs/remotes/origin` 目录下就会多出一个 `ms` 文件）。  
 
-使用 `git push origin 标签名 标签名 标签名` 可以将标签推送到远端。也可以使用 `git push origin --tags` 命令将标签一次性推送完。获取远程标签可以直接使用 `git pull` 只是该命令会将所有的标签都拉下来，使用 `git fetch origin tag v2.0` 可以只将 `v2.0` 的标签拉取下来。  
+* 使用 `git push origin 标签名 标签名 标签名` 可以将标签推送到远端。也可以使用 `git push origin --tags` 命令将标签一次性推送完。获取远程标签可以直接使用 `git pull` 只是该命令会将所有的标签都拉下来，使用 `git fetch origin tag v2.0` 可以只将 `v2.0` 的标签拉取下来。  
 
-`git push origin  :v2.0` 可以将远程的标签删除。需要注意的是：如果将远程标签删除，其他用户无法直接感知，还需要通过 `pull` 感知（本地应该也把标签删除）。如果远端是新增标签，则 pull 可以将新增的标签拉取到本地；如果远程是删除标签，则 pull 无法感知。
+* `git push origin  :v2.0` 可以将远程的标签删除。需要注意的是：如果将远程标签删除，其他用户无法直接感知，还需要通过 `pull` 感知（本地应该也把标签删除）。如果远端是新增标签，则 pull 可以将新增的标签拉取到本地；如果远程是删除标签，则 pull 无法感知。
 
 #### 删除远程分支
 使用命令 `git push origin :dev` 可以删除远端的 `dev` 分支（当然你可以在 GitHub 上直接删掉）。或者使用 `git push origin --delete dev` 把远端分支删除；
+
+## submodule 与 subtree
+如果你想在 A 项目中引用 B 项目中代码，可以在A项目中使用 `git submodule add <B项目的远端地址>`命令来实现。这样做后A项目的本地就有了B项目，想要推送到远端还需要使用 `add` 、`commit` 和 `push` 命令。  
+
+如果B库中的内容修改了，A库中的B库并不会同步修改。A如果想要感知B库的更新，A库就需要使用 `pull` 拉一下（不过该操作你必须进入到 `A/B` 这个目录中才可以成功操作），然后退出到 `A` 这个根目录，进行 `add`、`commit` 和 `push` 操作。  
+
+上面的操作是比较繁琐的，如果A仓库中有许多个子仓库，子仓库每次更新想让A仓库都感知到就需要一个一个进行目录切换。因此可以使用 `git submodule pull foreach git pull` 命令（该命令直接在项目 A 的根目录使用）来替代上面的 `pull` 操作，该命令是迭代命令，会把所有的子模块拉下来。  
+
+需要注意的是，一个项目中有子模块时，`git clone` 命令不可以直接克隆了，因为这么做子模块不会被克隆下来，此时就需要使用 `git clone <项目远程地址> --recursive` 命令。  
+
+### 删除 submodule 子模块
+第一步：先把暂存区闪一下：`git rm --cached <子模块目录>` 将项目中的子模块删除，然后再使用 `rm -rf B` 删除 B 目录，然后别忘了将 `.gitmodules` 配置文件删除，最后进行 `commit` 操作就可以将子模块删除。
+
+### subtree
+submodule 模块比较麻烦，而且在A仓库中修改子模块B后，B仓库是不会感知到的（只能将仓库B中的内容改了让A仓库中的B模块感知到）。想要实现“双工”，就应该使用 `subtree` 命令。    
+
+- 向仓库中添加一个子模块：`git subtree add -P <指定子模块的名字> <子模块的远程地址> master`。  
+  子模块的仓库地址就是 GitHub 上的项目地址，如果你不想每次都输入地址，可以使用 `git remote add <subtree-origin> <子模块的远程地址>` 来给远程地址（URL）起一个别称：`subtree-origin`，当然这个别称可以任意起，运行完该命令后，在使用 `git subtree add -P` 命令时，远程地址就可以直接使用 `subtree-origin` 来代替URL地址。  
+- `git subtree add -P <指定的子模块的名字> <子模块的远程地址> master --squash` 命令与上面不加 `--squash` 参数功能一样，加了该参数可以减少 commit，为了防止子工程干扰父工程。让 commit 次数减少到两次（合并时的提交，合并后的提交，因此这很像解决冲突），注意两点：  
+  1. 会产生新的提交；
+  2. 往前走两步 commit；  
+
+- 使用 `subtree` 命令时（命令的前两个单词是：`git subtree`），你如果使用 `--squash` 参数，以后的每次都应该加上该参数；而如果没加该参数，就都不要再加该参数了（一个约定）。  
+- `git subtree pull -P <子模块名字> <子仓库地址> master` 将服务端的子仓库拉到本地父仓库中（该命令在父仓库操作），然后还需要进行 push 操作将本地推送到远端父仓库中（当修改本地子仓库的内容后，父仓库中的子模块如果想要同步需要该操作）。
+
+**当修改父模块中的子模块时，子仓库如何也同步？**  
+上面已经说明了将子仓库中的内容改了之后可以让父仓库仓的子模块感知到（先 pull 再 push）。这里说一下当修改父模块中的子模块时，子仓库也同步。  
+
+实现思路，需要将远端的父仓库中的子模块拉取到本地子仓库中，然后再将本地的子仓库推送到云端仓库中。运行 `git subtree push -P <子模块名称> <子仓库地址> master` 就可以将本地（父工程中的子模块）修改的内容推送到远程的子仓库中。  
+
+> 子模块地址就是在执行 `git subtree add -P <指定的子模块名字>` 时指定的，当指定好该名字后，父仓库的目录中就会多出一个子模块名字的目录。以后再操作该模块时（比如 `git subtree pull` 命令），子模块的名字就是 add 时指定的那个名字。  
 
 ## Git GUI
 使用 `git gui` 命令或者 `gitk` 可以将 git 图形化界面调出。  
