@@ -236,6 +236,10 @@ function initCanvas(img){
         ctx.putImageData(imageData,0,0);
     }
 
+    document.querySelector(".aboriginal").addEventListener('click',function(){
+        createImg(fileIpt.files[0]);
+    },false);   
+
     invertBtn.addEventListener("click", invert, false);
     grayscaleBtn.addEventListener("click", grayscale, false);
     ancientBtn.addEventListener('click',ancient,false);

@@ -1,6 +1,8 @@
 # 从零搭建一个 webpack 脚手架工具
 
-从最基础的开始，webpack 版本：`^4.39.2`，搭建时会用到一下内容：  
+webpack 是一个现代 JavaScript 应用程序的静态模块打包器，已经成为前端开发不可获取的工具。特别是在开发大型项目时，项目太大，文件过多导致难以维护，或者是优化网络请求时，webpack 都是不可获取的利器。
+
+从最基础的开始，使用的 webpack 版本是`^4.39.2`，搭建时会用到一下内容：  
 1. 从单页面到多页面
 2. 代码切片
 3. 热更新
@@ -14,35 +16,49 @@
 11. 不同开发环境的配置
 12. 配置 react 开发环境  
 
-- [从零搭建一个 webpack 脚手架工具](#从零搭建一个-webpack-脚手架工具)
-    - [安装 webpack，设置程序打包命令](#安装-webpack设置程序打包命令)
-    - [entry 入口配置（必须的）](#entry-入口配置必须的)
-    - [output 配置](#output-配置)
-        - [单页面](#单页面)
-        - [多页面](#多页面)
-        - [publicPath](#publicpath)
-    - [html-webpack-plugin 插件](#html-webpack-plugin-插件)
-        - [多个 HTML 页面的配置](#多个-html-页面的配置)
-    - [mode 环境变量](#mode-环境变量)
-    - [module 配置](#module-配置)
-        - [`style-loader` 和 `css-loader`](#style-loader-和-css-loader)
-        - [loader options](#loader-options)
-        - [`sass-loader` 和 `less-loader`](#sass-loader-和-less-loader)
-        - [`html-loader`](#html-loader)
-        - [`file-loader` 和 `url-loader`](#file-loader-和-url-loader)
-        - [`ts-loader`](#ts-loader)
-        - [`babel-loader`](#babel-loader)
-        - [处理 react jsx 语法：`@babel/preset-react`](#处理-react-jsx-语法babelpreset-react)
-        - [`postcss-loader`](#postcss-loader)
-    - [resolve 配置项](#resolve-配置项)
-        - [`resolve.alias`](#1-resolvealias)
-        - [`resolve.extensions`](#resolveextensions)
-    - [devServer 配置项](#devserver-配置项)
-        - [配置 devServer](#配置-devserver)
-        - [配置命令](#配置命令)
-        - [historyApiFallback 更具体的配置](#historyapifallback-更具体的配置)
-        - [devServer 中 publicPath 的配置](#devserver-中-publicpath-的配置)
-        - [开启模块热替换功能](#开启模块热替换功能)
+- [从零搭建一个 webpack 脚手架工具](#%e4%bb%8e%e9%9b%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e4%b8%aa-webpack-%e8%84%9a%e6%89%8b%e6%9e%b6%e5%b7%a5%e5%85%b7)
+  - [安装 webpack，设置程序打包命令](#%e5%ae%89%e8%a3%85-webpack%e8%ae%be%e7%bd%ae%e7%a8%8b%e5%ba%8f%e6%89%93%e5%8c%85%e5%91%bd%e4%bb%a4)
+  - [entry 入口配置（必须的）](#entry-%e5%85%a5%e5%8f%a3%e9%85%8d%e7%bd%ae%e5%bf%85%e9%a1%bb%e7%9a%84)
+  - [output 配置](#output-%e9%85%8d%e7%bd%ae)
+    - [单页面](#%e5%8d%95%e9%a1%b5%e9%9d%a2)
+    - [多页面](#%e5%a4%9a%e9%a1%b5%e9%9d%a2)
+    - [publicPath](#publicpath)
+  - [html-webpack-plugin 插件](#html-webpack-plugin-%e6%8f%92%e4%bb%b6)
+    - [多个 HTML 页面的配置](#%e5%a4%9a%e4%b8%aa-html-%e9%a1%b5%e9%9d%a2%e7%9a%84%e9%85%8d%e7%bd%ae)
+  - [mode 环境变量](#mode-%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f)
+  - [module 配置](#module-%e9%85%8d%e7%bd%ae)
+    - [`style-loader` 和 `css-loader`](#style-loader-%e5%92%8c-css-loader)
+    - [loader options](#loader-options)
+    - [`sass-loader` 和 `less-loader`](#sass-loader-%e5%92%8c-less-loader)
+    - [`html-loader`](#html-loader)
+    - [`file-loader` 和 `url-loader`](#file-loader-%e5%92%8c-url-loader)
+      - [file-loader 中的 options](#file-loader-%e4%b8%ad%e7%9a%84-options)
+      - [`url-loader`](#url-loader)
+    - [`ts-loader`](#ts-loader)
+    - [`babel-loader`](#babel-loader)
+    - [处理 react jsx 语法：`@babel/preset-react`](#%e5%a4%84%e7%90%86-react-jsx-%e8%af%ad%e6%b3%95babelpreset-react)
+      - [处理 `.jsx` 的文件](#%e5%a4%84%e7%90%86-jsx-%e7%9a%84%e6%96%87%e4%bb%b6)
+    - [`postcss-loader`](#postcss-loader)
+      - [配置 PostCSS](#%e9%85%8d%e7%bd%ae-postcss)
+      - [自动添加后缀 —— `autoprefixer`](#%e8%87%aa%e5%8a%a8%e6%b7%bb%e5%8a%a0%e5%90%8e%e7%bc%80--autoprefixer)
+      - [`postcss-preset-env` 插件](#postcss-preset-env-%e6%8f%92%e4%bb%b6)
+  - [resolve 配置项](#resolve-%e9%85%8d%e7%bd%ae%e9%a1%b9)
+    - [1. `resolve.alias`](#1-resolvealias)
+    - [`resolve.extensions`](#resolveextensions)
+  - [devServer 配置项](#devserver-%e9%85%8d%e7%bd%ae%e9%a1%b9)
+    - [配置 devServer](#%e9%85%8d%e7%bd%ae-devserver)
+    - [配置命令](#%e9%85%8d%e7%bd%ae%e5%91%bd%e4%bb%a4)
+    - [historyApiFallback 更具体的配置](#historyapifallback-%e6%9b%b4%e5%85%b7%e4%bd%93%e7%9a%84%e9%85%8d%e7%bd%ae)
+    - [devServer 中 publicPath 的配置](#devserver-%e4%b8%ad-publicpath-%e7%9a%84%e9%85%8d%e7%bd%ae)
+    - [开启模块热替换功能](#%e5%bc%80%e5%90%af%e6%a8%a1%e5%9d%97%e7%83%ad%e6%9b%bf%e6%8d%a2%e5%8a%9f%e8%83%bd)
+      - [React 中使用热模块更替](#react-%e4%b8%ad%e4%bd%bf%e7%94%a8%e7%83%ad%e6%a8%a1%e5%9d%97%e6%9b%b4%e6%9b%bf)
+  - [代码优化](#%e4%bb%a3%e7%a0%81%e4%bc%98%e5%8c%96)
+    - [分离样式文件](#%e5%88%86%e7%a6%bb%e6%a0%b7%e5%bc%8f%e6%96%87%e4%bb%b6)
+    - [代码分片](#%e4%bb%a3%e7%a0%81%e5%88%86%e7%89%87)
+    - [`webpack-merge`](#webpack-merge)
+  - [生产环境配置](#%e7%94%9f%e4%ba%a7%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae)
+    - [压缩代码](#%e5%8e%8b%e7%bc%a9%e4%bb%a3%e7%a0%81)
+      - [压缩 CSS](#%e5%8e%8b%e7%bc%a9-css)
 
 
 
@@ -77,6 +93,7 @@
 
 ## entry 入口配置（必须的）
 entry 大致有四种写法，分别是字符串的形式、数组形式、函数形式和对象形式。代表的含义分别是：  
+
 |形式|含义|举例|
 |:---|:---|:-----|
 字符串的形式|这种表示单个入口|例如：`entry: "path(__dirname,"../src/index.js")"`|

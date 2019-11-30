@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            background-color: gray;
+        }
+        #my-cvs{
+            background-color: white;
+            margin: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas height="600" width="600" id="my-cvs"></canvas>
+    
+    <script src="./untils.js"></script>
+    <script>
+
+        let cvs = document.querySelector("#my-cvs"),
+            ctx = cvs.getContext('2d'),
+            mouse = untils.captureMouse(cvs);
+        
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame, cvs);
+
+            for(var i = 0;i < cvs.width;i ++){
+                for(var j = 0;j < cvs.height;j ++){
+                    ctx.fillStyle = (i % 20 === 0) ? "#f00" : ((i % 30) === 0) ? "#0f0" : "#00f";
+                    ctx.fillRect(i,j,10,10);
+                }
+            }
+
+            var imagedata = ctx.getImageData(0,0,cvs.width,cvs.height),
+                pixels = imagedata.data;
+
+            for(var y = 0;y < imagedata.height;y += 1){
+                for(var x = 0;x < imagedata.width;x += 1){
+                    var dx = x - mouse.x,
+                        dy = y - mouse.y,
+                        dist = Math.sqrt(dx * dx + dy ** 2),
+                        offset = (x + y * imagedata.width) * 4,
+                        r = pixels[offset],
+                        g = pixels[offset + 1],
+                        b = pixels[offset + 2];
+                    
+                    pixels[offset] = Math.cos(r * dist * 0.001) * 256;
+                    pixels[offset + 1] = Math.sin(g * dist * 0.001) * 256;
+                    pixels[offset + 2] = Math.cos(b * dist * 0.0005) * 256;
+                }
+            }
+            ctx.putImageData(imagedata,0,0);
+        })();
+
+    </script>
+
+</body>
+</html>
