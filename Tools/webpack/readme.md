@@ -34,14 +34,17 @@ webpack 是一个现代 JavaScript 应用程序的静态模块打包器，已经
     - [`file-loader` 和 `url-loader`](#file-loader-%e5%92%8c-url-loader)
       - [file-loader 中的 options](#file-loader-%e4%b8%ad%e7%9a%84-options)
       - [`url-loader`](#url-loader)
+      - [html-withimg-loader](#html-withimg-loader)
     - [`ts-loader`](#ts-loader)
     - [`babel-loader`](#babel-loader)
+    - [eslint](#eslint)
     - [处理 react jsx 语法：`@babel/preset-react`](#%e5%a4%84%e7%90%86-react-jsx-%e8%af%ad%e6%b3%95babelpreset-react)
       - [处理 `.jsx` 的文件](#%e5%a4%84%e7%90%86-jsx-%e7%9a%84%e6%96%87%e4%bb%b6)
     - [`postcss-loader`](#postcss-loader)
       - [配置 PostCSS](#%e9%85%8d%e7%bd%ae-postcss)
       - [自动添加后缀 —— `autoprefixer`](#%e8%87%aa%e5%8a%a8%e6%b7%bb%e5%8a%a0%e5%90%8e%e7%bc%80--autoprefixer)
       - [`postcss-preset-env` 插件](#postcss-preset-env-%e6%8f%92%e4%bb%b6)
+    - [暴露全局变量](#%e6%9a%b4%e9%9c%b2%e5%85%a8%e5%b1%80%e5%8f%98%e9%87%8f)
   - [resolve 配置项](#resolve-%e9%85%8d%e7%bd%ae%e9%a1%b9)
     - [1. `resolve.alias`](#1-resolvealias)
     - [`resolve.extensions`](#resolveextensions)
@@ -52,13 +55,20 @@ webpack 是一个现代 JavaScript 应用程序的静态模块打包器，已经
     - [devServer 中 publicPath 的配置](#devserver-%e4%b8%ad-publicpath-%e7%9a%84%e9%85%8d%e7%bd%ae)
     - [开启模块热替换功能](#%e5%bc%80%e5%90%af%e6%a8%a1%e5%9d%97%e7%83%ad%e6%9b%bf%e6%8d%a2%e5%8a%9f%e8%83%bd)
       - [React 中使用热模块更替](#react-%e4%b8%ad%e4%bd%bf%e7%94%a8%e7%83%ad%e6%a8%a1%e5%9d%97%e6%9b%b4%e6%9b%bf)
-  - [代码优化](#%e4%bb%a3%e7%a0%81%e4%bc%98%e5%8c%96)
+  - [使用 watch 简化操作](#%e4%bd%bf%e7%94%a8-watch-%e7%ae%80%e5%8c%96%e6%93%8d%e4%bd%9c)
+  - [webpack优化](#webpack%e4%bc%98%e5%8c%96)
     - [分离样式文件](#%e5%88%86%e7%a6%bb%e6%a0%b7%e5%bc%8f%e6%96%87%e4%bb%b6)
     - [代码分片](#%e4%bb%a3%e7%a0%81%e5%88%86%e7%89%87)
     - [`webpack-merge`](#webpack-merge)
   - [生产环境配置](#%e7%94%9f%e4%ba%a7%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae)
     - [压缩代码](#%e5%8e%8b%e7%bc%a9%e4%bb%a3%e7%a0%81)
       - [压缩 CSS](#%e5%8e%8b%e7%bc%a9-css)
+  - [webpack 小插件](#webpack-%e5%b0%8f%e6%8f%92%e4%bb%b6)
+    - [1. cleanWebpackPlugin](#1-cleanwebpackplugin)
+    - [2. copyWebpackPlugin](#2-copywebpackplugin)
+    - [3. webpack.DefinePlugin](#3-webpackdefineplugin)
+    - [4. BannerPlugin](#4-bannerplugin)
+  - [create-react-app 中配置多页应用](#create-react-app-%e4%b8%ad%e9%85%8d%e7%bd%ae%e5%a4%9a%e9%a1%b5%e5%ba%94%e7%94%a8)
 
 
 
@@ -192,6 +202,16 @@ const HtmlWebpackPlugin  = require('html-webpack-plugin');
             // 指定 打包输出后，文件的名字（不指定的话还是原来的名字）
             filename: "hello.html",
             // 还有许多配置，这是常用的几个
+
+            // 压缩 HTML 代码
+            minify: {
+                // 删除标签属性值的双引号或单引号
+                removeAttributeQuotes: true,
+                // 将代码压缩成一行
+                collapseWhitespace: true,
+            },
+            // 将引入的 js 文件添加上 hash 值（防止缓存）
+            hash: true
         })
     ]
 }
@@ -271,18 +291,11 @@ if(isDve){
 module.exports = config;
 ```
 
-
-
-
-
-
-
-
 ## module 配置
 这一部分比较多，主要是配置各种loader，比如 `css-loader`,`babel-loader`,`sass-loader`等等。而这些配置存在于 module.rules 这个配置项中。
 所有的 loader 都是需要安装的。 通过 `npm install xxx-loader` 或 `yarn add xxx-loader` 的形式进行安装。
 ### `style-loader` 和 `css-loader` 
-两者有很大不同，`css-loader` 的作用仅仅是处理 CSS 的各种加载语法，例如 `@import` 和 `url()` 等。而 `style-loader` 才是真正让样式起作用的 loader。因此这两个一般配合使用：
+两者有很大不同，`css-loader` 的作用仅仅是处理 CSS 的各种加载语法，例如 `@import` 和 `url()` 等。而 `style-loader` 才是真正让样式起作用的 loader（会将 CSS 引入到 head 标签里的 style 标签中）。因此这两个一般配合使用：
 ```js
 {
     module: {
@@ -305,7 +318,14 @@ module.exports = config;
         rules: [
             {
                 test: /\.css$/,
-                use: ['style-loader',{
+                use: [{
+                    loader: 'style-loader',
+                    options: {
+                        // 将样式放到顶部
+                        // 当 HTML 模板中也有 CSS 样式（通过 style 标签写的），你又不想被覆盖掉，可以将 引入的 CSS 放到最顶部防止原来的样式被覆盖。
+                        insertAt: 'top',
+                    }
+                },{
                     // 对 css-loader 配置时，是个对象
                     loader: 'css-loader',
                     options: {
@@ -396,9 +416,22 @@ rules: [
             // 大于该值时，使用 publicPath 
             // 这个属性在 file-loader 中是没有的。
             limit: 10240,
-            name: '[name].[ext]'
+            name: '[name].[ext]',
+            // 将所有的图片打包到 img 目录下
+            outputPath: 'img/',
         }
     }
+}
+```
+
+#### html-withimg-loader
+当我们在 HTML 模板中有 img 标签是，img 标签的 src 的路径并不会被 webpack 转化，因此需要使用 `html-withimg-loader`，使用之前同样需要先下载。然后配置：  
+```js
+{
+    rules: [
+        test: /\.html/,
+        use: 'html-withimg-loader'
+    ]
 }
 ```
 
@@ -422,7 +455,7 @@ babel-loader 很重要，使用 babel-loader可以让我们写的 JS 代码更�
 + `@babel/core` babel 编译器的核心模块；
 + `@babel/preset-env` 它是官方推荐的预置器，可根据用户设置的目标环境自动添加所需的插件和补丁来编译 ES6+ 代码。  
 具体配置如下：
-```js
+```js 
 rules: [
     {
         test: /\.js$/,
@@ -468,10 +501,79 @@ rules: [
             }
         ]
     ],
-    "plugins": []
+    "plugins": [
+        // 语法转换（ES6转ES5）将常用到这个包
+        // 在开发环境下载
+        // 下载这个插件后还需要下载另一个包：@babel/runtime
+        // @babel/runtime 需要下载到生产环境中（--save）。不需要配置
+        "@babel/plugin-transform-runtime",
+    ]
 }
 ```
 > env 的 targets 属性，可以配置的环境名称有：`chrome`，`opera`，`edge`，`firefox`，`safari`，`ie`，`ios`，`android`，`node`，`electron`。当然 targets 的值也可以是一个字符串，例如：`"targets": "> 0.25%, not dead"` 表示仅包含浏览器具有> 0.25％市场份额的用户所需的polyfill和代码转换。  
+
+上面配置了 `@babel/plugin-transform-runtime` 插件，解决了语法问题（比如 Promise、async/await、迭代器），而 ES6 以及往上的 API 浏览器也不一定支持，比如字符串的 includes 方法，这时就需要另一个 babel 包：`@babel/polyfill`，下载：`yarn add @babel/polyfill`。这个包不需要配置到 babel 中，要使用这个包，就在文件中引入：`require('@babel/polyfill');`。  
+
+### eslint
+eslint 是 JS 语法的校验器，它提供了一个 loader：`eslint-loader`。使用之前需要先下载：`yarn add eslint eslint-loader`，配置如下：  
+```js
+{
+    rules: [
+        {
+            test: /\.js$/,
+            use: {
+                laoder: 'eslint-loader',
+            }
+        }
+    ]
+}
+```
+设置好 loader 后，还要在项目根目录下建一个 `.eslintrc.json` 文件再进行其他配置。  
+
+当然，也可以来到这个网址 [https://eslint.org/demo/](https://eslint.org/demo/)，下载默认的配置文件。下载好后把文件修改成 `.eslintrc.json` 名称（名称前有一个点），然后把该文件剪切到项目根目录下。  
+
+需要注意的是，loader 的执行顺序是从右到左（对于一个规则，多个loader的情况，配置 .css laoder时，use 项中有多个 loader），从下到上（对于一个多个规则，比如同是处理 .js 文件的配置，写了好几个规则（test）），因此，eslint-loader 应该放在所有 .js 规则中的最后一个（先检验，再做别的事情）。
+```js
+{
+    rules: [
+        {
+            test: /\.js$/,
+            use: [
+                loader: "babel-loader",
+            ]
+        },{
+            test: /\.js$/,
+            use: [
+                loader: "eslint-loader",
+            ]
+        }
+    ]
+}
+```
+
+也可以使用 options 中的 enforce 配置项：
+```js
+{
+    rules: [
+        {
+            test: /\.js$/,
+            use: [
+                loader: "eslint-loader",
+                options: {
+                    // 强制让这个 loader 最先执行
+                    enforce: "pre"
+                }
+            ]
+        },{
+            test: /\.js$/,
+            use: [
+                loader: "babel-loader",
+            ]
+        }
+    ]
+}
+```
+`enforce` 默认值是 `normal`，除了 `pre` 和 `normal` 之外，还有 `post`，表示强制最后执行在 normal 之后执行这个loader。
 
 ### 处理 react jsx 语法：`@babel/preset-react`
 下载: `yarn add @babel/preset-react -D`。当然，如果想使用 react，也要下载。在 `.babelrc` 的presets项中添加一个preset：
@@ -490,6 +592,7 @@ rules: [
     ]
 }
 ```
+
 这个时候就可以愉快的使用 react 了！
 #### 处理 `.jsx` 的文件
 用 react 写的文件不光可以使用 `.js`后缀，也可以使用 `.jsx` 文件后缀。但想要使用，这需要配置，不然会报错。来到 webpack 配置文件，添加一个 loader 项：
@@ -518,6 +621,9 @@ use: {
     use: ['style-loader','css-loader','postcss-loader'],
 }
 ```
+
+需要注意的是：使用多个 loader 时，loader 的加载是有顺序的，loader 的加载是从右到左。因此，less-loader 或者 sass-loader 先执行，让代码先转成原生的CSS，然后使用 postcss-loader 优化CSS属性（比如添加属性后缀），然后是 css-loader 将CSS文件中 `import` 导入的文件添加进来，最后使用 style-loader 将 CSS 样式添加到 html 的 style 标签中。
+
 #### 配置 PostCSS
 这里需要创建一个文件 —— `postcss.config.js` 在项目根目录下。  
 #### 自动添加后缀 —— `autoprefixer`
@@ -573,7 +679,83 @@ module.exports = {
 };
 ```
 
+配置完有关 CSS loader 后，还有一个问题，我们不想将 CSS 都插入到 style 标签中，如果 CSS 样式代码很多，会导致生成的 HTML 文件很大，我们希望使用 `<link>` 标签引入打包后的 CSS 文件（将 CSS 单独提取出来），这时候就要使用一个插件：`mini-css-extract-plugin`。  
 
+下载：`yarn add mini-css-extract-plugin -D`。  
+
+配置：  
+```js
+// webpack.config.dev.js
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+    // ....
+
+    plugins: [
+        new MiniCssExtractPlugin({
+            // 抽离的样式叫什么名字（会生成在 css 文件夹下）
+            filename: "css/main.css",
+        });
+    ],
+
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    // 将 style-loader 替换掉（不再将 css 样式放在 style 标签中）
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
+            }
+        ]
+    }
+}
+```
+
+### 暴露全局变量
+在 webapck 中使用 jquery 时，可以这么引入：  
+```js
+import $ from 'jquery';
+```
+但是这个 `$` 变量并不在全局下（window）。如果我们想要将改变量暴露到全局中，需要使用 `expose-loader`。  
+
+下载：`yarn add expose-loader`。将 jquery 模块暴露出来：
+```js
+import $ from "expose-loader?$!jquery";
+```
+`?$!` 中的 `$` 就是指被暴露的变量名（`expose-loader` `?` `!` 是固定格式）。
+
+当然，如果不想这么写，也可以在 rules 中进行配置：  
+```js
+{
+    rules: [
+        test: require('jquery'),
+        use: 'expose-loader?$'
+    ]
+}
+```
+配置好后，使用jQuery时，还需要进行引入：`import $ from 'jquery'`。如果不想每次都引入（或说不用引入），可以使用一个插件：`provide-plugin`。使用时不需要下载，webpack 自带，然后在 plugins 配置项中配置：
+```js
+{
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery'
+        })
+    ]
+}
+```
+
+如果你在 HTML 中引入了第三方模块使用 script 标签，但在开发中如果再使用 `import $ from 'jquery'`，webpack 就会多打包一次。为了不让 webpack 这样做，可以添加一个配置: 
+```js
+module.exports = {
+    plugins: [],
+    // ...
+    externals: {
+        jquery: 'jQuery'
+    }
+}
+```
 
 ## resolve 配置项
 这是一个可选的配置项，配置 `resolve` 用来设置模块如何被解析。几个常见的配置项：  
@@ -601,6 +783,9 @@ import App2 from 'xyz/index.js';  // 非精准匹配，匹配 path/to/file.js/in
 ```js
 {
     resolve: {
+        // 顺序的是从左到右，假如引入的文件不带后缀，
+        // 会先找 .wasm 的文件，没找到会接着找 .mjs 的文件，
+        // 以此类推
         extensions: ['.wasm', '.mjs', '.js', '.json','.jsx']
     }
 }
@@ -636,10 +821,54 @@ if(isDev){      // 如果是开发环境
         open: true,
         // 被作为索引文件的文件名。
         // 默认是 index.html，可以通过这个来做更改
-        index: 'demo.html'
+        index: 'demo.html',
+
+        // 使用代理服务器
+        proxy: {
+            '/api': {
+                // 当请求 /api 的路径时，就是用 target 代理服务器
+                target: "http://loaclhost:3000",
+                // 重写路径
+                pathRewrite: {
+                    '/api': ''
+                }
+            }
+        }
     }
 }
 ```
+有时候我们不想使用代理，只是想单纯的模拟数据。就可以使用 webpack 给我们提供的一个 `before` 函数：
+```js
+{
+    devServer: {
+        // app 参数就是 express 框架的 express 实例
+        before(app){
+            app.get('/api',(req,res) => {
+                // to do something...
+            })
+        }
+    }
+}
+```
+
+第三种方式，就是使用 webpack 的端口（服务端和 webpack（前端） 是一个端口）在服务端需要下载一个中间件：`webpack-dev-middleware`。
+```shell
+yarn add webpack-dev-middleware -D 
+```
+然后服务端写入以下代码：
+```js
+const express = require("express");
+const webpack = require("webpack");
+const webpackMiddleware = require("webpack-dev-middleware");
+
+// 引入写好的 webpack 配置文件
+let config = require("./webpack.config.js");
+let compiler = webpack(config);
+
+// 绑定中间件
+app.use(webpackMiddleware(compiler));
+```
+
 ### 配置命令
 来到 package.json 文件中，再添加一条命令，叫做 `start`，写下下面的内容：
 ```json
@@ -763,7 +992,24 @@ alias: {
 ```
 最后，重启服务，热更替模块就可以用了。使用 react-hot-loader 的好处就是，可以避免 React 组件的不必要渲染。  
 
-## 代码优化
+## 使用 watch 简化操作
+当代码一变化，就会自动打包。
+```js
+// webpack.config.dev.js
+
+module.exports = {
+    watch: true,    // 开启监听
+    watchOptions: {
+        poll: 1000, // 每秒打包一次
+        // 防抖，一直输入代码，停止输入 500 毫秒后再打包。
+        aggreateTimeout: 500,
+        // 不需要进行监控的文件或目录
+        ignored: /node_modules/ 
+    }
+}
+```
+
+## webpack优化
 配置了那么多，优化处理一点也没有，特别是导出的文件只有一个，这样会让文件非常大，这时候就需要切片处理以及分离文件。  
 ### 分离样式文件
 在面前的配置中，css 样式是通过附加 style 标签的方式引入样式的。在生产环境下我们希望将样式存于 CSS 文件中，文件更有利于客户端进行缓存。  
@@ -905,6 +1151,8 @@ module.exports = {
     devtool: 'source-map',
 }
 ```
+`devtool` 还有几个配置值：`eval-source-map`，这个表示不会产生单独的文件（集成在打包后的文件中），但是可以显示行和列（代码有异常时）；`cheap-module-source-map` 不会产生列，但是会产生一个 source-map；`cheap-module-eval-source-map` 配置不会生成 source-map 文件，集成在打包后的文件中，不会产生列。
+
 如果想让 css或sass 也生成 map，需要在loader的options中指定：
 ```js
 {
@@ -977,3 +1225,64 @@ module.exports = {
     }
 }
 ```
+需要注意的是，使用 OptimizeCssAssetsPlugin 插件压缩 CSS 文件后，JS 文件压缩就会失效。这时候就需要使用 JS 压缩插件：`UglifyJsPlugin`。  
+
+下载：`yarn add uglify-js-plugin -D`。  
+
+在 `optimization` 的 `minimizer` 配置项中配置：  
+```js
+{
+    minimizer: [
+        new UglifyJsPlugin({
+            // 是否需要缓存（是）
+            cache: true,
+            // 是否是并发打包（是）
+            parallel: true,
+            // 是否生成源码映射（是）
+            sourceMap: true
+        }),
+        new OptimizeCssAssetsPlugin({
+            // ...
+        })
+    ]
+}
+```
+
+## webpack 小插件 
+### 1. cleanWebpackPlugin
+该插件需要下载，功能是每次新的打包完成后，旧的打包目录会自动被删除。该插件需要传入一个参数，你要删除的路径，要删除多个目录可以传入一个数组。  
+
+### 2. copyWebpackPlugin
+该插件需要下载。功能是将没有指定为入口的目录中的文件拷贝到打包后的目录中。  
+格式：
+```js
+new CopyWebpackPlugin([
+    {from: '要拷贝的目录',to: '拷贝到哪里'}
+])
+```
+### 3. webpack.DefinePlugin
+该插件是 webpack 自带的插件（不需要下载）。用它可以自定义环境变量。
+```js
+{
+    plugin: [
+        new webpack.DefinePlugin({
+            // DEV 变量就是一个环境变量
+            DEV: JSON.stringify('dev'),
+            PRODUCTION: JSON.stringify('production')
+        }),
+    ]
+}
+```
+一般不使用这种方式配置环境变量。而是使用 `process.env.NODE_ENV` 来设置。
+
+### 4. BannerPlugin
+该插件是 webpack 自带的，有一个字符串参数，表示版权说明。
+```js
+{
+    plugins: [
+        new webpack.BannerPlugin("make 2019 by xxx"),
+    ]
+}
+```
+
+## create-react-app 中配置多页应用

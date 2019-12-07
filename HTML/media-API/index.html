@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5 media API</title>
+    <style>
+        .btnWrapper{
+            margin: 20px 0px 10px 0px;
+        }
+        button{
+            height: 30px;
+            padding: 0px 10px;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+        .recording{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="btnWrapper">
+        <button class="btnShut">shut</button>
+
+        <button class="btnStart">start</button>
+        <button class="btnPause" disabled>pause</button>
+        <button class="btnStop" disabled>stop</button>
+        <button class="btnReplay" disabled>continue</button>
+    </div>
+
+    <video controls autoplay width="500"></video>
+
+    <video controls width="500" class="recording"></video>
+
+    <canvas id="cvs"></canvas>
+
+    <script type="text/javascript">
+        const video = document.getElementsByTagName("video")[0];
+        const recording = document.querySelector(".recording");
+        const cvs = document.querySelector("#cvs");
+        const btnShut = document.querySelector(".btnShut");
+
+        const btnStart = document.querySelector(".btnStart");
+        const btnPause = document.querySelector(".btnPause");
+        const btnStop = document.querySelector(".btnStop");
+        const btnReplay = document.querySelector(".btnReplay");
+
+        const ctx = cvs.getContext("2d");
+
+        async function init() {
+            let stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+
+            var mediaRecorder = new MediaRecorder(stream);
+
+            video.srcObject = stream;
+
+            video.onloadedmetadata = function(){
+                cvs.width = video.width;
+                cvs.height = video.videoHeight * (video.width / video.videoWidth);
+            }
+
+            var chunks = [];
+
+            btnStart.onclick = function(){
+                recording.style.display = "none";
+                mediaRecorder.start();
+                btnPause.removeAttribute("disabled");
+                btnStop.removeAttribute("disabled");
+            }
+
+            btnPause.onclick = function(){
+                mediaRecorder.pause();
+                btnReplay.removeAttribute("disabled");
+            }
+
+            btnReplay.onclick = function(){
+                mediaRecorder.resume();
+            }
+
+            btnStop.onclick = function(){
+                mediaRecorder.stop();
+                btnPause.setAttribute("disabled",true);
+                btnReplay.setAttribute("disabled",true);
+                btnStop.setAttribute("disabled",true);
+            }
+
+            mediaRecorder.ondataavailable = function(e){
+                chunks.push(e.data);
+            }
+
+            mediaRecorder.onstop = function(){
+                recording.style.display = "inline-block";
+                var blob = new Blob(chunks,{'type': 'video/mp4'});
+                var videoURL = window.URL.createObjectURL(blob);
+                chunks = [];
+
+                recording.src = videoURL;
+            }
+        }
+
+        btnShut.onclick = function(){
+            ctx.drawImage(video,0,0,cvs.width,cvs.height);
+        }
+
+        init();
+
+    </script>
+
+</body>
+
+</html>

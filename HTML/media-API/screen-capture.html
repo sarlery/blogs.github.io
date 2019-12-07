@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>get screen capture</title>
+    <style>
+        div.wrapper{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <button class="start">start capture</button>
+        <button disabled class="stop">stop capture</button>
+    </div>
+    <video width="500" controls></video>
+
+    <video class="showVideo" width="500" controls style="display:none;"></video>
+
+    <script>
+
+        (function(){
+
+            var types = ["video/webm", 
+             "audio/webm", 
+             "video/webm\;codecs=vp8", 
+             "video/webm\;codecs=daala", 
+             "video/webm\;codecs=h264", 
+             "audio/webm\;codecs=opus", 
+             "video/mpeg"];
+
+        for (var i in types) { 
+            console.log( "Is " + types[i] + " supported? " + (MediaRecorder.isTypeSupported(types[i]) ? "Maybe!" : "Nope :(")); 
+        }
+
+        })();
+
+        const video = document.querySelector("video");
+        const start = document.querySelector(".start");
+        const stop = document.querySelector(".stop");
+        const showVideo = document.querySelector(".showVideo");
+
+        
+        async function init(){
+            showVideo.style.display = "none";
+            stop.removeAttribute("disabled");
+
+            let audioStream = await navigator.mediaDevices.getUserMedia({video: false,audio: true});
+
+            // 录屏API：getDisplayMedia
+            let stream = await navigator.mediaDevices.getDisplayMedia({video: true,audio: true});
+
+            video.srcObject = stream;
+
+            // 合并音轨（将视频中的片段合并到音频中）
+            stream.getVideoTracks().forEach(value => audioStream.addTrack(value));
+
+            // 此时的 audioStream 就有视频片段了
+            var mediaRecorder = new MediaRecorder(audioStream,{
+                mimeType : 'video/mp4',
+                audioBitsPerSecond : 128000,
+                videoBitsPerSecond : 2500000,
+            }),
+                chunks = [];
+
+            video.setAttribute("muted",true);
+            video.setAttribute("autoplay",true);
+
+            mediaRecorder.start();
+
+            mediaRecorder.ondataavailable = function(e){
+                chunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = function(){
+                handleStop(chunks);
+            };
+
+            stop.onclick =  function(){
+                mediaRecorder.stop();
+            };
+        }
+
+        start.onclick = init;
+
+        function handleStop (chunks){
+
+            var tracks = video.srcObject.getVideoTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+
+            showVideo.style.display = "inline-block";
+            stop.setAttribute("disabled",true);
+
+            var blob = new Blob(chunks,{'type': 'video/mp4'});
+            var videoURL = window.URL.createObjectURL(blob);
+            chunks = [];
+
+            showVideo.src = videoURL;
+        }
+    
+    </script>
+    
+</body>
+</html>

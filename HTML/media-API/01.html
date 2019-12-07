@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态显示每帧的图片</title>
+    <link href="./index.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="box">
+            <video width="800" src="./source/debug.mp4"></video>
+
+            <div class="settings">
+
+                <!-- 开始播放/暂停 -->
+                <div class="start"></div>
+
+                <!-- 总时长 -->
+                <div class="duration"></div>
+                <!-- 播放时长 -->
+                <div class="finish"></div>
+
+                <!-- 音量 -->
+                <div class="volumeBox">
+                    <div class="volume"></div>
+                </div>
+
+                <!-- 进度条 -->
+                <div class="progress-bar">
+                    <div class="bar"></div>
+                </div>
+
+                <select class="speedWrapper">
+                    <option>0.5</option>
+                    <option>1.0</option>
+                    <option>1.25</option>
+                    <option>1.5</option>
+                    <option>2.0</option>
+                </select>
+
+                <!-- 放大 -->
+                <div class="enlarge"></div>
+
+                <!-- 缩略画面 -->
+                <canvas id="cvs" width="100"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="./index.js"></script>
+
+</body>
+
+</html>
