@@ -7,7 +7,7 @@ const ancientBtn = document.querySelector(".ancientBtn");
 
 const showView = document.querySelector(".showView");
 
-fileIpt.onchange = function(){
+fileIpt.onchange = function () {
     // 把获得的图片文件生成预览图（原图）
     createImg(this.files[0]);
 }
@@ -16,11 +16,11 @@ fileIpt.onchange = function(){
  * 图片预览
  * @param {File} file
  */
-function createImg(file){
+function createImg(file) {
 
     var oldFile = imgBox.children;
 
-    if(oldFile.length)
+    if (oldFile.length)
         imgBox.removeChild(oldFile[0]);
 
     var image = new Image(),
@@ -28,8 +28,8 @@ function createImg(file){
         box_W = imgBox.clientWidth,
         box_H = imgBox.clientHeight;
 
-    image.onload = function(){
-        if(image.width >= image.height)
+    image.onload = function () {
+        if (image.width >= image.height)
             image.style.height = box_H + 'px';
         else
             image.style.width = box_W + 'px';
@@ -38,7 +38,7 @@ function createImg(file){
     }
 
     reader.readAsDataURL(file);
-    reader.onload = function(e){
+    reader.onload = function (e) {
         image.src = e.target.result;
     }
     imgBox.appendChild(image);
@@ -48,7 +48,7 @@ function createImg(file){
  *
  * @param {Image} img
  */
-function initStyle(img){
+function initStyle(img) {
     const myCvs = document.getElementById("myCvs");
     if (myCvs) {
         showView.removeChild(myCvs);
@@ -69,16 +69,22 @@ function initStyle(img){
         ctx.scale(1, img.height / 400);
         ctx.drawImage(img, 0, 0, cvs.width, cvs.height);
     }
-    return {cvs,ctx};
+    return {
+        cvs,
+        ctx
+    };
 }
 
 /**
  * canvas 初始化
  * @param {Image} img
  */
-function initCanvas(img){
+function initCanvas(img) {
 
-    const {cvs, ctx} = initStyle(img);
+    const {
+        cvs,
+        ctx
+    } = initStyle(img);
 
     var imageData = ctx.getImageData(0, 0, cvs.width, cvs.height),
         data = imageData.data,
@@ -114,8 +120,8 @@ function initCanvas(img){
     /**
      * 复古样式
      */
-    function ancient(){
-        for(let i = 0;i < len;i += 4){
+    function ancient() {
+        for (let i = 0; i < len; i += 4) {
             let r = data[i],
                 g = data[i + 1],
                 b = data[i + 2];
@@ -124,20 +130,20 @@ function initCanvas(img){
             data[i + 2] = r * 0.27 + g * 0.35 + b * 0.13;
         }
 
-        ctx.putImageData(imageData,0,0);
+        ctx.putImageData(imageData, 0, 0);
     }
 
     /**
      * 红色蒙版
      */
-    function redMask(){
-        for(let i = 0;i < len;i += 4){
+    function redMask() {
+        for (let i = 0; i < len; i += 4) {
             let sum = 0;
-            for(let j = 0;j < 3;j ++){
+            for (let j = 0; j < 3; j++) {
                 sum += data[i + j];
             }
             var avg = sum / 3;
-            data[i] = avg;      // 红色是平均值
+            data[i] = avg; // 红色是平均值
             // 绿色和蓝色都设为零
             data[i + 1] = data[i + 2] = 0;
         }
@@ -149,13 +155,13 @@ function initCanvas(img){
      * @param {Event} e
      * @param {number} degree
      */
-    function brightness(e,degree){
-        for(let i = 0;i < len;i += 4){
+    function brightness(e, degree) {
+        for (let i = 0; i < len; i += 4) {
             data[i] = data[i] + degree >= 255 ? data[i] : data[i] + degree;
             data[i + 1] = data[i + 1] + degree >= 255 ? data[i + 1] : data[i + 1] + degree;
             data[i + 2] = data[i + 2] + degree >= 255 ? data[i + 2] : data[i + 2] + degree;
         }
-        ctx.putImageData(imageData,0,0);
+        ctx.putImageData(imageData, 0, 0);
     }
 
     /**
@@ -163,8 +169,8 @@ function initCanvas(img){
      * @param {Event} e
      * @param {number} n - number 应该在 0 ~ 1 之间
      */
-    function pellucidity(e,n){
-        for(let i = 0;i < len;i += 4){
+    function pellucidity(e, n) {
+        for (let i = 0; i < len; i += 4) {
             data[i + 3] *= n;
         }
         ctx.putImageData(imageData, 0, 0);
@@ -176,7 +182,7 @@ function initCanvas(img){
      * @param {number} x 
      * @param {number} y 
      */
-    function getXY(obj,x,y){
+    function getXY(obj, x, y) {
         var w = obj.width,
             data = obj.data,
             color = [];
@@ -194,7 +200,7 @@ function initCanvas(img){
      * @param {number} y 
      * @param {Array} color 
      */
-    function setXY(obj,x,y,color){
+    function setXY(obj, x, y, color) {
         var w = obj.width,
             data = obj.data;
         data[4 * (y * w + x)] = color[0];
@@ -208,21 +214,19 @@ function initCanvas(img){
      * @param {Event} e 
      * @param {number} num 
      */
-    function mosaic(e,num){
+    function mosaic(e, num) {
         var stepW = cvs.width / num,
             stepH = cvs.height / num;
 
-        debugger;
-        
-        for(let i = 0;i < stepH;i ++){
-            for(let j = 0;j < stepW;j ++){
+        for (let i = 0; i < stepH; i++) {
+            for (let j = 0; j < stepW; j++) {
                 var color = getXY(
                     imageData,
                     j * num + Math.floor(Math.random() * num),
                     i * num + Math.floor(Math.random() * num)
                 )
-                for(let k = 0;k < num;k ++){
-                    for(let l = 0;l < num;l ++){
+                for (let k = 0; k < num; k++) {
+                    for (let l = 0; l < num; l++) {
                         setXY(
                             imageData,
                             j * num + l,
@@ -233,28 +237,54 @@ function initCanvas(img){
                 }
             }
         }
-        ctx.putImageData(imageData,0,0);
+        ctx.putImageData(imageData, 0, 0);
     }
 
-    document.querySelector(".aboriginal").addEventListener('click',function(){
+    // 究极黑白色
+    function whiteBlack() {
+        for (var i = 0; i < len; i += 4) {
+            var avg = (data[i] + data[i + 1] + data[i + 2]) / 3,
+                res = avg >= 128 ? 255 : 0;
+            data[i] = res; // red
+            data[i + 1] = res; // green
+            data[i + 2] = res; // blue
+            data[i + 3] = 255;
+        }
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    // 高斯模糊效果
+    function gauss() {
+        let newImageData = gaussBlur(imageData);
+        ctx.putImageData(newImageData, 0, 0);
+    }
+
+    document.querySelector(".aboriginal").addEventListener('click', function () {
         createImg(fileIpt.files[0]);
-    },false);   
+    }, false);
 
     invertBtn.addEventListener("click", invert, false);
     grayscaleBtn.addEventListener("click", grayscale, false);
-    ancientBtn.addEventListener('click',ancient,false);
-    document.querySelector(".redMaskBtn").addEventListener("click",redMask,false);
+    ancientBtn.addEventListener('click', ancient, false);
+    document.querySelector(".redMaskBtn").addEventListener("click", redMask, false);
 
-    document.querySelector(".brightnessBtn").addEventListener("click", function(e){
-        brightness.call(this,e,-50);
+    document.querySelector(".brightnessBtn").addEventListener("click", function (e) {
+        brightness.call(this, e, -50);
     }, false);
 
     document.querySelector(".pellucidityBtn").addEventListener("click", function (e) {
-        pellucidity.call(this,e,0.2);
-    },false);
+        pellucidity.call(this, e, 0.2);
+    }, false);
 
-    document.querySelector(".mosaicBtn").addEventListener('click',function(e){
-        mosaic.call(this,e,6);
-    },false);
+    document.querySelector(".mosaicBtn").addEventListener('click', function (e) {
+        mosaic.call(this, e, 6);
+    }, false);
+
+    document.querySelector(".white-black").addEventListener("click", function () {
+        whiteBlack.call(this);
+    }, false);
+
+    document.querySelector(".gauss").addEventListener("click", function () {
+        gauss.call(this);
+    }, false);
 }
-

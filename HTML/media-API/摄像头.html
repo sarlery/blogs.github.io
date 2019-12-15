@@ -58,7 +58,7 @@
                 audio: true
             });
 
-            var mediaRecorder = new MediaRecorder(stream);
+            var mediaRecorder = new MediaRecorder(stream, {mimeType: 'video/webm'});
 
             video.srcObject = stream;
 
@@ -98,7 +98,7 @@
 
             mediaRecorder.onstop = function(){
                 recording.style.display = "inline-block";
-                var blob = new Blob(chunks,{'type': 'video/mp4'});
+                var blob = new Blob(chunks,{'type': 'video/webm'});
                 var videoURL = window.URL.createObjectURL(blob);
                 chunks = [];
 

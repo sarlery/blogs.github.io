@@ -25,13 +25,16 @@
 
         (function(){
 
-            var types = ["video/webm", 
-             "audio/webm", 
-             "video/webm\;codecs=vp8", 
-             "video/webm\;codecs=daala", 
-             "video/webm\;codecs=h264", 
-             "audio/webm\;codecs=opus", 
-             "video/mpeg"];
+            var types = [
+                "video/webm", 
+                "audio/webm", 
+                "video/webm\;codecs=vp8", 
+                "video/webm\;codecs=daala", 
+                "video/webm\;codecs=h264", 
+                "audio/webm\;codecs=opus", 
+                "video/mpeg",
+                "video/mp4"
+            ];
 
         for (var i in types) { 
             console.log( "Is " + types[i] + " supported? " + (MediaRecorder.isTypeSupported(types[i]) ? "Maybe!" : "Nope :(")); 
@@ -60,11 +63,7 @@
             stream.getVideoTracks().forEach(value => audioStream.addTrack(value));
 
             // 此时的 audioStream 就有视频片段了
-            var mediaRecorder = new MediaRecorder(audioStream,{
-                mimeType : 'video/mp4',
-                audioBitsPerSecond : 128000,
-                videoBitsPerSecond : 2500000,
-            }),
+            var mediaRecorder = new MediaRecorder(audioStream,{type: "video/webm"}),
                 chunks = [];
 
             video.setAttribute("muted",true);
@@ -97,6 +96,7 @@
             stop.setAttribute("disabled",true);
 
             var blob = new Blob(chunks,{'type': 'video/mp4'});
+
             var videoURL = window.URL.createObjectURL(blob);
             chunks = [];
 

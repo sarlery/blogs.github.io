@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 视频处理</title>
+    <style>
+        .wrapper{
+            display: grid;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 400px 400px;
+        }
+    </style>
+    <script src="./tools/pixel.js"></script>
+</head>
+<body>
+
+    <div class="wrapper">
+        <video controls id="userMedia" height="400" width="600"></video>
+        <canvas id="myCvs" height="400" width="600"></canvas>
+        <canvas id="cvs-2" height="400" width="600"></canvas>
+        <canvas id="cvs-3" height="400" width="600"></canvas>
+    </div>
+
+    <script>
+        
+        const userMedia = document.querySelector("#userMedia");
+        const cvs = document.querySelector("#myCvs");
+        const cvs_2 = document.querySelector("#cvs-2");
+        const cvs_3 = document.querySelector("#cvs-3");
+
+        const ctx = cvs.getContext("2d");
+        const ctx_2 = cvs_2.getContext("2d");
+        const ctx_3 = cvs_3.getContext("2d");
+
+        async function init(){
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true,
+            });
+
+            userMedia.srcObject = stream;
+
+            window.requestAnimationFrame(playCanvas);
+        }
+
+        init();
+
+        function playCanvas(){
+            window.requestAnimationFrame(playCanvas);
+
+            ctx.drawImage(userMedia,0,0,cvs.width,cvs.height);
+            ctx_2.drawImage(userMedia,0,0,cvs_2.width,ctx_2.height);
+            ctx_3.drawImage(userMedia,0,0,cvs_3.width,ctx_3.height);
+
+            let imageData = ctx.getImageData(0,0,cvs.width,cvs.height);
+            let imageData_2 = ctx.getImageData(0,0,cvs.width,cvs.height);
+            let imageData_3 = ctx.getImageData(0,0,cvs.width,cvs.height);
+
+            let newImageData = imageProcessing.deepBlack(imageData);
+            let newImageData_2 = imageProcessing.mosaic(imageData_2);
+            let newImageData_3 = imageProcessing.grayscale(imageData_3);
+
+            ctx.putImageData(newImageData,0,0);
+            ctx_2.putImageData(newImageData_2,0,0);
+            ctx_3.putImageData(newImageData_3,0,0);
+        }
+    
+    </script>
+    
+</body>
+</html>

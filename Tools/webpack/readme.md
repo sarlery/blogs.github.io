@@ -1273,7 +1273,7 @@ new CopyWebpackPlugin([
     ]
 }
 ```
-一般不使用这种方式配置环境变量。而是使用 `process.env.NODE_ENV` 来设置。
+一般不使用这种方式配置环境变量。
 
 ### 4. BannerPlugin
 该插件是 webpack 自带的，有一个字符串参数，表示版权说明。

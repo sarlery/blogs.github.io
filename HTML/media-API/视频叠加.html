@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <video controls width="800" height="600"></video>
+
+    <script>
+        
+        const video = document.querySelector("video");
+
+        // 生成 canvas capture 对象
+        class CvsMediaStream{
+
+            constructor(targetVideo,width,height){
+                this.cvsWidth = width;
+                this.cvsHeight = height;
+                this.targetVideo = targetVideo;
+
+                this.canvas = document.createElement("canvas");
+                this.context = this.canvas.getContext("2d");
+
+                // 总的视频流界面宽和高
+                this.canvas.width = width;
+                this.canvas.height = height;
+
+                // 前置摄像头的宽和高
+                this.userWidth = this.cvsWidth / 3;
+                this.userHeight = this.cvsHeight / 3;
+
+                this.init();
+            }
+
+            // 初始化操作
+            async init(){
+                await this.createScreenMedia();
+                await this.createUserMedia();
+                await this.createAudioMedia();
+
+                this.mergeStream();
+
+                window.requestAnimationFrame(this.render.bind(this));
+                // this.render();
+            }
+
+            // 设置录屏 API
+            async createScreenMedia(){
+                this.screenStream = await navigator.mediaDevices.getDisplayMedia({video: true,audio: false});
+
+                this.screenVideo = document.createElement("video");
+                this.screenVideo.width = this.cvsWidth;
+                this.screenVideo.height = this.cvsHeight;
+                this.screenVideo.autoplay = true;
+
+                this.screenVideo.srcObject = this.screenStream;
+            }       
+
+            // 调出前置摄像头
+            async createUserMedia(){
+                this.userStream = await navigator.mediaDevices.getUserMedia({video: true,audio: false});
+                this.userVideo = document.createElement("video");
+
+                this.userVideo.width = this.userWidth;
+                this.userVideo.height = this.userHeight;
+                this.userVideo.autoplay = true;
+
+                this.userVideo.srcObject = this.userStream;
+            }
+
+            // 调出音频设备
+            async createAudioMedia(){
+                this.audioStream = await navigator.mediaDevices.getUserMedia({video: false,audio: true});
+
+                this.audio = document.createElement("audio");
+                this.audio.autoplay = true;
+                this.audio.srcObject = this.audioStream;
+            }
+            
+            // 合并音轨
+            mergeStream(){
+
+                // 创建 canvas 流
+                this.cvsStream = this.canvas.captureStream();
+
+                // 将全部的流合入到 canvas 流当中
+                this.userStream.getVideoTracks().forEach(track => this.cvsStream.addTrack(track));
+                this.screenStream.getVideoTracks().forEach(track => this.cvsStream.addTrack(track));
+
+                // 给前置摄像头的视频流中加入音频
+                this.audioStream.getAudioTracks().forEach(track => this.cvsStream.addTrack(track));
+
+                this.targetVideo.srcObject = this.cvsStream;
+            }
+
+            // 渲染出来
+            render(){
+
+                window.requestAnimationFrame(this.render.bind(this));
+
+                this.context.drawImage(this.screenVideo,0,0,this.cvsWidth,this.cvsHeight);
+
+                this.context.drawImage(
+                    this.userVideo,
+                    this.cvsWidth - this.userWidth,
+                    this.cvsHeight - this.userHeight,
+                    this.userWidth,
+                    this.userHeight
+                );
+            }
+        }
+
+        let cvsMediaStream = new CvsMediaStream(video,video.width,video.height);
+
+        console.log(cvsMediaStream);
+        
+    </script>
+    
+</body>
+</html>
