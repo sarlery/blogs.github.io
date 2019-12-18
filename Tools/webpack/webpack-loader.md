@@ -1,4 +1,37 @@
-# 样式 loader 的编写
+# loader 原理与实现
+
+## 实现 babel-loader
+需要先下载 `@babel/core`、`@babel/preset-env` 两个 Babel 包：  
+
+```bash
+npm install @babel/core @babel/preset-env
+```
+
+```js
+{
+    test: /\.js$/,
+    use: {
+        loader: 'babel-loader',
+        options: {
+            "presets": [
+                [
+                    "@babel/preset-env",
+                    {
+                    "targets": {
+                        "browsers": ["last 2 versions"]
+                    },
+                    "modules": false,
+                    "useBuiltIns": "usage",
+                    "corejs": 3
+                    }
+                ]
+            ]
+        }
+    }
+}
+```
+
+## 样式 loader 的编写
 
 webpack 中的配置：  
 
@@ -11,7 +44,7 @@ rules: [
 ]
 ```
 
-## less-loader 的实现
+### less-loader 的实现
 less-loader 主要是将 less 格式的样式转成浏览器能认识的原生 css 代码。
 
 1. 首先需要先下载 `less`：    
@@ -41,7 +74,7 @@ module.exports = loader;
 
 css-loader 的处理过程比较麻烦，这里先介绍一下 style-loader。
 
-## style-loader 的编写
+### style-loader 的编写
 `style-loader` 的作用是讲 css 代码插入到 `head` 标签下的 `style` 标签中。  
 
 webpack 配置文件中的 use 数组中的第一个 loader 应该返回一个 JS 脚本（字符串格式的 JS 脚本），因此 `style-loader` 需要这么做。
@@ -88,7 +121,7 @@ loader.pitch = function(remainingRequest){
 module.exports = loader;
 ```
 
-## css-loader 的实现
+### css-loader 的实现
 css-loader 处理的是样式中引入的图片路径（`url(xxx)`）。  
 
 我们就需要想办法将源码中的 `url()` 字符串提取出来，然后给路径做替换。再把替换后的路径插入到源码中。
