@@ -1,11 +1,3 @@
-/**
- * banner-loader 是一个可以将注释插入到 js 文件页面顶部的 loader
- * 这个 loader 可以表示 js 文件的一些说明
- * banner-loader 接受两个参数：
- * 1. text 直接传入一个注释用的字符串
- * 2. filename 一个注释模板文件（路径），指定后就会读取模板文件中的内容
-*/
-
 const fs = require("fs");
 const loaderUtils = require("loader-utils");
 // schema-utils 是一个校验模块

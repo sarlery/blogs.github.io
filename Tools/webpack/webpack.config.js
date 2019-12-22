@@ -47,6 +47,9 @@ module.exports = {
                     limit: 1024 * 30
                 }
             }
+        },{
+            test: /\.(c|le)ss$/,
+            use: ['style-loader','css-loader','less-loader']
         }]
     }
 }

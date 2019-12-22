@@ -13,6 +13,8 @@
 
 import webpackJpg from "./webpack.png";
 
+import "./index.less";
+
 let img = new Image();
 
 img.src = webpackJpg;

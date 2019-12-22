@@ -3,7 +3,7 @@ const loaderUtils = require("loader-utils");
 const mime = require("mime");
 
 /**
- * url-laoder 会处理路径
+ * url-loader 会处理路径
  * url-loader 有一个 options 选项：limit
  * limit 选项可以指定文件的大小（字节）
  * 当文件小于 limit 值时会生成 base64 的字符串

@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./loaders/css-loader.js!./loaders/less-loader.js!./src/index.less":
+/*!*************************************************************************!*\
+  !*** ./loaders/css-loader.js!./loaders/less-loader.js!./src/index.less ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+throw new Error("Module parse failed: Unexpected token (1:5)\nFile was processed with these loaders:\n * ./loaders/css-loader.js\n * ./loaders/less-loader.js\nYou may need an additional loader to handle the result of these loaders.\n> body {\n|   background-color: #5B83AD;\n| }");
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/classCallCheck.js":
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/classCallCheck.js ***!
@@ -177,6 +188,8 @@ var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtim
 
 var _webpack = _interopRequireDefault(__webpack_require__(/*! ./webpack.png */ "./src/webpack.png"));
 
+__webpack_require__(/*! ./index.less */ "./src/index.less");
+
 /** 作者：xxx **/
 // async function fn(a,...b){
 //     return a + b.reduce((pre,cur) => {
@@ -244,6 +257,21 @@ function () {
 }();
 
 ;
+
+/***/ }),
+
+/***/ "./src/index.less":
+/*!************************!*\
+  !*** ./src/index.less ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        let style = document.createElement('style');
+        style.innerHTML = __webpack_require__(/*! !../loaders/css-loader.js!../loaders/less-loader.js!./index.less */ "./loaders/css-loader.js!./loaders/less-loader.js!./src/index.less");
+        document.head.appendChild(style);
+    
 
 /***/ }),
 
