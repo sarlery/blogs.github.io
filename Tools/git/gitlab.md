@@ -8,7 +8,7 @@
 
 配置完第一步后,第二步的命令最好不要去运行,第二步是通过命令行的方式安装 gitlab。这是很慢的.因此可以来到这个网址手动下载安装包:  
 
-![https://packages.gitlab.com/gitlab/gitlab-ce/](https://packages.gitlab.com/gitlab/gitlab-ce/)  
+[https://packages.gitlab.com/gitlab/gitlab-ce/](https://packages.gitlab.com/gitlab/gitlab-ce/)  
 
 选择 Ubuntu 的一个版本进行下载.点击进去后,下载按钮在右上角。下好后别忘了 MD5 或者 SHA1 校验。以下是校验命令(打开终端运行即可)。
 

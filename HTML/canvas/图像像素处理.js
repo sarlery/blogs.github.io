@@ -255,7 +255,7 @@ function initCanvas(img) {
 
     // 高斯模糊效果
     function gauss() {
-        let newImageData = gaussBlur(imageData);
+        let newImageData = imageProcessing.gaussBlur(imageData);
         ctx.putImageData(newImageData, 0, 0);
     }
 
@@ -287,4 +287,60 @@ function initCanvas(img) {
     document.querySelector(".gauss").addEventListener("click", function () {
         gauss.call(this);
     }, false);
+
+    document.querySelector(".linear").addEventListener("click",function(){
+        var data = imageData.data;
+        var len = data.length;
+        for(let i = 0;i < len;i += 4){
+            var sum = 0;
+            for(let j = 0;j < 3;j ++){
+                sum += (data[i + j] / 3);
+            }
+            
+            var res = 2 * Math.pow(sum,0.7);
+
+            // 遮罩效果
+            // var res = 7 * Math.log(1 + sum);
+
+            for(let k = 0;k < 3;k ++){
+                data[i + k] = res;
+            }
+        }
+        ctx.putImageData(imageData,0,0);
+    },false);
+
+    document.querySelector(".overturn").addEventListener("click",function(){
+        var data = imageData.data;
+        var len = data.length;
+        data.reverse();
+
+        for(let i = 0;i < len;i += 4){
+            var a = data[i + 3];
+            var b = data[i + 2];
+            var g = data[i + 1];
+            var r = data[i];
+
+            data[i] = a;
+            data[i + 1] = b;
+            data[i + 2] = g;
+            data[i + 3] = r;
+        }
+        
+        ctx.rotate(Math.PI / 2);
+        ctx.putImageData(imageData,0,0);
+
+    },false);
+}
+
+
+
+function getIdx(img_w,img_h,imageData,idx){
+    var data = imageData.data,
+        len = data.length;
+
+    var unit = len / Math.sqrt(img_h * img_w),
+        w_num = unit * img_w,
+        h_num = unit * img_h;
+
+    
 }
