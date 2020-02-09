@@ -6,19 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSS</title>
     <style>
-        .span{
-            font: 800 20px/1.5 微软雅黑;
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .parent{
+            height: 200px;
+            width: 200px;
+            padding: 40px;
+            border: 50px solid rgba(0,0,0,0.8);
+            background: url("./img/加尔米施帕滕基兴.jpg") no-repeat center/cover padding-box border-box;
+
+            margin: 60px auto;
+        }
+        .child{
+            border: 1px solid #cccccc;
         }
     </style>
 </head>
 
 <body>
 
-    <span class="span">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste odit cupiditate architecto
-        consectetur nemo rerum rem quo harum laudantium sint natus illum, veniam repudiandae magni saepe. Cum quisquam
-        ipsam itaque?
-    </span>
+    <div class="parent">
+        
+    </div>
 
+    <span class="child">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt, ab?</span>
 </body>
 
 </html>
