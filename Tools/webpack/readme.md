@@ -68,7 +68,6 @@ webpack 是一个现代 JavaScript 应用程序的静态模块打包器，已经
     - [2. copyWebpackPlugin](#2-copywebpackplugin)
     - [3. webpack.DefinePlugin](#3-webpackdefineplugin)
     - [4. BannerPlugin](#4-bannerplugin)
-  - [create-react-app 中配置多页应用](#create-react-app-%e4%b8%ad%e9%85%8d%e7%bd%ae%e5%a4%9a%e9%a1%b5%e5%ba%94%e7%94%a8)
 
 
 
@@ -1284,5 +1283,3 @@ new CopyWebpackPlugin([
     ]
 }
 ```
-
-## create-react-app 中配置多页应用

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agorithm</title>
+</head>
+<body>
+
+    <script>
+
+        function flat(array) {
+            return array.reduce((prev,current) => { 
+                return prev.concat(
+                    !Array.isArray(current) ? current : flat(current)
+                );
+            },[]);
+        }
+        
+        const flatten = (array) => array.reduce((prev,current) => prev.concat(!Array.isArray(current) ? current : flat(current)),[]);
+
+        console.log(flatten([
+            [
+                [
+                    [
+                        1,2,3
+                    ],
+                    4
+                ],
+                6
+            ],
+            7
+        ]));
+        
+    </script>
+    
+</body>
+</html>
