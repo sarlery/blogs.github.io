@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ul {
+            list-style: none;
+        }
+
+        .ul .letter {
+            height: 160px;
+            width: 100vw;
+            border-bottom: 1px solid #aaaaaa;
+            line-height: 160px;
+        }
+
+        .sideBar {
+            position: fixed;
+            right: 0;
+            top: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <ul class="ul">
+
+        </ul>
+        <ul class="sideBar"></ul>
+    </div>
+    <script>
+        const ul = document.querySelector(".ul");
+        const sideBar = document.querySelector(".sideBar");
+        const songs = [ // 假如是后端的数据
+            {
+                name: "稻香",
+                code: "d"
+            },
+            {
+                name: "喜欢你",
+                code: "x"
+            },
+            {
+                name: "山水之间",
+                code: "s"
+            },
+            {
+                name: "我的梦",
+                code: "w"
+            },
+            {
+                name: "光年之外",
+                code: "g"
+            },
+            {
+                name: "忽然之间",
+                code: "h"
+            },
+            {
+                name: "芒种",
+                code: "m"
+            },
+            {
+                name: "red",
+                code: "r"
+            },
+            {
+                name: "红玫瑰",
+                code: "h"
+            }
+        ];
+
+        (() => {
+            compare(songs, "code");
+            render(songs);
+            renderAlphabet(sideBar, handleClick);
+        })();
+
+        function compare(ary, prop, order = 1) {
+            ary.sort((a, b) => {
+                if (a[prop] > b[prop]) {
+                    return order;
+                } else if (a[prop] < b[prop]) {
+                    return -order;
+                } else return 0;
+            });
+        }
+
+        function renderAlphabet(wrapper, clickCb) {
+            for (let i = 0; i < 26; i++) {
+                let li = document.createElement("li");
+                let code = String.fromCharCode(i + 65);
+                li.innerHTML = code;
+                li.setAttribute("data-letter", code);
+                li.addEventListener("click", (e) => clickCb(e, code));
+                wrapper.appendChild(li);
+            }
+        }
+
+        function handleClick(e, code) {
+            var el = document.querySelector(`.letter-${code}`);
+            el && el.scrollIntoView(true);
+        }
+
+        function render(list) {
+            list.forEach(item => {
+                var li = document.createElement("li");
+                li.innerHTML = item.name;
+                li.classList.add("letter", "letter-" + item.code.toLocaleUpperCase());
+                ul.appendChild(li);
+            });
+        }
+
+    </script>
+</body>
+
+</html>
