@@ -1,19 +1,13 @@
-function get(target){
-    console.log(target);
-}
+var str = "abc_def_ghi";  // ---> abcDefGhi
 
-@get
-class Person{
-    constructor(name, age, gender){
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-    }
+function humpStyle(str){
+  var reg = /([a-zA-Z]+)_+([a-zA-Z])([a-zA-Z]+)/g;
+  var newStr = str.replace(reg, function(match, p1, p2, p3){
+    var upperCase = p2.toLocaleUpperCase();
+    return p1 + upperCase + p3;
+  });
 
-    getName(){
-        return this.name;
-    }
-}
+  return newStr;
+} 
 
-
-
+console.log(humpStyle(str));
