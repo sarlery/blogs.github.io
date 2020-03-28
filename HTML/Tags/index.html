@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <img src="../canvas/img/05.jpg" class="img" />
+
+    <script>
+        var img = document.querySelector(".img");
+
+        console.log(img.offsetWidth);
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOMContentLoaded", img.offsetWidth);
+        }, false);
+
+        document.addEventListener('readystatechange', (event) => {
+            console.log(event);
+            console.log("readystatechange", img.offsetWidth);
+        });
+
+        window.onload = function () {
+            console.log("load", img.offsetWidth);
+        }
+
+        img.onload = function () {
+            console.log("img", img.offsetWidth);
+        }
+
+    </script>
+
+</body>
+
+</html>

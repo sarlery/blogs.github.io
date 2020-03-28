@@ -12,11 +12,3 @@
 
 // t.then(n => console.log("n == ",n), e => console.log("e == ",e));
 
-function fn(n){
-    if(true){
-        var a = "hello";
-    }
-    console.log(a);
-}
-
-fn(3);
