@@ -13,3 +13,4 @@ package-lock.json
 # *.html
 *.lock
 *.vscode
+*.idea
