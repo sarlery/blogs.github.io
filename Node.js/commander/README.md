@@ -1,6 +1,6 @@
 # commander + axios 做一个查询天气的命令行工具
 
-闲来无事，在浏览 GitHub 时无意中看到了 `commander.js` 这个工具，16k 的 start，就看了看 commander 的官方文档。cammander 文档内容很少，而且很容易入门，它是一个用来创建命令行程序的 Nodejs 库。  
+commander.js 是一个用来创建命令行程序的 Nodejs 库。  
 commander 的 API 没有几个，本文主要用到了其中的 `option` 方法。而天气信息则是使用的高德天气的开放web接口，注册登录高德开放平台后就可以使用里面的免费API接口了。  
 
 ## 初始化项目
@@ -44,7 +44,7 @@ if(program.fruit){
 OK，一个简单的命令就书写完毕了！当打开终端，输入 `node index -f apple`后，控制台就会打出 `apple`。来说一下中间的那两行代码，这时核心 API。
 当使用 `npm -h` 后，控制台就会打印出各个命令的输入方式和功能描述：  
 
-![](./img/npm-h.png)  
+![npm -h](./img/npm-h.png)  
 
 `program.option` 的功能就是注册一个命令，这个命令可以有简写形式（就是上面的 `-f`），但必须要有具体的形式（就是上面的 `--fruit`），函数的第二个参数是对这个命令的描述，也是必须要填的。commander 支持链式调用，因此后面又直接调用了 `.parse`。  
 `precess.argv` 是 node.js 中的一个属性，当你在控制台输入参数时，这个属性就会接收到你输入到的内容，该属性会返回一个数组：
@@ -297,7 +297,7 @@ console.log("Warn!You'd better not do that.: xxxx".warn);
 
 最终输出样子：  
 
-![](./img/colors.png)  
+![colors](./img/colors.png)  
 
 下面就给得到的天气对象添上颜色：
 
@@ -345,4 +345,4 @@ function renderInfo(info) {
 
 效果：  
 
-![](./img/weather.png)
+![weather](./img/weather.png)

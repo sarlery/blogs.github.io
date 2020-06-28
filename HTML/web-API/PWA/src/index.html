@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="./favicon.ico">
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+
+    <h1>Hello PWA!</h1>
+
+    <script>
+        window.onload = function () {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/src/sw.js')
+                    .then(resitration => {
+                        console.log(resitration);
+                    }).catch(err => console.error(err));
+            }
+        }
+
+        if ("Notification" in window) {
+            if (Notification.permission === "default") {
+                Notification.requestPermission();
+            }else if(Notification.permission === "granted"){
+                window.addEventListener('offline', () => {
+                    new Notification("通知：", {
+                        body: "当前网络不可用"
+                    });
+                }, false);
+                window.addEventListener('online', () => {
+                    new Notification("通知：", {
+                        body: "网络已连接"
+                    });
+                }, false);
+            }
+        }
+
+    </script>
+
+    <script src="./index.js"></script>
+
+</body>
+
+</html>

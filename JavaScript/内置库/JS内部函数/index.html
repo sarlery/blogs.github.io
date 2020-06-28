@@ -10,31 +10,92 @@
 
 <body>
 
+    <!-- <script>
+
+        const arr = [1,2,3,4,5,6,7,8,9,10];
+
+        var num = 3;
+
+        const obj = {
+            num: 7
+        };
+
+        function filter (elem) {
+            return (elem * 20 + 4) % this.num === 1;
+        }
+
+        const res = arr.filter(filter, undefined);
+        // console.log(res);
+
+
+        var a = { n: 1 };
+        var b = a;
+        a.x = a = { n: 2 };
+
+        console.log(a.x);
+        console.log(b);
+
+    </script> -->
+
     <script>
 
-        function add(...args){
-            return args.reduce((p,c) => p + c);
+        function reduce (ary, cb, initialVal) {
+            if(Object.prototype.toString.call(ary) !== '[object Array]')
+                throw new TypeError(ary + ' is not an Array.');
+            if(typeof cb !== 'function')
+                throw new TypeError(cb + ' is not a function.');
+            var len = ary.length;
+            var value, idx = 0;
+            if(initialVal === undefined) {
+                if(!len) {
+                    // 空数组，没有初始值时 报错
+                    throw new Error('Reduce of empty array with no initial value');
+                }
+                value = ary[idx ++];
+            }else{
+                value = initialVal;
+            }
+            while(idx < len) {
+                value = cb(value, ary[idx], idx, ary);
+                idx ++;
+            }
+            return value;
         }
 
-        function currie(fn){
-            var fnLen = fn.length;
-            return function curred (...args) {
-                if(!args.length){
-                    return fn.apply(this,args);
-                }
-                return function(...args_2){
-                    if(!args_2.length){
-                        return fn.apply(this,args);
+        function filter (ary, cb, thisArg) {
+            if(Object.prototype.toString.call(ary) !== '[object Array]')
+                throw new TypeError(ary + ' is not an Array.');
+            if(typeof cb !== 'function')
+                throw new TypeError(cb + ' is not a function.');
+
+            var len = ary.length,
+                res = [],
+                idx = 0;
+
+            if (thisArg === undefined) {
+                while (idx < len) {
+                    if(cb(ary[idx], idx, ary)) {
+                        res.push(ary[idx]);
                     }
-                    return curred.apply(this,[...args,...args_2]);
+                    idx ++;
+                }
+            } else {
+                while (idx < len) {
+                    if( cb.call(thisArg, ary[idx], idx, ary)) {
+                        res.push(ary[idx]);
+                    }
+                    idx ++;
                 }
             }
+            return res;
         }
 
+        var obj = { num: 3 };
 
-        var func = currie(add);
-
-        console.log(func(1)(2,3)(3)(6)());
+        var res = [4,7,9,11,44,16].filter(elem => {
+            console.log(this);
+            return elem % this.num === 1;
+        }, obj);
 
     </script>
 

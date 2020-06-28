@@ -1,0 +1,83 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.wrapper{
+    margin: 40px auto;
+    height: 360px;
+    width: 600px;
+    outline: 10px solid blueviolet;
+    position: relative;
+    overflow: hidden;
+}
+
+.wrapper .img-box{
+    width: 2400px;
+    height: 100%;
+    display: flex;
+
+    animation-name: move;
+    animation-duration: 10s;
+    animation-timing-function: steps(4, end);
+    animation-iteration-count: infinite;
+}
+.wrapper .img-box div{
+    height: 100%;
+    width: 600px;
+    overflow: hidden;
+}
+.wrapper .img-box div img{
+    width: 100%;
+}
+.wrapper .img-box:hover,
+.wrapper .img-box:hover + .dots-box::after{
+    animation-play-state: paused;
+}
+
+@keyframes move{
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.wrapper .dots-box{
+    list-style: none;
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
+.wrapper .dots-box::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;
+    border-radius: 50%;
+    z-index: -1;
+    height: 30px;
+    width: 30px;
+    background-color: tomato;
+
+    animation-name: dots;
+    animation-duration: 10s;
+    animation-timing-function: steps(4, end);
+    animation-iteration-count: infinite;
+}
+.wrapper .dots-box li{
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,.4);
+    color: white;
+    text-align: center;
+    line-height: 30px;
+}
+
+@keyframes dots{
+    to {
+        transform: translateX(160px);
+    }
+}

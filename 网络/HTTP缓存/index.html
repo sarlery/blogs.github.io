@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>你好！！</h1>
+
+    <script>
+
+        fetch('/vary', {
+            method: 'GET',
+            headers: {
+                'Accept-Language': 'en-us',
+                'Accept': 'text/html;q=0.8, text/plain'
+            }
+        }).then(res => res.text())
+        .then(data => {
+            console.log('data: ', data);
+        }).catch(err => console.error(err));
+
+    </script>
+    
+</body>
+</html>

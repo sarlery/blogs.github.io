@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main {
+            height: 200px;
+            width: 200px;
+            cursor: pointer;
+            background-color: green;
+        }
+
+        .child1 {
+            height: 100px;
+            width: 100px;
+            cursor: pointer;
+            background-color: gold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="main">
+        <div class="child1">
+            <div class="child2"></div>
+        </div>
+    </div>
+    <script>
+        
+        function isInteger(num){
+            return typeof num === "number" 
+                            && isFinite(num) 
+                            && value % 1 === 0;
+        }
+
+        function isNaN2(value){
+            return typeof value === 'number' && isNaN(value);
+        }
+
+        function accMul(n1, n2){
+            var m = 0,
+                s1 = n1.toString(),
+                s2 = n2.toString();
+            
+            m += s1.split(".")[1].length;
+            m += s2.split(".")[1].length;
+            var result = Number(s1.replace(".", "")) * Number(s2.replace(".", ""));
+            result = result / Math.pow(10, m);
+            return result;
+        }
+
+        function isInherit(prop, object){
+            var type = Object.prototype.toString.call(object) === "[object Object]";
+            if(type || typeof object === "function")
+                return prop in object && !object.hasOwnProperty(prop);
+            return false;
+        }
+
+        function myInstanceof(object, constructor){
+            let proto = Object.getPrototypeOf(object);
+            while(true){
+                if(proto === null)  return false;
+                if(proto === constructor.prototype) return true;
+                proto = Object.getPrototypeOf(proto);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

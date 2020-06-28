@@ -1,0 +1,17 @@
+{
+    "name": "MyApp-PWA",
+    "short_name": "MyApp",
+    "icons": [
+        {
+            "src": "./src/sun.png",
+            "sizes": "200x200",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/src/",
+    "description": "渐进式 Web App",
+    "display": "standalone",
+    "background_color": "green",
+    "theme_color": "red",
+    "scope": "/src/"
+}

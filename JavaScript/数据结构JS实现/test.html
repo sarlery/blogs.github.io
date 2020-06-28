@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 笔试题</title>
+</head>
+<body>
+    
+    <script>
+
+        /* 数据类型转换 */
+
+        let res = parseFloat('left:200px');
+        if(res === 200){
+            alert(200);
+        }else if(res === NaN){
+            alert(NaN);
+        }else if(typeof res === 'number'){
+            alert('number');
+        }else{
+            alert('Invalid Number');
+        }
+
+        console.log(parseInt(""));
+        console.log(Number(""));
+        console.log(isNaN(""));
+        console.log(parseInt(null));
+        console.log(Number(null));
+        console.log(parseInt("12px"));
+        console.log(Number("12px"));
+        console.log(isNaN("12px"));
+        console.log(parseFloat("1.6px") + parseInt("1.2px") + typeof parseInt(null));
+        console.log(isNaN(Number(!!Number(parseInt('0.8')))));
+        console.log(typeof !parseInt(null) + !isNaN(null));
+
+        let result = 10 + false + undefined + [] + 'Hello' + null + true + {};
+        console.log('result: ', result);
+
+    </script>
+
+</body>
+</html>

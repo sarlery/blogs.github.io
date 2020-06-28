@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF</title>
+    <style>
+        body{
+            display: flex;
+        }
+        .comment-wrapper, .wrapper{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .comment-wrapper{
+            width: 60%;
+            border-left: 1px solid #666666;
+        }
+        .comment-wrapper p{
+            width: 80%;
+            padding: 10px;
+            margin: 6px 0;
+            background-color: rgba(0, 126, 230, 0.2);
+            border-radius: 10px;
+            text-align: justify;
+        }
+        .wrapper{
+            width: 40%;
+            margin: 30px auto;
+        }
+        .wrapper textarea{
+            height: 60px;
+            width: 90%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .wrapper button{
+            height: 40px;
+            outline: none;
+            border: 1px solid gray;
+            background-color: green;
+            color: white;
+            padding: 0px 40px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <form class="wrapper" action="/comments" method="POST">
+        <textarea name="msg" placeholder="..."></textarea><br />
+        <button id="btn" type="submit">提交</button>
+    </form>
+
+    <div class="comment-wrapper"></div>
+
+    <script>
+        const comment = document.querySelector(".comment-wrapper");
+
+        fetch("/getComments")
+            .then(res => res.json())
+            .then(data => {
+                data.data.forEach(item => {
+                    let p = document.createElement("p");
+                    p.textContent = item;
+                    comment.appendChild(p);
+                });
+            }).catch(err => console.error(err));
+    </script>
+    
+</body>
+</html>

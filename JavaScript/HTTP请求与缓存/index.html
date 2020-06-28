@@ -1,38 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <style>
-        #img-file{
-            opacity: 0;
-        }
-        label.label-file{
-            display: block;
-            height: 200px;
-            width: 200px;
-            border: 1px solid greenyellow;
-            text-align: center;
-            line-height: 50px;
-        }
-    </style>
 </head>
 <body>
 
-    <section>
-        <div>
-            <label class="label-file" for="img-file">
-                Choose images to upload (PNG, JPG, GIF)
-            </label>
-            <input type="file" accept="image/*" name="pic" id="img-file">
-        </div>
-    </section>
+    <h1>Hello!</h1>
 
     <script>
 
-        const fileIpt = document.getElementById('img-file');
+        const frame = document.createElement('iframe');
+        frame.src = "http://localhost:4000/aaa.html";
+        document.body.appendChild(frame);
+
+        let key = true;
+        frame.onload = function () {
+            if(key) {
+                frame.src = "/aaa.html";
+                key = false;
+            }else{
+                console.log(frame.contentWindow.name);
+            }
+        }
 
     </script>
 

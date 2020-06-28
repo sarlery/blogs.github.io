@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    text-align: center;
+    line-height: 80vh;
+    background-image: url('./sun.png');
+    background-repeat: no-repeat;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        p {
+            height: 30px;
+            width: 150px;
+            background-color: #ccf;
+        }
+
+        div {
+            height: 30px;
+            width: 150px;
+            background-color: #cfc;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+    <input type="text" id="input" />
+
+    <script>
+        const ipt = document.querySelector('#input');
+
+        ipt.addEventListener('click', () => {
+            console.log('click!');
+        },false);
+
+        ipt.addEventListener('focus', () => {
+            console.log('focus');
+        }, false);
+
+        ipt.addEventListener('mousedown', () => {
+            console.log('mousedown');
+        }, false);
+
+        ipt.addEventListener('mouseenter', () => {
+            console.log('mouseenter');
+        }, false);
+
+        ipt.addEventListener('mouseover', () => {
+            console.log('mouseover');
+        }, false);
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布订阅模式</title>
+    <style>
+        #main{
+            width: 200px;
+            height: 200px;
+            background-image: radial-gradient(white,red, black);
+            margin: 60px auto;
+            color: white;
+            line-height: 200px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 1.2s ease-out;
+            box-shadow: 0 0 20px 10px inset rgba(0,0,0,.6),
+                        0 0 20px 10px red,
+                        0 0 40px 10px white,
+                        0 0 400px 400px rgba(0,0,0,.4),
+                        0 0 200px 200px inset rgba(0,0,0,.2);
+        }
+
+        #main:hover{
+            background-image: linear-gradient(red, white);
+            box-shadow: 0 0 20px 10px inset rgba(0,0,0,.6), 
+                        0 0 40px 20px red,
+                        0 0 80px 20px white,
+                        0 0 800px 800px rgba(0,0,0,.6),
+                        0 0 200px 200px inset rgba(0,0,0,.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main"></div>
+    
+    <script src="./event.js"></script>
+    <script>
+        
+        class Ajax extends EventEmitter{
+            constructor(url, body = null, method = "GET", headers = {}){
+                this.method = method;
+                this.headers = headers;
+                this.body = body;
+                this.url = url;
+            }
+            success(cb){
+                this.event.on("response", cb);
+                return this.event;
+            }
+            fail(cb){
+                this.event.on("error", cb);
+            }
+            start(){
+                let { url, event, method, headers } = this;
+                fetch(url, {
+                    method,
+                    headers,
+                    body
+                }).then(res => {
+                    event.emit("response", res);
+                }).catch(err => {
+                    event.emit("error", err);
+                });
+                return this.event;
+            }
+        }
+
+    </script>
+
+</body>
+</html>

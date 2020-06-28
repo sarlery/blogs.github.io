@@ -1,14 +1,7 @@
-// const Promise = require("./promise");
+function trim(str){
+    var reg = /(^[\s]+|[\s]+$)/;
+    return str.replace(reg, str);
+}
 
-// function test(param){
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve(param);
-//         },1000);
-//     });
-// }
-
-// var t = test(100);
-
-// t.then(n => console.log("n == ",n), e => console.log("e == ",e));
-
+var res = trim("  hello world ");
+console.log(res);

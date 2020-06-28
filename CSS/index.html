@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        div{
+            margin: 40px;
+        }
+
+        .wrapper{
+            position: relative;
+            margin: 100px;
+            height: 200px;
+            width: 200px;
+            transform: rotate(45deg);
+            background-color: red;
+        }
+        .wrapper::after, .wrapper::before{
+            content: "";
+            display: block;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            background-color: red;
+        }
+        .wrapper::after{
+            left: 0;
+            top: -50%;
+        }
+        .wrapper::before{
+            left: -50%;
+            top: 0;
+        }
+
+        .trapezoid{
+            height: 0px;
+            width: 100px;
+            border-bottom: 100px solid red;
+            border-top: 0px solid rebeccapurple;
+            border-left: 0px solid green;
+            border-right: 100px solid transparent;
+        }
+        .trapezoid-2{
+            height: 0px;
+            width: 100px;
+            border-bottom: 100px solid red;
+            border-top-width: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+        }
+        .equ-triangle{
+            height: 0;
+            width: 0;
+            border: 100px solid transparent;
+            border-top-width: 0px;
+            border-bottom: 173px solid red;
+        }
+
+        .paral{
+            height: 120px;
+            width: 240px;
+            background-color: teal;
+            line-height: 120px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            transform: skewX(-20deg);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper"></div>
+
+    <div class="trapezoid"></div>
+    <div class="trapezoid-2"></div>
+    <div class="equ-triangle"></div>
+
+    <div class="paral">平行四边形</div>
+    
+</body>
+</html>
