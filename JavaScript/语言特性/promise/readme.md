@@ -166,7 +166,6 @@ class Promise{
     }
 }
 ```
-这里可能会有疑问，为什么要使用数组存储回调？数组中需要存储很多回调吗？感觉如果状态变化后，只执行一个回调吧，用两个函数不就可以了吗？这在下面会解释。  
 
 ## 链式调用
 
@@ -303,6 +302,13 @@ p(4).then(n => {
 
 ```js
 then (onFulfilled, onRejected) {
+    // 两个参数必须是回调函数，不是函数时替换成函数
+    // 这样可以实现这种效果：promise.then().then().then(d => console.log(d));
+    // 即使中间的 then 函数没有传参，后面的 then 函数也可以获取到值，这被称为“值穿透”
+    onFulfilled = typeof onFulfilled === 'function' ?
+            onFulfilled : v => v;   // 默认是把参数（this.value）直接返回
+        onRejected = typeof onRejected === 'function' ? 
+            onRejected : err => { throw err };
     let promise2 = new Promise((resolve, reject) => {
         /**
          * 根据 onFulfilled 回调执行后的返回值来判断是调用 resolve 还是 reject
@@ -359,5 +365,237 @@ then (onFulfilled, onRejected) {
 
 调用 `onFulfilled` 或者调用 `onRejected` 函数的地方都加上了定时器和 `try-catch` 语句，用定时器包裹是因为在 promise2 构造函数内部使用了 promise2 实例，在生成实例期间就想使用实例，显然是拿不到 promise2 实例的，这时就要使用定时器，在下一个事件循环时再运行里面的代码，这样就能拿到实例了。try-catch 语句很明显是为了捕获可能抛出的异常，有异常就传给 `reject` 函数。如果没有异常，就交给 `resolvePromise` 函数去处理（普通值或者 promise）。  
 
-`reslovePromise` 是关键，它是实现链式调用和能嵌套返回 promise 实例的核心代码。
+代码如下：  
 
+```js
+function resolvePromise(x, promise2, resolve, reject){
+    if(x === promise2){     // x 不能与 promise2 相等，不然会造成死循环
+        reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
+    }
+    let called;
+    // 如果 x 是一个对象，或者是一个方法
+    if((typeof x === 'object' && x !== null) || typeof x === 'function'){
+        // 带有 then 方法的对象被称为 thenable
+        try{        // 防止 then 取不到报错
+            let then = x.then;  // 如果能获取到 then 方法，就认为 x 是一个 promise 实例
+            if(typeof then === 'function'){
+                // 执行 then 方法，将 this 指向 x
+                then.call(x, y => {
+                    if(called)  return;
+                    called = true;
+                    // y 也有可能是一个 promise，递归调用，直到获得普通值或抛出异常
+                    // 这里之所以判断 called 是因为，called 可能会变成 true（至少递归了一次），
+                    // called === true，说明 reject 执行了，就终止递归
+                    resolvePromise(y, promise2, resolve, reject);
+                }, err => {
+                    if(called)  return;
+                    called = true;
+                    reject(err);
+                });
+            }else{      // 对象或者函数中没有 then 方法，就按照普通值处理
+                resolve(x);
+            }
+        }catch(e){
+            if(called)  return;
+            called = true;
+            reject(e);
+        }
+    }else{      // x 是一个普通值
+        resolve(x);
+    }
+}
+```
+
+在上面代码中，多次对 `called` 变量做判断，这是为了防止多次调用，一旦失败就 reject 出去，不再递归调用。  
+
+以上就实现了一个 Promise，如果要检测符不符合 Promise/A+ 规范，可以使用 npm 下载 promises-aplus-tests 包，写入一下代码：  
+
+```js
+// Promise 就是你自己封装的 Promise 类
+Promise.defer = Promise.deferred = function () {
+    let dfd = {};
+    dfd.promise = new Promise((resolve, reject) => {
+        dfd.resolve = resolve;
+        dfd.reject = reject;
+    });
+    return dfd;
+}
+```
+
+然后运行下面的代码：  
+
+```
+npx promises-aplus-tests promise.js
+```
+
+如果又不符合规范的地方，终端会输出错误信息。关于 Promise/A+ 规范可以参考这个网站：  [Promise/A+](https://promisesaplus.com/)
+
+## 完善
+
+以上基本就是 promise 的全部内容，至于 `catch`、`resolve`、`reject` 等方法都是在原有的基础上做的扩展或者封装，这些方法并不算是 promise 的核心。下面就一一实现这些方法。  
+
+### catch 
+
+`catch` 是 promise 实例上的方法，添加一个拒绝态的回调到当前 promise，然后返回一个新的 promise。实现如下：  
+
+```js
+catch(errCbs){
+    return this.then(null, errCbs);
+}
+```
+
+### resolve 与 reject
+
+这两个方法是 Promise 的静态方法。`resolve` 返回一个 Promise 对象，这样就能将该值以 Promise 对象形式使用；`reject` 返回一个状态为失败的 Promise 对象，并将给定的失败信息传递给对应的处理方法。  
+
+它们的实现如下：  
+
+```js
+static resolve(value){
+    return new Promise((resolve, reject) => {
+        resolve(value);
+    });
+}
+
+static reject(reason){
+    return new Promise((resolve, reject) => {
+        reject(reason);
+    });
+}
+```
+
+`resolve` 函数比较特别，例如：  
+
+```js
+// resolve 函数可以嵌套，多层 resolve，会以最内层的值为准
+//（最内层也可以是 reject，这样会走失败态）
+Promise.resolve(
+    Promise.resolve(
+        Promise.resolve(1)
+    )
+).then(d => {   // d: 1
+    console.log('d: ', d);
+}, e => console.log('e == ', e));
+```
+
+这时就要改造一下 `constructor` 中的 `resolve` 函数，需要判断传入的 `value` 是不是一个 promise。  
+
+```js
+constructor(exector){
+    var reject = (reason) => {
+        // ...
+    };
+    var resolve = (value) => {
+        if(value instanceof Promise){
+            return value.then(resolve, reject);
+        }
+        // ...
+    };
+}
+```
+
+### finally
+
+`finally` 是 promise 实例上的方法，它可以传入一个回调函数，无论成功还是失败这个回调都会去执行。finally 回调参数可以返回一个 promise，如果是成功的 promise，会采用上一次的结果，如果是失败的 promise，会采用这一次的失败结果，并把结果传入 catch 中（或 then 的第二个回调参数）。`finally` 最终也是返回新的 promise 实例，例如：  
+
+```js
+new Promise ((resolve, reject) => {
+    resolve(1);     // 首次成功
+}).finally(() => {
+    return new Promise((resolve) => {
+        resolve(100);   // 返回成功的 promise
+    });
+}).then(d => {      // d == 1
+    // 采用上一次的结果（1），而不是 100
+    console.log('d == ', d);
+}).catch(err => {
+    console.log('err', err);
+});
+
+// 失败情况：
+
+new Promise ((resolve, reject) => {
+    reject(1);      // 首次
+}).finally(() => {
+    return new Promise((resolve, reject) => {
+        reject(100);    // 失败的 promise
+    });
+}).then(d => {
+    console.log('d == ', d);
+}).catch(err => {   // err 100
+    console.log('err', err);
+    // 采用当前的失败数据
+});
+```
+
+`finally` 方法实现如下：  
+
+```js
+finally(cb){
+    return this.then(val => {
+        return Promise.resolve(cb()).then(() => val);
+    }, err => {
+        return Promise.resolve(cb()).then(() => { throw err });
+    });
+}
+```
+
+### all
+
+all 是一个静态方法，接受一个迭代器，返回 promise 实例，此实例在迭代所有的 promise 都完成（resolved）或参数中不包含 promise 时回调完成（resolve）；如果参数中 promise 有一个失败（rejected），此实例回调失败（reject），失败的原因是第一个失败 promise 的结果。实现如下：  
+
+```js
+static all(iterable){
+    return new Promise((resolve, reject) => {
+        let orderIdx = 0;
+        let resultArr = [];
+
+        for(let i = 0;i < iterable.length;i ++){
+            let value = iterable[i];
+            this.resolve(value).then(res => {
+                resultArr[i] = res;
+                orderIdx ++;
+                if(orderIdx === iterable.length){
+                    resolve(resultArr);
+                }
+            },err => {
+                reject(err);
+            });
+        }
+    });
+}
+```
+
+测试：  
+
+```js
+let p1 = Promise.resolve(1);
+let p2 = Promise.reject(2);
+let p3 = Promise.resolve(3);
+
+Promise.all([p1,p2,p3,4]).then(result => {
+    console.log('result: ', result);
+},err => {      // err: 2
+    console.log('err: ', err);
+});
+```
+
+### race
+
+`race` 也是一个静态方法，它也接受一个迭代器，返回一个 promise，一旦迭代器中的某个 promise 解决或拒绝，返回的 promise 就会解决或拒绝。  
+
+实现：  
+
+```js
+static race(iterable) {
+    if(!Array.isArray(iterable)){
+        throw TypeError(`${iterable} is not an array`);
+    }
+    let Constructor = this;
+    return new Constructor((resolve, reject) => {
+        for(let i = 0;i < iterable.length;i ++){
+            Constructor.resolve(iterable[i]).then(resolve,reject);
+        }
+    });
+}
+```
