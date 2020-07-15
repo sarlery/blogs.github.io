@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算器</title>
+    <style>
+        main{
+            max-width: 600px;
+            margin: 60px auto;
+        }
+        input{
+            height: 30px;
+            font-size: 18px;
+            padding-left: 10px;
+        }
+        button{
+            border-radius: 6px;
+            vertical-align: middle;
+            margin-left: 20px;
+            height: 36px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 0px 16px;
+            background-color: #f24;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .result{
+            font: inherit;
+            color: indigo;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <div class="wrapper">
+            <input type="text" /><button>operate</button>
+        </div>
+        <hr />
+        <h2>Result:
+            <span class="result"></span>
+        </h2>
+    </main>
+    
+    <script src="./index.js"></script>
+
+    <script>
+
+        const btn = document.querySelector('button');
+        const ipt = document.querySelector('input');
+        const resultView = document.querySelector('.result');
+        btn.addEventListener('click',() => {
+            var value = ipt.value.trim();
+            if(value){
+                getReult(value);
+                ipt.value = '';
+                ipt.focus();
+            }
+        });
+
+        function getReult(value){
+            var result = calculator.handle(value);
+            resultView.textContent = result;
+        }
+
+    </script>
+
+</body>
+</html>
