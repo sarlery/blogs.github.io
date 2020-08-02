@@ -1,53 +1,79 @@
 <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <head>
     <style>
-        p {
-            height: 30px;
-            width: 150px;
-            background-color: #ccf;
-        }
+        /* html {
+            font-size: calc(100vw / 64);
+        } */
 
         div {
-            height: 30px;
-            width: 150px;
-            background-color: #cfc;
+            font-size: 1rem;
         }
 
     </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
 </head>
 
 <body>
-    
-    <input type="text" id="input" />
+
+    <div class="container-sm">
+        <header class="bg-info">header</header>
+        <article class="row no-gutters">
+            <section class="col-xl-3 d-none d-xl-block bg-success">left</section>
+            <section class="col-xl-6 col-lg-9 bg-secondary">middle</section>
+            <section class="col-xl-3 col-lg-3 d-none d-lg-block bg-danger">right</section>
+        </article>
+        <footer class="bg-dark">footer</footer>
+    </div>
 
     <script>
-        const ipt = document.querySelector('#input');
+        var div = document.querySelector('div');
 
-        ipt.addEventListener('click', () => {
-            console.log('click!');
-        },false);
+        const DPR = window.devicePixelRatio;
 
-        ipt.addEventListener('focus', () => {
-            console.log('focus');
-        }, false);
+        console.log();
 
-        ipt.addEventListener('mousedown', () => {
-            console.log('mousedown');
-        }, false);
-
-        ipt.addEventListener('mouseenter', () => {
-            console.log('mouseenter');
-        }, false);
-
-        ipt.addEventListener('mouseover', () => {
-            console.log('mouseover');
-        }, false);
-
+        // window.onload = function(){
+        //     console.log(document.documentElement.clientWidth, document.documentElement.clientHeight);
+        //     console.log(window.outerWidth, window.outerHeight);
+        //     console.log(window.innerWidth, window.innerHeight);
+        //     console.log(div.clientWidth, div.clientHeight);
+        //     console.log(document.body.clientWidth, document.body.clientHeight);
+        // }
 
     </script>
 
 </body>
 
 </html>
+
+
+<!-- 
+    document.documentElement.clinetWidth/Height
+    document.body.clientWidth/Height
+    documnet.documentElement.scrollWidth/height
+    document.body.scrollWidth/Height
+    window.innerWidth/innerHeight
+    window.outerWidth/Height
+    window.screen.width/height
+    window.pageXOffset/pageYOffset
+    document.documentElement.offsetWidth/Height
+    document.body.offsetWidth/Height
+
+    e.offetWidth/Height
+    e.pageX/Y
+    e.clientWidth/Height
+    e.scrollWidth/Height
+ -->

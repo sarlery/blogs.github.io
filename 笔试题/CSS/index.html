@@ -5,22 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-
-        div{
-            /* 假设视口的宽为 50px */
-            /* 视口的高度为 70px */
-            width: 10vmax;     /* 7 */
-            height: 10vmin;      /* 5 */
-            background-color: blueviolet;
+        .wrapper{
+            position: relative;
+            height: 100px;
+            width: 100px;
+            border: 1px solid orangered;
+            overflow: hidden;
         }
-
+        .abs{
+            position: absolute;
+            left: 120px;
+            top: 10px;
+            height: 50px;
+            width: 50px;
+            background-color: indigo;
+        }
+        .fixed{
+            position: fixed;
+            left: 10px;
+            top: 120px;
+            height: 50px;
+            width: 50px;
+            background-color: green;
+        }
+        .child{
+            height: 120px;
+            width: 50px;
+            background-color: lawngreen;
+        }
     </style>
 </head>
 <body>
 
-    <div>
-
+    <div class="wrapper">
+        <div class="abs"></div>
+        <div class="fixed"></div>
+        <div class="child"></div>
     </div>
     
+    <script>
+
+        function random(){      // 随机生成 5-20 之间的整数
+            var set = new Set;
+            while(set.size < 8){
+                set.add(Math.floor(Math.random() * 16 + 5));
+            }
+            return Array.from(set);
+        }
+        // console.log(random());
+
+        function toBillStr(numStr){
+            return numStr.replace(/\B(?=(\d{3})+$)/g, ',');
+        }
+        // console.log(toBillStr('100000'));   // 100,000
+
+        function parser(str){   // 字符串改成驼峰式
+            return str.replace(/\-([a-z])/g, (match, p1) => {
+                return p1.toLocaleUpperCase();
+            });
+        }
+        // console.log(parser('get-element-by-id'));
+
+        function isPalStr(str){     // 回文字符串
+            let len = str.length, half = Math.floor(len / 2), i = 0;
+            while(i < half){
+                if(str[i] !== str[len - 1 - i]){
+                    return false;
+                }
+                i += 1;
+            }
+            return true;
+        }
+
+        // 不用循环生成 len 长的数组，值是数组的索引
+        function createAry(len){
+            return (new Array(len)).fill(0).map((item, idx) => idx);
+        }
+
+        try {
+            throw 1;
+        } catch (error) {
+            var a = 123;
+        }
+        console.log(a);
+
+    </script>
+
 </body>
 </html>

@@ -1,70 +1,68 @@
 # React 优化组件
 
 ## 1. shouldComponentUpdate
-如果你知道在什么情况下你的组件不需要更新，你可以在 `shouldComponentUpdate` 中返回 `false` 来跳过整个渲染过程。其包括该组件的 `render` 调用以及之后的操作。该方法会在 **重新渲染前** 被触发，其默认实现总是返回 `true`。  
+使用 `shouldComponentUpdate` 生命周期函数（简称 `SCU`）可以优化 React 组件。`SCU` 可以让我们自己控制组件是否进行渲染。它返回一个布尔值，`true` 代表重新渲染，`false` 代表不渲染。默认 SCU 返回 `ture`。即：父组件更新会连带着子组件也更新，有时候重新渲染子组件并没有必要。使用 SCU 可以优化组件渲染。  
 
-这样做可以提速。因为如果返回了 `false`，表明这个组件不需要更新，也就不需要再花费时间重新渲染 DOM。  
-
-```jsx
-shouldComponentUpdate(nextProps,nextState){
-    return false;
+```js
+shouldComponentUpdate(nextProps, nextState) {
+  if (this.props.color !== nextProps.color) {
+    return true;    // 不相等时返回 true，更新组件
+  }
+  if (this.state.count !== nextState.count) {
+    return true;    // 相等时返回 false，不更新组件
+  }
+  return false;
 }
 ```
 
-例如，下面的例子，当下一次的 `nextState.count` 值大于等于 4 时，组件就不再更新。  
+React 提供了 `PureComponent` 类自动为我们做优化，使用时把组件继承这个类即可。  
 
-```jsx
-// App.jsx
-
-import React,{Component} from "react";
-
-class App extends Component{
-    state = {
-        count: 0
-    }
-
-    // nextProps 就是最新一次的 props 值
-    // nextState 就是最新一次的 state 值
-    shouldComponentUpdate(nextProps,nextState){
-        if(nextState.count >= 4){
-            return false;
-        }
-        return true;
-    }
-
-    handleClick(){
-        this.setState(state => {
-            return {
-                count: state.count += 1
-            }
-        });
-    }
-
-    render(){
-        return (
-            <div>
-                <button onClick={() => this.handleClick()}>Click: {this.state.count}</button>
-            </div>
-        );
-    }
+```js
+class Example extends PureComponent{
+  // ...
 }
 ```
 
-`shouldComponentUpdate` 主要用于上一次的 props/state 与这一次的 props/state 是否相等，如果值相等，就不更新；如果值不相等就更新。  
+`PureComponent` 使用“浅比较”的模式来检查 props 和 state 中所有的字段，以此来决定是否组件需要更新。“浅比较”不会比较对象内部的属性。例如 props 的数据如下：  
 
-```jsx
-shouldComponentUpdate(nextProps,nextState){
-    // 不相等就更新
-    if(this.props.xxx !== nextProps.xxx){
-        return true
-    }
-    if(this.state.xxx !== nextState.xxx){
-        return true;
-    }
-    // 相等时就不更新
-    return false;
+```js
+props = {
+  obj: {
+    a: 1,
+    b: 2
+  },
+  count: 1
 }
 ```
+
+比较时，不会比较 `obj` 对象内部的属性，只是比较 `obj` 地址有没有发生变化。每次更新都要生成一个新的对象才行，因此，`SCU` 必须配合“不可变值”一起使用（数据变化必须返回新的数据，而不是接着使用原来的数据，尤其是对于引用类型来说）。  
+
+由于 `PureComponent` 是浅比较，当数据结构很复杂时，情况会变得麻烦。对于函数组件可以使用 `memo` 进行包裹，与 `PureComponent` 一样默认使用“浅比较”。  
+
+```js
+function MyCom(){
+  // ...
+}
+export default React.memo(MyCom);
+```
+
+也可以给 `memo` 函数传入第二个参数，这个函数与 `SCU` 函数返回值相反。  
+
+```js
+
+function areEqual(prevProps, nextProps){
+  // props 不相等时返回 false，表示更新组件
+  // props 相等时返回 true，表示不更新组件
+}
+
+React.memo(MyCom, areEqual);
+```
+
+下图是 React 的生命周期函数。  
+
+![React lifecycle](img/react-lifecycle.png)  
+
+从图中可以看出，`SCU` 处在 `render` 之前，它可以拦截组件的 `props` 和 `state`。
 
 ## 2. PureComponent
 当然，上面的写法不太好。如果 props 或者 state 的内容很多时，做判断就很繁琐。React 提供了 `PureComponent` 的组件，在使用时只需要继承 `React.PureComponent` 就行了，而不再直接使用 `shouldComponentUpdate` 钩子函数。  
@@ -87,7 +85,7 @@ var d = {a: 1};
 console.log(c === d);   // false
 ```
 
-而深比较是“原值相等”，深比较不使用运算符，而是需要实现一个深比较的函数。比如上面的代码中，对象c 与对象d 进行深比较时，因为 c 和 d对象中的属性都相等，因此为 true。  
+而深比较是“原值相等”，深比较不使用运算符，而是需要实现一个深比较的函数。比如上面的代码中，对象 c 与对象 d 进行深比较时，因为 c 和 d对象中的属性都相等，因此为 true。  
 
 ```js
 function deepEqual(o1,o2){
@@ -149,32 +147,20 @@ function App() {
 }
 ```
 
-## 4. useCallback
-useCallback 也是 React Hooks 中的一个钩子函数。这个函数接收两个参数，一个是回调，另一个是数组。`useCallback` 会返回一个包装后的函数。包装后的函数是经过 `useCallback` 优化后的函数。数组与 `useEffect` 中的数组作用类似。  
+## 4. useCallback 和 useMemo
+在使用 React Hook 时，我们常常会用到 `useCallback` 和 `useMemo`，这两个 API 都可以传入一个 deps 数组，与 `useEffect` 中的 deps 相比三者有什么不同之处呢？  
 
-比如上面代码中的 `handleClick` 函数就可以使用 `useCallback` 包装一下：  
+`useCallback` 和 `useMemo` 的行为相似，`useCallback` 会返回一个 `memoized` 的回调函数。而 `useMemo` 会返回一个 `memozied` 的值。  
 
-```js
-import React,{useEffect,useCallback,useState} from "react";
-function App(){
-    // ...
-    // 当 count 变化时，handleClickCallback 函数才会去执行
-    var handleClickCallback = useCallback(handleClick,[count]);
+`memoized` 回调函数会在 deps 中的某个依赖项发生变化时才被调用；`memoized` 值会在 deps 中的某个依赖项发生变化时才重新计算。  
 
-    return <button onClick={handleClickCallback}>Click</button>;
-}
-```
+如果 `useCallback` 和 `useMemo` 不传第二个参数，每次渲染都会执行函数或重新计算新的值，而如果传入的是空数组，则只初始渲染时执行一次（空数组表明没有依赖项）。使用 `useMemo` 有助于避免在每次渲染时都进行高开销的计算。  
 
-## 5. useMemo
-`useMemo` 作用与 `useCallback` 类似。上面的包装函数可以用 `useMemo` 这么来写：  
+而 `useEffect` 中的 deps 与两种不同。不传入 deps 参数时，每次渲染 useEffect 回调都会被执行。而 deps 如果是空数组时，只会在 `componentDidMount` 阶段执行一次，这可以处理一些副作用，比如发起网络请求，设置定时器等。如果 `useEffect` 回调函数内返回了一个函数，这个返回的函数会在 `componentWillUnmount` 阶段执行。如果 deps 中传入了依赖项，当某个依赖项发生变化时 useEffect 回调会被执行。  
 
-```js
-var handleClickCallback = useMemo(() => handleClick,[count]);
-```
+与 `useEffect` 相似的还有一个 `useLayoutEffect` API，在浏览器完成布局与绘制之后，传给 useEffect 的函数会延迟调用（异步执行），不应在这个函数中执行阻塞浏览器更新屏幕的操作；`useLayoutEffect` 会在所有的 DOM 变更之后同步调用 effect（在浏览器执行绘制之前），使用它来读取 DOM 布局并**同步**触发重渲染，它会阻塞浏览器的绘制。`useLayoutEffect` 要比 `useEffect` 执行时机早。尽量使用 `useEffect`。  
 
-可以发现，`useCallback(fn, deps)` 相当于 `useMemo(() => fn, deps)`。  
-
-## 6. memo
+## 5. memo
 `memo` 与 `useMemo` 不同，useMemo 是包装 js 函数用的，而 memo 是包装组件用的。它与 `PureComponent` 非常相似。但是 memo 适用于函数组件，而不适用于 class 组件。  
  
 例如上面的 App 组件就可以使用 `memo` 进行包裹：  
@@ -238,7 +224,7 @@ export default App;
 ```
 App 组件不需要使用 memo 优化，这是因为 App 组件中没有 props，memo 比对的是 props 的变化，然后更新组件。  
 
-## 7. lazy/Suspense
+## 6. lazy/Suspense
 `React.lazy` 函数能让你像渲染常规组件一样处理动态引入的组件。而 `Suspense` 是一个组件，这两个东西一般是配合使用的。  
 
 在 webpack 中如果做文件打包，打包出来的文件可能会很大。而打包好的文件中可能有一些代码并不需要每次加载页面时就请求它（或说使用到它），比如当用户点击按钮时才会运行某一些代码。这时候就可以使用异步的方式再去获取资源。  
@@ -304,7 +290,7 @@ import default memo(Text);
 
 `Suspense` 组件必须有一个 `fallback` 属性。fallback 的值应是一个组件，它表示懒加载的组件在没有加载到页面之前应显示的效果，通常是一个 `Loading`。  
 
-## 8. 错误边界
+## 7. 错误边界
 错误边界是一种React组件，这种组件可以捕获并打印发生在其 **子组件树任何位置的JavaScript错误** ，并且，它会渲染出备用UI，而不是渲染那些崩溃了的子组件树。渲染期间，生命周期方法和整个组件树的构造函数中捕获错误。
 
 需要注意的是，错误边界无法捕获以下场景产生的错误：  
@@ -370,7 +356,7 @@ const MyComponent = () => (
 );
 ```
 
-## 9. Portals
+## 8. Portals
 Portals 是 React16 新出的一个功能，被称为“插槽”。它可以将子节点渲染到存在于父组件以外的 DOM 节点上。  
 
 比如，一个组件本来在 `<App />` 组件中，但是通过 `Portal` 可以将这个组件插入到页面的任意位置。  
@@ -449,7 +435,7 @@ export default Dialog;
 
 `Portal` 的用法和作用可以参看这篇文章：[传送门：React Portal](https://zhuanlan.zhihu.com/p/29880992?utm_source=wechat_session&utm_medium=social&from=singlemessage)。
  
-## 10. PropTypes
+## 9. PropTypes
 `PropTypes` 可以给组件的 props 进行类型检查。PropTypes 需要另行下载：
 
 ```cmd
@@ -476,7 +462,7 @@ PropTypes 的用法与类型可以参考 React 官网上的文档：[PropTypes �
 当然，除了 `PropTypes` 之外，也可以使用 `TypeScript` 来编写 React，typescript 相当于自带了 props 类型检测功能。  
 
 
-## 11. Immutable.js
+## 10. Immutable.js
 `immutable.js` 是一个 JavaScript 库。使用时需要下载：  
 
 ```cmd
