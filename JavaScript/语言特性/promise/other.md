@@ -361,3 +361,46 @@ then (onFulfilled, onRejected) {
 
 `reslovePromise` 是关键，它是实现链式调用和能嵌套返回 promise 实例的核心代码。
 
+## 最后
+Promise 是解决异步回调问题的利器，使用 promise 可以把嵌套式的函数调用写成链式调用，有利于代码的阅读，有了 promise，我们可以把很多异步函数封装成 promise 风格的函数。比如 `Node` 中的 `promisify` 方法，它传入一个遵循常见的错误优先的回调风格的函数（即以 (err, value) => ... 回调作为最后一个参数），并返回一个返回 promise 的版本。例如：
+
+```js
+const utils = require('util');
+const fs = require('fs');
+const readFile = utils.promisify(fs.readFile);
+
+readFile('./util.js', { encoding: 'utf-8' }).then(data => {
+    console.log(data);
+}).catch(err => {
+    console.log(err);
+});
+```
+
+### 实现 promisify 函数
+代码如下：
+
+```js
+function promisify(fn){
+    return (...args) => {
+        return new Promise((resolve, reject) => {   
+            fn(...args, (err, result) => {
+                if(err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+}
+```
+
+resolve 函数只能传入一个值，因此对应返回多个参数的回调函数，promisify 是不能转换的，同时还要注意进行转换的函数是否包含 this 的引用。  
+
+我们上面实现的 then 方法是使用 setTimeout 实现的，它是宏任务的一个异步函数，而 ES6 中的 `then` 方法是内部是微任务实现的。典型的例子如下：  
+
+```js
+function loop(){
+    console.log(111);
+    Promise.resolve().then(loop);
+}
+loop();
+```
+这段代码如果是 ES6 中的 promise，在浏览器中运行时会发现页面将崩溃，这是因为微任务在执行时会把微任务队列中的任务全部执行完，上面代码显然是执行不完的，因为每次调用完 then 后，又会递归调用 `then`，微任务队列永远清不空！而如果是宏任务实现的 `then` 方法，因为宏任务队列一次只执行一个任务，因此上面的代码会像计时器一样一直执行，但不会造成死循环，每次执行一个宏任务后，浏览器会转而执行其他的任务，比如微任务、页面渲染。如果要用微任务实现 promise，可以用浏览器端的 `MutainObserver`  或者 `Node` 中的 `process.nextTick`
