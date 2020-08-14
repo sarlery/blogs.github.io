@@ -22,30 +22,6 @@ class HuffNode {
     }
 }
 
-const fs = require('fs');
-const {
-    Writable,
-    Readable
-} = require('stream');
-
-class InputObjectStream extends Writable{
-    constructor(options){
-        super(options);
-    }
-    _write(chunk, encoding, callback){
-
-    }
-    _writev(chunks, callback){
-
-    }
-}
-
-class OutputObjectStream extends Readable{
-    constructor(){
-
-    }
-}
-
 /**
  * 首先，遍历传入的预编码内容
  * 遍历内容，统计各个字符出现的次数（用 Map 统计和存储）
@@ -271,31 +247,8 @@ function signed(number, len = 32) {
     return binaryString;
 };
 
-function unsigned (number, len = 32) {
-    let max = 1;
-    let i = 1; // i: length of the binary
-    while (max < number) {
-        i++;
-        max = 2 ** i - 1;
-    }
-
-    let binaryString = "";
-    let remaining = number;
-
-    for (let j = i; j > 0; j--) {
-        if (2 ** (j - 1) <= remaining) {
-            binaryString = binaryString + "1";
-            remaining = remaining - 2 ** (j - 1);
-        } else {
-            binaryString = binaryString + "0";
-        }
-    }
-    const prefix = "0".repeat(len - i);
-    return prefix + binaryString;
-}
-
 let h = new HuffCode();
 
-h.compress('./123.bmp', './123.zip');
+// h.compress('./123.bmp', './123.zip');
 
-// h.decompress('./123.zip', './qwer.bmp');
+h.decompress('./123.zip', './qwer.bmp');
