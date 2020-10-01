@@ -368,6 +368,115 @@ interface P{
 };
 ```
 
-### Exclude 和 `NonNullable`  
+### Exclude 和 NonNullable
+
+`Exclude` 实现如下：  
+
+```js
+type Exclude<T, U> = T extends U ? never : T;
+```
+
+即：如果类型 `T` 继承自 `U`，那么返回的新类型将是 `never`，否则返回类型 `T`。比如下面的例子：  
+
+```ts
+interface A{
+    a: number;
+    b: null;
+    c?: string;
+}
+
+interface B extends A{
+    d: boolean;
+}
+
+// data 将是 A 类型
+let data: Exclude<A, B>;
+
+// result 将是 never 类型
+let result: Exclude<B, A>;
+```
+
+与 `Exclude` 对应的是 `Extract` 类型，它与 `Exclude` 相反，其实现如下：  
+
+```ts
+type Extract<T, U> = T extends U ? T : never;
+```
+
+#### NonNullable
+
+它的实现逻辑：  
+
+```ts
+type NonNullable<T> = T extends null | undefined ? never : T;
+```
+
+接收泛型 `T`，如果 `T` 继承自 `null` 和 `undefined` 的联合类型，那么返回 `never` 类型，否则返回类型 `T`。 `NonNullable` 会从 `T` 中排除 `null` 和 `undefined` 的联合类型。例如：  
+
+```ts
+// 类型 A 并不继承自 undefined | null 类型
+type A = undefined | string | number | null;
+
+// B 的类型将是 string | number （从 A 中排除了 undefined 和 null）
+type B = NonNullable<A>;
+```
+
+`NonNullable` 也可以用 `Exclude` 实现：  
+
+```ts
+type NonNull<T> = Exclude<T, null | undefined>
+```
+
+TypeScript 中实现了许多实用的类型，更多类型内置声明可以参考官网介绍：[高级类型](https://www.tslang.cn/docs/handbook/advanced-types.html) 或者查看 ts 源码。  
+
+
+
+
+## 8. 声明合并
+
+在 TS 中有多个“声明合并”的特性。  
+
+### 接口合并
+
+```ts
+interface A{
+    name: string;
+    age: number;
+}
+
+interface A{
+    gender: string;
+}
+// 类型 A 将拥有三个属性
+```
+
+### 合并命名空间
+
+如：  
+
+```ts
+namespace Animals {
+    export class Zebra { }
+}
+
+namespace Animals {
+    export interface Legged { numberOfLegs: number; }
+    export class Dog { }
+}
+```
+
+等同于：  
+
+```ts
+namespace Animals {
+    export interface Legged { numberOfLegs: number; }
+
+    export class Zebra { }
+    export class Dog { }
+}
+```
+
+> 命名空间可以与其它类型的声明进行合并。 只要命名空间的定义符合将要合并类型的定义。合并结果包含两者的声明类型。 TypeScript 使用这个功能去实现一些 JavaScript 里的设计模式。  
+
+关于声明合并的内容可以参考 TS 中文文档：[声明合并](https://www.tslang.cn/docs/handbook/declaration-merging.html)  
 
 

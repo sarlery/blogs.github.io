@@ -1,6 +1,4 @@
-interface User{
-    name: string;
-    age: 21
+const user: User = {
+    name: 'Ming',
+    age: 18
 }
-
-type PartailUser = Partial<User>;

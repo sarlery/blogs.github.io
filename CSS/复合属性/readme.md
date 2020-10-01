@@ -181,7 +181,7 @@ div{
 }
 ```
 
-### background-clip与background-origin的区别
+### background-clip 与 background-origin 的区别
 这两个属性的值都有 `content-box`、`border-box`、`padding-box`，但是不同点是什么呢？从字面意思看，`origin` 表示“原点、起源”，而 `clip` 与裁剪有关。origin 表示从哪个区域作为背景的起点，而 clip 则表示不能超出设定的区域，超出部分会被裁剪掉。
 
 #### background-clip
