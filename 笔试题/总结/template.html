@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script id="test" type="text/html">
+        <h1>{{title}} world!</h1>
+        <div>
+            <h3>My name is {{data.name}}</h3>
+            <h4>I'm {{data.age}}</h4>
+        </div>
+    </script>
+
+    <script>
+
+        function template(id, data) {
+            let content = document.getElementById(id).innerHTML;
+            // 匹配 {{...}}
+            const templateReg = /\{\{\s*(.+)\s*\}\}/g;
+            // 匹配 a.b[1] 形式的数组
+            const arrayReg = /(\w+)\s*\[(.+)\]/g;
+            let templateData = templateReg.exec(content);
+            while(templateData) {
+                let [templateStr, protoStr] = templateData;
+                let protoArr = protoStr.split('.');
+                let tempData = data;
+
+                protoArr.forEach(proto => {
+                    let execArr = arrayReg.exec(proto);
+                    if(execArr) {
+                        let [, protoName, index] = execArr;
+                        tempData = tempData[protoName][index];
+                    } else {
+                        tempData = tempData[proto];
+                    }
+                });
+                content = content.replace(templateStr, tempData);
+                templateData = templateReg.exec(content);
+            }
+            return content;
+        }
+
+        const user = {
+            title: 'hello',
+            data: {
+                name: 'XiaoMing',
+                age: 20
+            }
+        };
+
+        const html = template('test', user);
+        // console.log(html);
+
+
+        function permute(arr) {
+            function fn(list, tempList, arr) {
+                if(tempList.length === arr.length)  return list.push([...tempList]);
+                for(let i = 0;i < arr.length;i ++) {
+                    if(tempList.includes(arr[i]))   continue;
+
+                    tempList.push(arr[i]);
+                    fn(list, tempList, arr);
+                    tempList.pop();
+                }
+            }
+
+            let result = [];
+            fn(result, [], arr);
+            return result;
+        }
+
+        let arr = [1, 2, 3, 4];
+        // console.log(permute(arr));
+
+        function Super(age, gender) {
+            this.age = age;
+            this.gender = gender;
+        }
+        Super.prototype.sayAge = function() {
+            return this.age;
+        }
+
+        function Sub(name, age, gender) {
+            this.name = name;
+            Super.call(this, age, gender);
+        }
+        Sub.prototype = Object.create(Super.prototype);
+        Sub.prototype.constructor = Sub;
+
+
+        Sub.prototype.sayName = function() {
+            return this.name;
+        }
+
+        // function inherit(P, C) {
+        //     Object.setPrototypeOf(C.prototype, P.prototype);
+        // }
+
+        // inherit(Super, Sub);
+
+        let sub = new Sub('ming', 18, 'male');
+        console.log(sub.sayName());
+        console.log(sub.sayAge());
+
+    </script>
+
+</body>
+</html>
